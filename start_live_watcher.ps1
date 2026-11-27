@@ -200,8 +200,13 @@ while ($true) {
 using System;
 using System.Runtime.InteropServices;
 public class Win32Focus {
+    [StructLayout(LayoutKind.Sequential)]
+    public struct RECT { public int Left; public int Top; public int Right; public int Bottom; }
     [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
     [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr hWnd);
+    [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+    [DllImport("user32.dll")] public static extern bool SetCursorPos(int X, int Y);
+    [DllImport("user32.dll")] public static extern void mouse_event(uint dwFlags, int dx, int dy, uint dwData, UIntPtr dwExtraInfo);
 }
 "@
                     }
@@ -246,12 +251,30 @@ public class Win32Focus {
                 }
 
                 try {
+                    $waProc = Get-Process | Where-Object { $_.MainWindowTitle -like "*WhatsApp*" -and $_.MainWindowHandle -ne [IntPtr]::Zero } | Select-Object -First 1
                     if ($waProc) {
                         [Win32Focus]::ShowWindow($waProc.MainWindowHandle, 9) | Out-Null
                         [Win32Focus]::SetForegroundWindow($waProc.MainWindowHandle) | Out-Null
+                        Start-Sleep -Milliseconds 300
+
+                        # Click directly into WhatsApp's bottom message input box so focus is guaranteed
+                        $rect = New-Object Win32Focus+RECT
+                        if ([Win32Focus]::GetWindowRect($waProc.MainWindowHandle, [ref]$rect)) {
+                            $w = $rect.Right - $rect.Left
+                            $h = $rect.Bottom - $rect.Top
+                            if ($w -gt 300 -and $h -gt 200) {
+                                $clickX = [int]($rect.Left + ($w * 0.65))
+                                $clickY = [int]($rect.Bottom - 45)
+                                [Win32Focus]::SetCursorPos($clickX, $clickY) | Out-Null
+                                Start-Sleep -Milliseconds 80
+                                [Win32Focus]::mouse_event(0x0002, 0, 0, 0, [UIntPtr]::Zero) # LEFTDOWN
+                                [Win32Focus]::mouse_event(0x0004, 0, 0, 0, [UIntPtr]::Zero) # LEFTUP
+                                Start-Sleep -Milliseconds 200
+                            }
+                        }
                     }
                     $null = $wshell.AppActivate("WhatsApp")
-                    Start-Sleep -Milliseconds 500
+                    Start-Sleep -Milliseconds 250
 
                     # 1. Select all and DELETE any existing text in the box
                     $wshell.SendKeys("^a")
