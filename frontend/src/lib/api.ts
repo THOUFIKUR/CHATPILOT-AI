@@ -1,8 +1,9 @@
+import { supabase } from './supabase';
+
 export const API_BASE = 
-  import.meta.env.VITE_API_BASE_URL || 
-  (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
     ? "http://127.0.0.1:8000/api"
-    : "https://chatpilot-backend-5js6.onrender.com/api");
+    : (import.meta.env.VITE_API_BASE_URL || "https://chatpilot-backend-5js6.onrender.com/api");
 
 export async function fetchApi<T = any>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_BASE}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
@@ -61,7 +62,24 @@ export const api = {
   getHealth: () => fetchApi('/health'),
 
   // Contacts
-  getContacts: () => fetchApi('/contacts'),
+  getContacts: async () => {
+    try {
+      const res = await fetchApi('/contacts');
+      if (Array.isArray(res) && res.length > 0) {
+        return res;
+      }
+    } catch (e) {
+      console.warn('[API] /contacts backend call note:', e);
+    }
+    // Direct Supabase fallback
+    try {
+      const { data } = await supabase.from('contacts').select('*').order('created_at', { ascending: false });
+      if (Array.isArray(data) && data.length > 0) {
+        return data;
+      }
+    } catch {}
+    return [];
+  },
   createContact: (data: any) => fetchApi('/contacts', { method: 'POST', body: JSON.stringify(data) }),
   updateContact: (id: string, data: any) => fetchApi(`/contacts/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteContact: (id: string) => fetchApi(`/contacts/${id}`, { method: 'DELETE' }),
