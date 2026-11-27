@@ -61,7 +61,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ onNavigate }) => {
     }
   };
 
-  const loadData = async () => {
+  const loadData = async (retryCount = 1) => {
     try {
       const [c, r, a, p] = await Promise.all([
         api.getContacts().catch(() => []),
@@ -69,10 +69,15 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ onNavigate }) => {
         api.getActivity().catch(() => []),
         api.getProviders().catch(() => [])
       ]);
-      setContacts(c || []);
-      setPendingReplies(r || []);
-      setActivities(a || []);
-      setProviders(p || []);
+      const loadedContacts = Array.isArray(c) ? c : [];
+      setContacts(loadedContacts);
+      setPendingReplies(Array.isArray(r) ? r : []);
+      setActivities(Array.isArray(a) ? a : []);
+      setProviders(Array.isArray(p) ? p : []);
+
+      if (loadedContacts.length === 0 && retryCount > 0) {
+        setTimeout(() => loadData(retryCount - 1), 2000);
+      }
     } catch (e) {
       console.error(e);
     } finally {

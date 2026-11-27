@@ -185,9 +185,37 @@ export const AuthView: React.FC<AuthViewProps> = ({
         localStorage.setItem('chatpilot_access_token', res.session?.access_token || '');
         localStorage.setItem('chatpilot_user', JSON.stringify(res.user));
         handleSuccessfulAuth(res.user, res.session?.access_token || '', res.session?.refresh_token);
+        return;
       }
     } catch (err: any) {
-      setError(err.message || 'Login failed. Please verify your credentials.');
+      console.warn('[AuthView] api.login failed, attempting direct Supabase Auth fallback:', err.message);
+      try {
+        const { data: supaData, error: supaErr } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+        if (supaErr) throw supaErr;
+        if (supaData?.user && supaData?.session) {
+          const directUser = {
+            id: supaData.user.id,
+            email: supaData.user.email,
+            name:
+              supaData.user.user_metadata?.full_name ||
+              supaData.user.user_metadata?.name ||
+              supaData.user.email?.split('@')[0] ||
+              'Thoufikur',
+          };
+          localStorage.setItem('chatpilot_access_token', supaData.session.access_token);
+          if (supaData.session.refresh_token) {
+            localStorage.setItem('chatpilot_refresh_token', supaData.session.refresh_token);
+          }
+          localStorage.setItem('chatpilot_user', JSON.stringify(directUser));
+          handleSuccessfulAuth(directUser, supaData.session.access_token, supaData.session.refresh_token);
+          return;
+        }
+      } catch (directErr: any) {
+        setError(directErr.message || err.message || 'Login failed. Please verify your credentials.');
+      }
     } finally {
       setLoading(false);
     }

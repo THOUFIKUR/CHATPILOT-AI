@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { SecretIndicator } from '../components/SecretIndicator';
 import { api } from '../lib/api';
-import { getDeviceIdentifier } from '../lib/supabase';
+import { supabase, getDeviceIdentifier } from '../lib/supabase';
 
 interface MobileWelcomeViewProps {
   onOpenBrowserLogin: () => void;
@@ -80,9 +80,37 @@ export const MobileWelcomeView: React.FC<MobileWelcomeViewProps> = ({
         localStorage.setItem('chatpilot_access_token', res.session?.access_token || '');
         localStorage.setItem('chatpilot_user', JSON.stringify(res.user));
         onAuthenticated(res.user);
+        return;
       }
     } catch (err: any) {
-      setError(err.message || 'Login failed. Please check your password.');
+      console.warn('[MobileWelcomeView] api.login failed, trying direct Supabase fallback:', err.message);
+      try {
+        const { data: supaData, error: supaErr } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+        if (supaErr) throw supaErr;
+        if (supaData?.user && supaData?.session) {
+          const directUser = {
+            id: supaData.user.id,
+            email: supaData.user.email,
+            name:
+              supaData.user.user_metadata?.full_name ||
+              supaData.user.user_metadata?.name ||
+              supaData.user.email?.split('@')[0] ||
+              'Thoufikur',
+          };
+          localStorage.setItem('chatpilot_access_token', supaData.session.access_token);
+          if (supaData.session.refresh_token) {
+            localStorage.setItem('chatpilot_refresh_token', supaData.session.refresh_token);
+          }
+          localStorage.setItem('chatpilot_user', JSON.stringify(directUser));
+          onAuthenticated(directUser);
+          return;
+        }
+      } catch (directErr: any) {
+        setError(directErr.message || err.message || 'Login failed. Please check your password.');
+      }
     } finally {
       setLoading(false);
     }

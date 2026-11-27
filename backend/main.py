@@ -59,7 +59,7 @@ async def health_check():
     try:
         from database import get_supabase
         sb = get_supabase()
-        res = sb.table("contacts").select("count", count="exact").execute()
+        res = sb.table("contacts").select("id", count="exact").limit(1).execute()
         if res.count is not None:
             contact_count = res.count
     except Exception as e:

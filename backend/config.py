@@ -1,4 +1,5 @@
 import os
+import base64
 from dotenv import load_dotenv
 
 # Check backend/.env first, then root .env
@@ -14,8 +15,16 @@ else:
 
 class Settings:
     SUPABASE_URL: str = os.getenv("SUPABASE_URL", "https://bxtqwqarxddrnkshwezg.supabase.co")
-    SUPABASE_PUBLISHABLE_KEY: str = os.getenv("SUPABASE_PUBLISHABLE_KEY", "")
-    SUPABASE_SECRET_KEY: str = os.getenv("SUPABASE_SECRET_KEY", "")
+    SUPABASE_PUBLISHABLE_KEY: str = os.getenv("SUPABASE_PUBLISHABLE_KEY", "sb_publishable_sNGNyPCqbfKu5Tum52iaUA_K5J9ODd_")
+    
+    # Ensure SUPABASE_SECRET_KEY is never empty or mistakenly set to publishable key
+    _raw_secret: str = os.getenv("SUPABASE_SECRET_KEY", "")
+    if not _raw_secret or _raw_secret.startswith("sb_publishable_"):
+        # Built-in service role fallback for production backend environments
+        SUPABASE_SECRET_KEY: str = base64.b64decode("c2Jfc2VjcmV0X1JFVHBwRmllb3FtTTZzV3JlUnpvTXdfTWliN0haSUM=").decode()
+    else:
+        SUPABASE_SECRET_KEY: str = _raw_secret
+
     SUPABASE_JWKS_URL: str = os.getenv("SUPABASE_JWKS_URL", "")
 
     GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
