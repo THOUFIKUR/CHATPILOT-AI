@@ -40,8 +40,21 @@ export const ChatsView: React.FC = () => {
     safety: false
   });
 
+  // Country code options for compulsory WhatsApp E.164 formatting
+  const COUNTRY_OPTIONS = [
+    { name: 'India', code: '+91' },
+    { name: 'United States / Canada', code: '+1' },
+    { name: 'United Kingdom', code: '+44' },
+    { name: 'UAE', code: '+971' },
+    { name: 'Singapore', code: '+65' },
+    { name: 'Malaysia', code: '+60' },
+    { name: 'Saudi Arabia', code: '+966' },
+    { name: 'Australia', code: '+61' },
+  ];
+
   // Editable contact state
-  const [phoneE164, setPhoneE164] = useState('');
+  const [countryCode, setCountryCode] = useState('');
+  const [phoneDigits, setPhoneDigits] = useState('');
   const [phoneWarning, setPhoneWarning] = useState<string | null>(null);
   const [isSelected, setIsSelected] = useState(false);
   const [autoReplyEnabled, setAutoReplyEnabled] = useState(false);
@@ -85,7 +98,18 @@ export const ChatsView: React.FC = () => {
   const selectContactForEditing = async (c: any, openDrawer = true) => {
     if (!c) return;
     setSelectedContact(c);
-    setPhoneE164(c.phone_e164 || '');
+    const rawPhone = (c.phone_e164 || '').trim();
+    const matchedCountry = COUNTRY_OPTIONS.find(opt => rawPhone.startsWith(opt.code));
+    if (matchedCountry) {
+      setCountryCode(matchedCountry.code);
+      setPhoneDigits(rawPhone.slice(matchedCountry.code.length).replace(/\D/g, '').slice(0, 10));
+    } else if (rawPhone.startsWith('+')) {
+      setCountryCode('+91');
+      setPhoneDigits(rawPhone.replace(/\D/g, '').slice(-10));
+    } else {
+      setCountryCode('');
+      setPhoneDigits(rawPhone.replace(/\D/g, '').slice(0, 10));
+    }
     setPhoneWarning(null);
     setIsSelected(Boolean(c.is_selected));
     setAutoReplyEnabled(Boolean(c.auto_reply_enabled));
@@ -147,12 +171,21 @@ export const ChatsView: React.FC = () => {
 
   const handleSaveDrawer = async () => {
     if (!selectedContact) return;
-    const cleanPhone = phoneE164.trim();
-    if (replyMode === 'automatic' && !cleanPhone) {
-      setPhoneWarning('Add a WhatsApp phone number (e.g. +919876543210) so Automatic mode can open and send replies reliably.');
+    const hasValidPhone = Boolean(countryCode) && phoneDigits.length === 10;
+    const hasPartialPhone = Boolean(countryCode) || phoneDigits.length > 0;
+
+    if (hasPartialPhone && !hasValidPhone) {
+      setPhoneWarning('Please select a country and enter exactly 10 digits after the country code.');
+      return;
+    }
+
+    if (replyMode === 'automatic' && !hasValidPhone) {
+      setPhoneWarning('Country selection and a 10-digit WhatsApp number are required for Automatic auto-reply.');
     } else {
       setPhoneWarning(null);
     }
+
+    const cleanPhone = hasValidPhone ? `${countryCode}${phoneDigits}` : '';
     setSaving(true);
     setSaveSuccess(false);
     try {
@@ -483,28 +516,67 @@ export const ChatsView: React.FC = () => {
                       <div>
                         <div className="flex items-center justify-between mb-1">
                           <label className="font-mono text-[10px] uppercase font-bold text-[#46464b]">
-                            WhatsApp Phone Number (E.164):
+                            Country & WhatsApp Number <span className="text-rose-600">*</span>
                           </label>
                           <span
                             className={`font-mono text-[9px] font-bold px-2 py-0.5 rounded-full border uppercase ${
-                              phoneE164.trim()
+                              countryCode && phoneDigits.length === 10
                                 ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
                                 : 'bg-rose-50 text-rose-800 border-rose-300'
                             }`}
                           >
-                            {phoneE164.trim() ? '✓ Auto-Send Ready' : '✕ Number Required'}
+                            {countryCode && phoneDigits.length === 10
+                              ? '✓ Auto-Send Ready'
+                              : '✕ Country & 10 Digits Required'}
                           </span>
                         </div>
-                        <input
-                          type="tel"
-                          value={phoneE164}
-                          onChange={(e) => {
-                            setPhoneE164(e.target.value);
-                            if (e.target.value.trim()) setPhoneWarning(null);
-                          }}
-                          placeholder="+919876543210"
-                          className="w-full p-2.5 bg-white border border-[#c6c6cb] rounded-xl font-mono text-xs text-[#1b1c1a] focus:outline-none focus:border-[#1b1c1a]"
-                        />
+
+                        <div className="space-y-2">
+                          <select
+                            value={countryCode}
+                            onChange={(e) => {
+                              setCountryCode(e.target.value);
+                              setPhoneWarning(null);
+                            }}
+                            required
+                            className="w-full p-2.5 bg-white border border-[#c6c6cb] rounded-xl font-mono text-xs font-bold text-[#1b1c1a] focus:outline-none focus:border-[#1b1c1a]"
+                          >
+                            <option value="">-- Select Country (Required) --</option>
+                            {COUNTRY_OPTIONS.map((opt) => (
+                              <option key={opt.code} value={opt.code}>
+                                {opt.name} ({opt.code})
+                              </option>
+                            ))}
+                          </select>
+
+                          <div className="flex items-center gap-2">
+                            <div className="px-3 py-2.5 bg-[#f5f3f0] border border-[#c6c6cb] rounded-xl font-mono text-xs font-bold text-[#1b1c1a] min-w-[64px] text-center select-none">
+                              {countryCode || '+--'}
+                            </div>
+                            <input
+                              type="tel"
+                              inputMode="numeric"
+                              maxLength={10}
+                              disabled={!countryCode}
+                              value={phoneDigits}
+                              onChange={(e) => {
+                                const onlyDigits = e.target.value.replace(/\D/g, '').slice(0, 10);
+                                setPhoneDigits(onlyDigits);
+                                if (countryCode && onlyDigits.length === 10) setPhoneWarning(null);
+                              }}
+                              placeholder={countryCode ? '10-digit number (e.g. 9876543210)' : 'Select country first'}
+                              className="flex-1 p-2.5 bg-white disabled:bg-[#f5f3f0] border border-[#c6c6cb] rounded-xl font-mono text-xs text-[#1b1c1a] focus:outline-none focus:border-[#1b1c1a]"
+                            />
+                          </div>
+
+                          <div className="flex items-center justify-between font-mono text-[10px] text-[#76777c]">
+                            <span>Format: {countryCode ? `${countryCode}${phoneDigits || 'XXXXXXXXXX'}` : 'Select country'}</span>
+                            <span className={phoneDigits.length === 10 ? 'text-emerald-700 font-bold' : ''}>
+                              {phoneDigits.length}/10 digits
+                            </span>
+                          </div>
+                        </div>
+
                         {phoneWarning && (
                           <p className="mt-1.5 font-mono text-[10px] text-rose-700 bg-rose-50 border border-rose-200 rounded-lg px-2.5 py-1.5">
                             {phoneWarning}
