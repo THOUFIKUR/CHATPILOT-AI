@@ -1,0 +1,719 @@
+# CHATPILOT AI — MASTER DEVELOPMENT PROMPT
+
+You are a senior software architect, UI/UX designer, full-stack engineer, Python backend developer and AI integration specialist.
+
+Build a complete Windows-first personal WhatsApp AI assistant named **ChatPilot AI**.
+
+ChatPilot AI learns the user's individual communication style from historical WhatsApp conversations, maintains separate memory for every selected contact and group, understands incoming messages and generates personalized replies.
+
+IMPORTANT SECURITY NOTE:
+The API credentials previously shared in chat must NOT be copied into source code or this prompt. They have been exposed and must be revoked and replaced. Load replacement credentials only through the backend environment or secure credential storage. Never commit secrets to GitHub.
+
+============================================================
+1. STRICT PROJECT RULES
+============================================================
+
+- Use Antigravity as the main development environment.
+- Use the connected Stitch integration for UI design.
+- Do NOT use n8n anywhere in this project.
+- Do NOT use Flutter.
+- Do NOT require Android Studio during initial Windows development.
+- Do NOT create another Supabase project.
+- Do NOT rename the existing Supabase organization or project.
+- Do NOT delete, truncate, rename or recreate existing Supabase tables.
+- Build and test on Windows first.
+- Android development comes after Windows testing.
+- Never expose API secrets in frontend code.
+- Never commit .env files to GitHub.
+- Do not claim a feature works until it has been tested.
+- Do not automatically send real WhatsApp messages during initial development.
+- Implement features in milestones and verify each milestone before continuing.
+
+============================================================
+2. DESIGN REFERENCES
+============================================================
+
+Use the two images supplied by the user in Antigravity.
+
+IMAGE 1 — CHATPILOT AI UI:
+Use as the primary visual reference for:
+- Overview dashboard
+- Chats / contact management
+- Groups
+- Memory
+- AI Providers
+- Reply Inbox
+- Activity
+- Settings
+
+IMAGE 2 — HUMANLOOP AGENT CONFIGURATION:
+Use as inspiration for:
+- AI model configuration
+- System prompt editor
+- Model parameters
+- Provider settings
+- Agent testing
+- Deployment status
+- Logs and performance
+
+Create a unified professional Windows application. Do not copy unrelated Humanloop branding.
+
+============================================================
+3. TECHNOLOGY STACK
+============================================================
+
+Frontend:
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- Lucide React
+- Tauri for Windows desktop packaging
+
+Backend:
+- Python 3.11+
+- FastAPI
+- Pydantic
+- SQLAlchemy
+- Async HTTP client
+
+Database:
+- Existing Supabase PostgreSQL
+- Supabase Authentication
+
+AI providers:
+- Groq API
+- Google Gemini API
+- OpenRouter API
+
+Future mobile integration:
+- Native Android Kotlin notification-listener companion.
+
+Do not require local AI inference for normal operation. Ollama may remain an optional provider, not a requirement.
+
+============================================================
+4. EXISTING SUPABASE PROJECT
+============================================================
+
+Organization:
+THOUFIKURRAHAMAN's Org
+
+Project:
+THOUFIKURRAHAMAN's Project
+
+Project URL:
+https://bxtqwqarxddrnkshwezg.supabase.co
+
+Project reference:
+bxtqwqarxddrnkshwezg
+
+Environment variables:
+SUPABASE_URL
+SUPABASE_PUBLISHABLE_KEY
+SUPABASE_SECRET_KEY
+
+Use the secret key only on the backend and only if privileged operations genuinely require it. Prefer authenticated user-scoped operations with RLS.
+
+The following 15 tables already exist:
+1. contacts
+2. chatpilot_groups
+3. conversations
+4. contact_prompts
+5. writing_samples
+6. conversation_summaries
+7. contact_memory
+8. messages
+9. ai_providers
+10. ai_usage_logs
+11. reply_drafts
+12. devices
+13. integration_events
+14. activity_logs
+15. app_settings
+
+The initial ChatPilot AI database migration has already been applied.
+
+Before modifying the database:
+- Inspect the live schema.
+- Generate TypeScript database types.
+- Confirm columns, constraints, indexes, foreign keys and RLS policies.
+- Do not assume the schema matches an imagined schema.
+- Do not drop, truncate, rename or recreate existing tables.
+- If a schema change is necessary, create a new migration after reviewing the current schema.
+- Preserve Supabase-managed schemas and infrastructure.
+
+============================================================
+5. AI PROVIDER CONFIGURATION
+============================================================
+
+Create three primary AI providers.
+
+PROVIDER 1 — GROQ
+Environment variable: GROQ_API_KEY
+Official key page: https://console.groq.com/keys
+
+PROVIDER 2 — GOOGLE GEMINI
+Environment variable: GEMINI_API_KEY
+Official key page: https://aistudio.google.com/app/apikey
+
+PROVIDER 3 — OPENROUTER
+Environment variable: OPENROUTER_API_KEY
+Official key page: https://openrouter.ai/settings/keys
+
+Do not place actual API key values in source code, frontend settings, database rows, logs, screenshots or GitHub.
+
+Load regenerated credentials from the backend environment or secure credential storage.
+
+Use official provider API endpoints and currently supported model identifiers. Do not invent model names or endpoints. Make model identifiers configurable so they can be updated without code changes.
+
+Create an AI provider manager with:
+- Multiple provider support.
+- Model selection.
+- Priority configuration.
+- API connection testing.
+- Provider health checks.
+- Timeout handling.
+- Rate-limit handling.
+- Retry-After support.
+- Exponential backoff.
+- Usage logging.
+- Token usage monitoring when provider supplies it.
+- Monthly budget limits.
+- Cost monitoring where pricing data is available.
+- Error tracking.
+- Provider cooldown.
+
+When a provider returns a rate-limit response, try another enabled provider only when its privacy settings permit the same conversation data to be sent.
+
+Do not bypass provider quotas or rotate accounts to evade limits.
+
+Never silently send private messages to another provider. Require explicit per-provider permission for private conversation content.
+
+Do not call multiple models for every reply unless the user explicitly enables a verification feature.
+
+============================================================
+6. UI DESIGN SYSTEM
+============================================================
+
+Use IMAGE 1 as the main design reference.
+
+Theme: clean, professional light theme.
+
+Colors:
+- Primary: #16A34A
+- Background: #F8FAFC
+- Surface: #FFFFFF
+- Main text: #172033
+- Secondary text: #64748B
+- Border: #E5E7EB
+
+Typography:
+- Inter font.
+- Heading weights 600–700.
+- Body weight 400.
+- Clear hierarchy and readable line heights.
+
+Components:
+- Card radius approximately 12px.
+- Button radius approximately 8px.
+- Consistent spacing.
+- Subtle shadows only where useful.
+- Professional Lucide icons.
+- Responsive desktop layouts.
+- Accessible contrast and keyboard focus states.
+
+Avoid:
+- Unnecessary emojis.
+- Neon gradients.
+- Excessive animations.
+- Generic AI chatbot appearance.
+- Oversized headings.
+- Cluttered cards.
+- Fake statistics or fake provider statuses.
+
+============================================================
+7. APPLICATION PAGES
+============================================================
+
+A. OVERVIEW DASHBOARD
+
+Display:
+- Selected contacts.
+- Selected groups.
+- Messages received today.
+- AI replies generated.
+- Pending approvals.
+- Provider status.
+- Provider usage.
+- Recent activity.
+- WhatsApp integration status.
+- Import status.
+
+All statistics must come from actual database records. Show empty states when no data exists.
+
+B. CHATS / CONTACT MANAGEMENT
+
+Features:
+- Add contact.
+- Edit contact.
+- Search contacts.
+- Select and deselect contacts.
+- Enable and disable AI.
+- Configure individual prompts.
+- Configure language preferences.
+- Configure reply mode.
+- Import chat history.
+- View conversation history.
+- View writing-style profile.
+- Delete contact data.
+
+Every contact must have separate memory, prompt and writing samples.
+
+C. GROUP MANAGEMENT
+
+Features:
+- Add groups.
+- Select groups.
+- Group-specific prompts.
+- Group-specific memory.
+- Mention-only mode.
+- Manual-only mode.
+- Group automation controls.
+- Cooldown and duplicate prevention.
+
+Default group automation must be disabled.
+
+D. MEMORY
+
+Display:
+- Contact conversation history.
+- Important facts.
+- Conversation summaries.
+- Writing style.
+- Language preferences.
+- Ongoing discussions.
+
+Allow reviewing, editing and deleting memory.
+
+Never mix information between contacts.
+
+E. AI PROVIDERS
+
+Display:
+- Groq.
+- Gemini.
+- OpenRouter.
+
+For every provider display:
+- Connection status.
+- Configured model.
+- Priority.
+- API connection test.
+- Usage.
+- Quota information when available.
+- Error information.
+- Privacy permission.
+- Budget setting.
+
+Include provider configuration and model selection.
+
+Do not display invented quota numbers. If a provider does not expose remaining quota, label it as unavailable or estimated.
+
+F. REPLY INBOX
+
+Display:
+- Incoming message.
+- Contact name.
+- Conversation context.
+- AI-generated draft.
+- Selected provider and model.
+- Approval status.
+
+Actions:
+- Edit.
+- Approve.
+- Reject.
+- Send only through a configured integration and only after explicit user approval or an explicitly enabled automation rule.
+
+Start with manual approval.
+
+G. ACTIVITY
+
+Display:
+- Incoming messages.
+- Imported conversations.
+- AI requests.
+- Provider failures.
+- Approved drafts.
+- Sending results.
+
+Mask private message content in diagnostic logs by default.
+
+H. SETTINGS
+
+Sections:
+- General.
+- WhatsApp.
+- Notifications.
+- Privacy.
+- AI preferences.
+- Backup.
+- About.
+
+============================================================
+8. WHATSAPP HISTORICAL CHAT IMPORTER
+============================================================
+
+Create a complete WhatsApp Chat Importer.
+
+Allow the user to upload exported TXT files.
+
+Support:
+- Individual conversations.
+- Group conversations.
+- Multiple contact imports.
+- Timestamp extraction.
+- Sender identification.
+- Incoming/outgoing identification.
+- Multiline messages.
+- Different date formats.
+- Duplicate detection.
+- Import preview.
+- Contact mapping.
+- Import progress.
+- Import cancellation.
+- Import validation.
+- Import summary.
+
+Ask the user to identify their own sender name before processing.
+
+Create a preview before saving.
+
+Save approved messages in the existing conversations and messages tables.
+
+Save approved outgoing messages as writing samples.
+
+Create contact-specific summaries and memory only after the user approves the import.
+
+Never assume a message belongs to the user without verifying sender mapping.
+
+Process locally where possible. Do not upload original exports to cloud storage unnecessarily.
+
+Do not attempt to silently extract WhatsApp's internal database or bypass application security.
+
+============================================================
+9. WRITING STYLE LEARNING
+============================================================
+
+The AI must analyse the user's outgoing messages.
+
+Identify:
+- English.
+- Tamil.
+- Tanglish.
+- Slang.
+- Vocabulary.
+- Sentence length.
+- Formality.
+- Emoji frequency.
+- Punctuation.
+- Typical expressions.
+- Common greeting and closing patterns.
+
+Create a separate writing-style profile for each contact.
+
+Use actual outgoing examples as inference context.
+
+Do not claim to train a new AI model unless actual model training has occurred.
+
+Allow the user to review and edit the generated style profile.
+
+============================================================
+10. CONVERSATION MEMORY
+============================================================
+
+Implement:
+- Recent conversation history.
+- Long-term conversation summaries.
+- Important user-approved facts.
+- Contact-specific preferences.
+- Writing-style memory.
+
+Retrieve relevant context before generating each reply.
+
+Never mix contacts or group memory.
+
+Never invent missing facts.
+
+Allow memory review, editing and deletion.
+
+Notification content must not be treated as a complete historical transcript.
+
+============================================================
+11. MESSAGE CAPTURE ARCHITECTURE
+============================================================
+
+Build a Windows message simulator first.
+
+Also implement a secure FastAPI webhook receiver.
+
+Create diagnostics to display:
+- Incoming event.
+- Source.
+- Sender.
+- Available message text.
+- Timestamp.
+- Processing status.
+- Contact match.
+- Duplicate status.
+
+Do not assume the Windows desktop application can directly read Android WhatsApp notifications.
+
+For actual Android notifications, implement a future native Kotlin companion using Android NotificationListenerService.
+
+The Android app will:
+- Request notification access.
+- Receive available WhatsApp notification content.
+- Identify sender information when available.
+- Forward permitted message events securely to the Windows backend.
+- Display connection status.
+- Provide diagnostics.
+- Support revoking notification access.
+
+Notification capture does not guarantee complete historical conversation access. Grouped notifications, hidden previews, missing permissions and Android background restrictions can produce incomplete events.
+
+Do not attempt to extract WhatsApp's private internal database.
+
+============================================================
+12. AI REPLY GENERATION
+============================================================
+
+When a message arrives:
+
+1. Identify the contact or group.
+2. Check whether it is selected.
+3. Check automation settings.
+4. Load that contact's or group's system prompt.
+5. Load relevant writing samples.
+6. Load recent conversation history.
+7. Load relevant approved memory.
+8. Check which providers are permitted to receive this content.
+9. Select an enabled available AI provider.
+10. Generate a concise response.
+11. Validate the response.
+12. Check for duplicates and unsafe commitments.
+13. Save the draft.
+14. Request approval unless the user explicitly enabled automatic mode for that conversation.
+
+Never invent personal commitments, appointments, payments or facts.
+
+Never disclose private information.
+
+Never automatically respond to OTPs, financial transactions, sensitive requests or high-risk messages.
+
+Keep group replies disabled by default.
+
+============================================================
+13. BACKEND API
+============================================================
+
+Create FastAPI routes:
+
+GET /api/health
+GET /api/contacts
+POST /api/contacts
+GET /api/groups
+POST /api/groups
+GET /api/conversations
+GET /api/messages
+POST /api/import
+GET /api/import/status
+GET /api/memory
+POST /api/memory
+GET /api/ai/providers
+POST /api/ai/test
+POST /api/ai/generate
+GET /api/replies
+POST /api/replies/approve
+POST /api/replies/reject
+POST /api/webhooks/whatsapp
+GET /api/diagnostics
+
+Use authentication, request validation, ownership checks, structured logging and meaningful errors.
+
+Do not expose privileged backend routes to unauthenticated users.
+
+============================================================
+14. SECURITY
+============================================================
+
+- Never expose API secrets.
+- Use environment variables or secure credential storage.
+- Validate all requests.
+- Enforce user ownership.
+- Maintain RLS.
+- Protect webhook endpoints with authentication/signature validation where supported.
+- Avoid logging complete private messages unnecessarily.
+- Provide data deletion controls.
+- Encrypt stored secrets.
+- Use secure session handling.
+- Keep a clear audit trail.
+- Make cloud-provider privacy permissions explicit.
+- Do not silently change providers for private content.
+
+============================================================
+15. WINDOWS DEVELOPMENT
+============================================================
+
+Build and test these components on Windows:
+
+1. React interface.
+2. FastAPI backend.
+3. Supabase connection.
+4. TXT importer.
+5. Contact mapping.
+6. Writing-style analysis.
+7. Memory generation.
+8. Groq API.
+9. Gemini API.
+10. OpenRouter API.
+11. AI provider fallback.
+12. Message simulator.
+13. Reply approval.
+14. Diagnostics.
+
+Package the application using Tauri after the core functionality works.
+
+Provide clear Windows setup scripts and instructions.
+
+============================================================
+16. ANDROID COMPANION — LATER PHASE
+============================================================
+
+Do not require Android Studio for initial Windows development.
+
+After Windows passes its tests, create a separate native Kotlin Android companion.
+
+Implement:
+- NotificationListenerService.
+- WhatsApp notification identification.
+- Available notification text extraction.
+- Sender/conversation metadata extraction where available.
+- Secure communication with the Windows backend.
+- Notification diagnostics.
+- Permission status display.
+- Connection status.
+- Supported notification reply actions only where Android and the notification provide them.
+
+Do not claim complete chat-history access through notification listening.
+
+============================================================
+17. TESTING
+============================================================
+
+Test:
+- TXT parsing.
+- Multiple date formats.
+- Multiline messages.
+- Sender identification.
+- Incoming/outgoing mapping.
+- Duplicate imports.
+- Contact isolation.
+- Prompt retrieval.
+- Writing-style consistency.
+- Conversation memory.
+- AI provider routing.
+- Rate-limit failures.
+- Privacy restrictions.
+- Duplicate reply prevention.
+- Reply approval.
+- Webhook parsing.
+- Supabase RLS.
+
+Clearly distinguish simulated tests from actual integration tests.
+
+Never claim that a real WhatsApp message was captured or sent unless a real integration test proves it.
+
+============================================================
+18. DOCUMENTATION
+============================================================
+
+Create:
+- README.md
+- ARCHITECTURE.md
+- DATABASE_SCHEMA.md
+- API_SETUP.md
+- WINDOWS_SETUP.md
+- CHAT_IMPORT_GUIDE.md
+- AI_ROUTER.md
+- SECURITY.md
+- TESTING.md
+- ANDROID_SETUP.md
+
+Include .env.example with placeholder values only.
+
+Add .env, local secrets and exported WhatsApp chat files to .gitignore.
+
+============================================================
+19. DEVELOPMENT MILESTONES
+============================================================
+
+MILESTONE 1:
+Inspect environment and create all UI screens using Stitch.
+
+MILESTONE 2:
+Implement React frontend and navigation.
+
+MILESTONE 3:
+Connect the existing Supabase project and inspect the existing schema.
+
+MILESTONE 4:
+Implement the WhatsApp TXT importer.
+
+MILESTONE 5:
+Implement contact-specific memory and writing-style learning.
+
+MILESTONE 6:
+Connect Groq, Gemini and OpenRouter.
+
+MILESTONE 7:
+Implement AI routing and fallback.
+
+MILESTONE 8:
+Implement Reply Inbox and message simulator.
+
+MILESTONE 9:
+Implement optional WhatsApp gateway integration.
+
+MILESTONE 10:
+Test and package the Windows application.
+
+MILESTONE 11:
+Develop the Android notification companion.
+
+After each milestone:
+- Run tests.
+- Fix errors.
+- Verify database operations.
+- Update documentation.
+- Report completed functionality.
+- Report incomplete functionality.
+- Do not proceed while critical tests fail.
+
+============================================================
+20. FINAL INSTRUCTION
+============================================================
+
+Start with environment inspection and Stitch UI design.
+
+Use the supplied ChatPilot AI reference image as the primary UI guide and the Humanloop image as inspiration for the agent configuration screens.
+
+Do not generate a fake completed application.
+
+Do not attempt all milestones in one unverified operation.
+
+Keep the application name exactly as ChatPilot AI.
+
+Do not use n8n anywhere.
+
+The final result must be a maintainable, secure, fully runnable Windows application with a clear path to Android integration.

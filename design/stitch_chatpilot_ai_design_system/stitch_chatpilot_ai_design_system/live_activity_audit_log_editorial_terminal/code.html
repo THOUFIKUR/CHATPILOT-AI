@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=JetBrains+Mono:wght@100..900&amp;family=Newsreader:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes pulseRing {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(172, 52, 0, 0.55);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(172, 52, 0, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(172, 52, 0, 0);
+  }
+}
+@keyframes inkShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.animate-delay-1 { animation-delay: 0.05s; }
+.animate-delay-2 { animation-delay: 0.1s; }
+.animate-delay-3 { animation-delay: 0.15s; }
+.animate-delay-4 { animation-delay: 0.2s; }
+.animate-pulse-ring {
+  animation: pulseRing 2.2s infinite;
+}
+.animate-ink-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.animate-ink-shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  animation: inkShimmer 2.4s infinite linear;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-pulse-ring,
+  .animate-ink-shimmer::after {
+    animation: none !important;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
+</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-secondary":"#ffffff","on-primary-container":"#81838e","inverse-surface":"#30312f","on-surface":"#1b1c1a","tertiary-fixed":"#dce1ff","outline-variant":"#c6c6cb","on-primary":"#ffffff","on-primary-fixed":"#181b24","inverse-primary":"#c4c6d1","surface-container":"#efeeeb","surface-container-low":"#f5f3f0","on-secondary-fixed-variant":"#832600","on-background":"#1b1c1a","primary-fixed-dim":"#c4c6d1","on-tertiary-container":"#547aff","error":"#ba1a1a","on-secondary-container":"#5d1900","tertiary":"#000000","surface-variant":"#e4e2df","secondary-fixed-dim":"#ffb59d","surface-container-lowest":"#ffffff","surface":"#fbf9f6","surface-container-highest":"#e4e2df","error-container":"#ffdad6","primary-container":"#181b24","surface-container-high":"#eae8e5","on-primary-fixed-variant":"#444650","on-tertiary-fixed-variant":"#0039b5","background":"#fbf9f6","on-error":"#ffffff","inverse-on-surface":"#f2f0ed","tertiary-container":"#001551","on-tertiary-fixed":"#001551","surface-bright":"#fbf9f6","primary-fixed":"#e0e2ed","primary":"#000000","tertiary-fixed-dim":"#b7c4ff","secondary-container":"#fd6b36","outline":"#76777c","on-error-container":"#93000a","on-secondary-fixed":"#390c00","secondary-fixed":"#ffdbd0","secondary":"#ac3400","surface-dim":"#dbdad7","on-surface-variant":"#46464b","surface-tint":"#5b5e68","on-tertiary":"#ffffff"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"margin-mobile":"1rem","space-xl":"2.5rem","space-sm":"0.5rem","space-md":"1rem","space-lg":"1.5rem","gutter":"1.25rem","margin":"2.5rem","gutter-mobile":"0.75rem","space-xs":"0.25rem"},"fontFamily":{"label-md":["JetBrains Mono"],"label-sm":["JetBrains Mono"],"label-lg":["Geist"],"headline-md":["Newsreader"],"headline-lg-mobile":["Newsreader"],"body-lg":["Newsreader"],"body-sm":["Geist"],"display-lg-mobile":["Newsreader"],"headline-lg":["Newsreader"],"display-lg":["Newsreader"],"data-mono":["JetBrains Mono"],"body-md":["Geist"],"headline-sm":["Newsreader"]},"fontSize":{"label-md":["11px",{"lineHeight":"16px","letterSpacing":"0.04em","fontWeight":"500"}],"label-sm":["10px",{"lineHeight":"14px","letterSpacing":"0.06em","fontWeight":"500"}],"label-lg":["13px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"600"}],"headline-md":["26px",{"lineHeight":"32px","letterSpacing":"0em","fontWeight":"600"}],"headline-lg-mobile":["28px",{"lineHeight":"34px","letterSpacing":"-0.01em","fontWeight":"500"}],"body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"display-lg-mobile":["38px",{"lineHeight":"44px","letterSpacing":"-0.015em","fontWeight":"400"}],"headline-lg":["36px",{"lineHeight":"44px","letterSpacing":"-0.01em","fontWeight":"500"}],"display-lg":["56px",{"lineHeight":"64px","letterSpacing":"-0.02em","fontWeight":"400"}],"data-mono":["13px",{"lineHeight":"18px","letterSpacing":"-0.01em","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"headline-sm":["20px",{"lineHeight":"26px","letterSpacing":"0em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed"><aside class="fixed left-0 top-0 h-full w-[260px] bg-surface-container-low z-50 flex flex-col justify-between border-r border-outline-variant/60 shadow-[0_1px_12px_rgba(20,23,31,0.04)]"><div class="flex flex-col flex-1 min-h-0"><div class="p-space-md border-b border-outline-variant/60 bg-surface-container"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-sm text-label-sm text-secondary uppercase font-bold tracking-widest">CHATPILOT // AI DISPATCH</span><span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full border border-outline-variant/80 bg-surface-container-lowest text-on-surface-variant">SYS.01</span></div><h1 class="font-headline-sm text-headline-sm text-primary tracking-tight font-serif">Gazette &amp; Terminal</h1><div class="mt-space-xs pt-space-xs border-t border-outline-variant/40 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><span>VOL. IXVIII</span><span>EDITION #421</span></div></div><nav class="flex-1 overflow-y-auto px-space-sm py-space-md space-y-1" data-active-classes="bg-primary text-on-primary font-semibold"><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="overview" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-on-primary/15 flex items-center justify-center transition-transform duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">newspaper</span></span><span>Overview</span></div><span class="font-data-mono text-label-sm opacity-60">01</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="ask-chatpilot" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">terminal</span></span><span>Ask ChatPilot</span></div><span class="font-data-mono text-label-sm opacity-60">02</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="reply-inbox" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">mark_email_unread</span></span><span>Reply Inbox</span></div><span class="px-2 py-0.5 bg-secondary text-on-secondary font-label-sm text-label-sm font-bold rounded-full shadow-sm">2</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="contacts" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">contacts</span></span><span>Contacts</span></div><span class="font-data-mono text-label-sm opacity-60">04</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="groups" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">hub</span></span><span>Groups</span></div><span class="font-data-mono text-label-sm opacity-60">05</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="memory" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">history_edu</span></span><span>Memory</span></div><span class="font-data-mono text-label-sm opacity-60">06</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="ai-providers" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">schema</span></span><span>AI Providers</span></div><span class="font-data-mono text-label-sm opacity-60">07</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="activity-log" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">receipt_long</span></span><span>Activity Log</span></div><span class="font-data-mono text-label-sm opacity-60">08</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="dataset-audit" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">fact_check</span></span><span>Dataset Audit</span></div><span class="font-data-mono text-label-sm opacity-60">09</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="settings" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">settings_input_component</span></span><span>Settings</span></div><span class="font-data-mono text-label-sm opacity-60">10</span></a></nav></div><div class="p-space-md border-t border-outline-variant/60 bg-surface-container-low"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Local Bridge</span><span class="inline-flex items-center gap-1.5 font-label-sm text-label-sm px-2.5 py-0.5 rounded-full border border-outline-variant/70 bg-surface-container-lowest text-on-surface shadow-sm"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse-ring"></span>CONNECTED</span></div><div class="pt-space-xs flex items-center gap-space-sm"><div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="min-w-0 flex-1"><p class="font-label-lg text-label-lg text-on-surface truncate">Thoufikur Rahman</p><p class="font-label-sm text-label-sm text-on-surface-variant truncate font-data-mono">DISPATCH CHIEF</p></div></div></div></aside><div class="pl-[260px]"><header class="fixed top-0 left-[260px] right-0 h-16 bg-surface/90 backdrop-blur-md border-b border-outline-variant/60 z-40 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm text-on-surface font-label-md text-label-md"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 flex items-center justify-center"><span class="material-symbols-outlined text-[16px] text-on-surface-variant">calendar_today</span></span><span class="uppercase tracking-wider font-semibold">EDITION: OCT 24, 2024 // 08:30 GMT</span></div><div class="h-4 w-px bg-outline-variant/60"></div><div class="flex items-center gap-2 font-label-md text-label-md text-on-surface"><span class="w-2 h-2 rounded-full bg-primary"></span><span class="font-data-mono tracking-tight">OPERATIONAL 99.8%</span></div><div class="h-4 w-px bg-outline-variant/60"></div><div class="flex items-center gap-2 font-label-md text-label-md"><span class="text-on-surface-variant uppercase font-medium">Global Auto-Reply:</span><span class="px-2.5 py-0.5 rounded-full bg-surface-container-high border border-outline-variant/80 font-data-mono font-bold text-on-surface">ARMED // LIVE</span></div></div><div class="flex items-center gap-space-md"><button class="px-3.5 py-1.5 rounded-xl border border-outline-variant/80 bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-all duration-200 flex items-center gap-1.5 shadow-sm hover:-translate-y-0.5" type="button"><span class="material-symbols-outlined text-[16px]">upload_file</span><span>Import Corpus</span></button><button class="px-3.5 py-1.5 rounded-xl bg-primary border border-primary text-on-primary font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-all duration-200 flex items-center gap-1.5 shadow-sm hover:-translate-y-0.5" type="button"><span class="material-symbols-outlined text-[16px]">send</span><span>Simulate Dispatch</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="relative pt-16 min-h-screen bg-surface w-full px-8"><div class="flex flex-col w-full pb-12">
+<!-- Editorial Page Header & Live Telemetry Strip -->
+<div class="pt-8 pb-6 flex flex-col xl:flex-row xl:items-end justify-between gap-6 animate-fade-in-up">
+<div class="max-w-2xl">
+<div class="flex items-center gap-3 mb-2">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-bold">DISPATCH LEDGER // 08</span>
+<span class="text-outline-variant">•</span>
+<span class="inline-flex items-center gap-1.5 font-label-sm text-label-sm text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse-ring"></span>
+          LIVE STREAMING
+        </span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Live Activity &amp; Audit Log</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1.5">Real-time chronological ledger of every notification, draft, and security block.</p>
+</div>
+<!-- Compact Telemetry Sparkline & Throughput Card -->
+<div class="bg-surface-container-low rounded-2xl px-5 py-3.5 shadow-sm flex items-center gap-6 self-start xl:self-auto">
+<div>
+<div class="font-label-sm text-label-sm uppercase text-on-surface-variant">24H THROUGHPUT</div>
+<div class="flex items-baseline gap-2 mt-0.5">
+<span class="font-headline-sm text-headline-sm text-on-surface">1,482</span>
+<span class="font-data-mono text-data-mono text-secondary">+14.2%</span>
+</div>
+</div>
+<div aria-hidden="true" class="w-28 h-10 flex items-end gap-1">
+<svg class="w-full h-full text-primary overflow-visible" viewbox="0 0 112 40">
+<path d="M2 32 L16 26 L30 29 L44 18 L58 22 L72 10 L86 15 L100 6 L110 12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<circle class="fill-secondary" cx="110" cy="12" r="3"></circle>
+</svg>
+</div>
+<div class="pl-4 bg-surface-container-lowest rounded-xl px-3.5 py-2 shadow-sm">
+<div class="font-label-sm text-label-sm uppercase text-on-surface-variant">AVG LATENCY</div>
+<div class="font-data-mono text-data-mono font-semibold text-on-surface mt-0.5">812ms</div>
+</div>
+</div>
+</div>
+<!-- Stylish Filter Pill Tabs -->
+<div class="flex items-center justify-between gap-4 pb-6 animate-fade-in-up animate-delay-1 overflow-x-auto">
+<div class="flex items-center gap-2 flex-nowrap" id="audit-filter-tabs" role="tablist">
+<button class="filter-tab px-4 py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md shadow-sm transition-all duration-200 whitespace-nowrap flex items-center gap-2" data-filter="all" type="button">
+<span>All Events</span>
+<span class="px-1.5 py-0.5 rounded-full bg-on-primary/15 font-data-mono text-label-sm">24</span>
+</button>
+<button class="filter-tab px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md transition-all duration-200 whitespace-nowrap" data-filter="incoming" type="button">
+        Incoming Notifications
+      </button>
+<button class="filter-tab px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md transition-all duration-200 whitespace-nowrap" data-filter="generated" type="button">
+        Replies Generated
+      </button>
+<button class="filter-tab px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md transition-all duration-200 whitespace-nowrap" data-filter="sent" type="button">
+        Replies Sent
+      </button>
+<button class="filter-tab px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md transition-all duration-200 whitespace-nowrap flex items-center gap-1.5" data-filter="blocked" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+<span>Security Blocks</span>
+</button>
+<button class="filter-tab px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md transition-all duration-200 whitespace-nowrap" data-filter="failed" type="button">
+        Failed Actions
+      </button>
+</div>
+<div class="hidden md:flex items-center gap-2 shrink-0">
+<button class="px-3.5 py-2 rounded-xl bg-surface-container-lowest text-on-surface font-label-md text-label-md shadow-sm hover:bg-surface-container-high transition-all duration-200 flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-[16px]">download</span>
+<span>Export CSV</span>
+</button>
+</div>
+</div>
+<!-- Split-Pane Layout: Left Timeline Feed (7 cols) / Right Event Details Drawer (5 cols) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<!-- Left Timeline Feed -->
+<div class="lg:col-span-7 flex flex-col gap-3.5 animate-fade-in-up animate-delay-2" id="timeline-feed">
+<!-- Event Card 1: Selected by Default -->
+<article class="event-card group relative bg-surface-container-lowest rounded-2xl p-5 shadow-md cursor-pointer transition-all duration-200 hover:-translate-y-0.5" data-category="generated" data-event-id="EVT-9021">
+<div class="flex items-start justify-between gap-4">
+<div class="flex items-start gap-4 min-w-0">
+<!-- Framed Dual-Tone Icon -->
+<div class="w-11 h-11 rounded-xl bg-tertiary-fixed flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:scale-105">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant text-[22px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2.5 flex-wrap">
+<span class="font-data-mono text-label-sm text-on-surface-variant">#EVT-9021</span>
+<span class="text-outline-variant">•</span>
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant">2m ago</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mt-1 truncate">Generated draft reply for Parveen</h3>
+<div class="flex items-center gap-2 mt-2 flex-wrap font-data-mono text-data-mono text-on-surface-variant">
+<span class="px-2 py-0.5 rounded-lg bg-surface-container-low text-on-surface">Groq Qwen 27B</span>
+<span>•</span>
+<span>780ms</span>
+<span>•</span>
+<span class="truncate">WhatsApp Bridge</span>
+</div>
+</div>
+</div>
+<!-- Semantic Status Badge: Blue (Drafted) -->
+<span class="shrink-0 px-3 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm uppercase font-bold tracking-wider">
+            Drafted
+          </span>
+</div>
+</article>
+<!-- Event Card 2 -->
+<article class="event-card group relative bg-surface-container-low rounded-2xl p-5 shadow-sm cursor-pointer transition-all duration-200 hover:bg-surface-container-lowest hover:shadow-md hover:-translate-y-0.5" data-category="incoming" data-event-id="EVT-9019">
+<div class="flex items-start justify-between gap-4">
+<div class="flex items-start gap-4 min-w-0">
+<div class="w-11 h-11 rounded-xl bg-surface-container-high flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:scale-105">
+<span class="material-symbols-outlined text-on-surface text-[22px]">graphic_eq</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2.5 flex-wrap">
+<span class="font-data-mono text-label-sm text-on-surface-variant">#EVT-9019</span>
+<span class="text-outline-variant">•</span>
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant">18m ago</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mt-1 truncate">Voice memo transcribed for Parveen</h3>
+<div class="flex items-center gap-2 mt-2 flex-wrap font-data-mono text-data-mono text-on-surface-variant">
+<span class="px-2 py-0.5 rounded-lg bg-surface-container text-on-surface">Gemini 2.5 Flash</span>
+<span>•</span>
+<span>1.1s</span>
+<span>•</span>
+<span class="truncate">Audio 00:42</span>
+</div>
+</div>
+</div>
+<!-- Semantic Status Badge: Grey (Info) -->
+<span class="shrink-0 px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm uppercase font-bold tracking-wider">
+            Info
+          </span>
+</div>
+</article>
+<!-- Event Card 3 -->
+<article class="event-card group relative bg-surface-container-low rounded-2xl p-5 shadow-sm cursor-pointer transition-all duration-200 hover:bg-surface-container-lowest hover:shadow-md hover:-translate-y-0.5" data-category="blocked" data-event-id="EVT-9014">
+<div class="flex items-start justify-between gap-4">
+<div class="flex items-start gap-4 min-w-0">
+<div class="w-11 h-11 rounded-xl bg-error-container flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:scale-105">
+<span class="material-symbols-outlined text-on-error-container text-[22px]" style="font-variation-settings: 'FILL' 1;">gpp_bad</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2.5 flex-wrap">
+<span class="font-data-mono text-label-sm text-on-surface-variant">#EVT-9014</span>
+<span class="text-outline-variant">•</span>
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant">1h ago</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mt-1 truncate">Blocked OTP verification message</h3>
+<div class="flex items-center gap-2 mt-2 flex-wrap font-data-mono text-data-mono text-on-surface-variant">
+<span class="px-2 py-0.5 rounded-lg bg-surface-container text-on-surface">Unknown Sender +91 98402 91122</span>
+<span>•</span>
+<span>Regex Guardrail</span>
+</div>
+</div>
+</div>
+<!-- Semantic Status Badge: Red (Blocked) -->
+<span class="shrink-0 px-3 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm uppercase font-bold tracking-wider">
+            Blocked
+          </span>
+</div>
+</article>
+<!-- Event Card 4 -->
+<article class="event-card group relative bg-surface-container-low rounded-2xl p-5 shadow-sm cursor-pointer transition-all duration-200 hover:bg-surface-container-lowest hover:shadow-md hover:-translate-y-0.5" data-category="sent" data-event-id="EVT-9008">
+<div class="flex items-start justify-between gap-4">
+<div class="flex items-start gap-4 min-w-0">
+<div class="w-11 h-11 rounded-xl bg-primary-fixed flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:scale-105">
+<span class="material-symbols-outlined text-on-primary-fixed text-[22px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2.5 flex-wrap">
+<span class="font-data-mono text-label-sm text-on-surface-variant">#EVT-9008</span>
+<span class="text-outline-variant">•</span>
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant">3h ago</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mt-1 truncate">Approved &amp; sent reply to Parveen</h3>
+<div class="flex items-center gap-2 mt-2 flex-wrap font-data-mono text-data-mono text-on-surface-variant">
+<span class="px-2 py-0.5 rounded-lg bg-surface-container text-on-surface">Manual Ratification</span>
+<span>•</span>
+<span>Thoufikur Rahman</span>
+</div>
+</div>
+</div>
+<!-- Semantic Status Badge: Green-tinted / Confirmed -->
+<span class="shrink-0 px-3 py-1 rounded-full bg-primary text-on-primary font-label-sm text-label-sm uppercase font-bold tracking-wider">
+            Confirmed
+          </span>
+</div>
+</article>
+<!-- Load More Footer -->
+<div class="pt-2 flex items-center justify-between px-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Showing 4 of 24 recent dispatches</span>
+<button class="px-4 py-2 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-all duration-200" type="button">
+          Load Earlier Entries
+        </button>
+</div>
+</div>
+<!-- Right Event Details Drawer Card -->
+<aside class="lg:col-span-5 bg-surface-container-lowest rounded-2xl p-6 shadow-md sticky top-24 animate-fade-in-up animate-delay-3" id="event-detail-drawer">
+<!-- Drawer Header -->
+<div class="flex items-start justify-between gap-4 pb-5">
+<div>
+<div class="flex items-center gap-2">
+<span class="font-data-mono text-data-mono font-bold text-secondary" id="detail-id">#EVT-9021</span>
+<span class="text-outline-variant">•</span>
+<span class="px-2.5 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm uppercase font-bold" id="detail-badge">Drafted</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mt-2" id="detail-title">Generated draft reply for Parveen</h3>
+</div>
+<button class="w-9 h-9 rounded-xl bg-surface-container-low hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors" title="Open in Reply Inbox" type="button">
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+</button>
+</div>
+<!-- Structured Metadata Grid -->
+<div class="grid grid-cols-2 gap-3 bg-surface-container-low rounded-xl p-4 mb-5">
+<div>
+<div class="font-label-sm text-label-sm uppercase text-on-surface-variant">Timestamp</div>
+<div class="font-data-mono text-data-mono text-on-surface mt-0.5" id="detail-timestamp">Oct 24, 08:28:14 GMT</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm uppercase text-on-surface-variant">Contact</div>
+<div class="font-body-md text-body-md font-medium text-on-surface mt-0.5" id="detail-contact">Parveen (+91 98••• 410)</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm uppercase text-on-surface-variant">Provider</div>
+<div class="font-data-mono text-data-mono text-on-surface mt-0.5" id="detail-provider">Groq Cloud</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm uppercase text-on-surface-variant">Model &amp; Latency</div>
+<div class="font-data-mono text-data-mono text-on-surface mt-0.5" id="detail-model">Qwen 27B • 780ms</div>
+</div>
+</div>
+<!-- Matched Safety Rules -->
+<div class="mb-5">
+<div class="font-label-sm text-label-sm uppercase text-on-surface-variant mb-2">Matched Safety Rules</div>
+<div class="flex flex-wrap gap-2" id="detail-rules">
+<span class="px-2.5 py-1 rounded-lg bg-surface-container-low text-on-surface font-data-mono text-label-sm flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+            PII_REDACTION_PASS
+          </span>
+<span class="px-2.5 py-1 rounded-lg bg-surface-container-low text-on-surface font-data-mono text-label-sm flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+            TONE_EDITORIAL_OK
+          </span>
+</div>
+</div>
+<!-- Syntax-Highlighted JSON Metadata Viewer -->
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant">Raw Payload &amp; Telemetry JSON</span>
+<button class="px-2.5 py-1 rounded-lg bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm uppercase flex items-center gap-1.5 transition-all duration-200" id="copy-json-btn" type="button">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+<span id="copy-json-label">Copy</span>
+</button>
+</div>
+<pre class="bg-primary-container text-on-primary rounded-xl p-4 font-data-mono text-data-mono overflow-x-auto leading-relaxed" id="detail-json"><code>{
+  <span class="text-secondary-fixed-dim">"event_id"</span>: <span class="text-tertiary-fixed-dim">"EVT-9021"</span>,
+  <span class="text-secondary-fixed-dim">"action"</span>: <span class="text-tertiary-fixed-dim">"draft_generated"</span>,
+  <span class="text-secondary-fixed-dim">"provider"</span>: <span class="text-tertiary-fixed-dim">"groq"</span>,
+  <span class="text-secondary-fixed-dim">"model"</span>: <span class="text-tertiary-fixed-dim">"qwen-27b-instruct"</span>,
+  <span class="text-secondary-fixed-dim">"latency_ms"</span>: <span class="text-on-tertiary-container">780</span>,
+  <span class="text-secondary-fixed-dim">"confidence"</span>: <span class="text-on-tertiary-container">0.94</span>,
+  <span class="text-secondary-fixed-dim">"requires_approval"</span>: <span class="text-secondary-container">true</span>
+}</code></pre>
+</div>
+</aside>
+</div>
+</div>
+<script>
+  (function() {
+    const eventsData = {
+      'EVT-9021': {
+        id: '#EVT-9021',
+        badge: 'Drafted',
+        badgeClass: 'bg-tertiary-fixed text-on-tertiary-fixed-variant',
+        title: 'Generated draft reply for Parveen',
+        timestamp: 'Oct 24, 08:28:14 GMT',
+        contact: 'Parveen (+91 98••• 410)',
+        provider: 'Groq Cloud',
+        model: 'Qwen 27B • 780ms',
+        rules: ['PII_REDACTION_PASS', 'TONE_EDITORIAL_OK'],
+        json: `{
+  "event_id": "EVT-9021",
+  "action": "draft_generated",
+  "provider": "groq",
+  "model": "qwen-27b-instruct",
+  "latency_ms": 780,
+  "confidence": 0.94,
+  "requires_approval": true
+}`
+      },
+      'EVT-9019': {
+        id: '#EVT-9019',
+        badge: 'Info',
+        badgeClass: 'bg-surface-container-highest text-on-surface-variant',
+        title: 'Voice memo transcribed for Parveen',
+        timestamp: 'Oct 24, 08:12:03 GMT',
+        contact: 'Parveen (+91 98••• 410)',
+        provider: 'Google AI',
+        model: 'Gemini 2.5 Flash • 1.1s',
+        rules: ['AUDIO_DURATION_OK', 'LANGUAGE_EN_IN'],
+        json: `{
+  "event_id": "EVT-9019",
+  "action": "voice_transcribed",
+  "provider": "google",
+  "model": "gemini-2.5-flash",
+  "latency_ms": 1100,
+  "duration_sec": 42,
+  "requires_approval": false
+}`
+      },
+      'EVT-9014': {
+        id: '#EVT-9014',
+        badge: 'Blocked',
+        badgeClass: 'bg-error-container text-on-error-container',
+        title: 'Blocked OTP verification message',
+        timestamp: 'Oct 24, 07:30:45 GMT',
+        contact: 'Unknown (+91 98402 91122)',
+        provider: 'Local Guardrail',
+        model: 'Regex Guardrail • 4ms',
+        rules: ['OTP_PATTERN_BLOCKED', 'UNTRUSTED_SENDER'],
+        json: `{
+  "event_id": "EVT-9014",
+  "action": "security_block",
+  "provider": "local_guardrail",
+  "rule": "OTP_PATTERN_BLOCKED",
+  "latency_ms": 4,
+  "quarantined": true
+}`
+      },
+      'EVT-9008': {
+        id: '#EVT-9008',
+        badge: 'Confirmed',
+        badgeClass: 'bg-primary text-on-primary',
+        title: 'Approved & sent reply to Parveen',
+        timestamp: 'Oct 24, 05:29:11 GMT',
+        contact: 'Parveen (+91 98••• 410)',
+        provider: 'WhatsApp Bridge',
+        model: 'Manual Ratification • 140ms',
+        rules: ['HUMAN_RATIFIED', 'DISPATCH_VERIFIED'],
+        json: `{
+  "event_id": "EVT-9008",
+  "action": "reply_dispatched",
+  "approved_by": "Thoufikur Rahman",
+  "channel": "whatsapp_local_bridge",
+  "latency_ms": 140,
+  "status": "delivered"
+}`
+      }
+    };
+
+    const cards = document.querySelectorAll('.event-card');
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    const copyBtn = document.getElementById('copy-json-btn');
+    const copyLabel = document.getElementById('copy-json-label');
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        cards.forEach(c => {
+          c.classList.remove('bg-surface-container-lowest', 'shadow-md');
+          c.classList.add('bg-surface-container-low', 'shadow-sm');
+        });
+        card.classList.remove('bg-surface-container-low', 'shadow-sm');
+        card.classList.add('bg-surface-container-lowest', 'shadow-md');
+
+        const id = card.getAttribute('data-event-id');
+        const data = eventsData[id];
+        if (!data) return;
+
+        document.getElementById('detail-id').textContent = data.id;
+        const badgeEl = document.getElementById('detail-badge');
+        badgeEl.textContent = data.badge;
+        badgeEl.className = `px-2.5 py-0.5 rounded-full font-label-sm text-label-sm uppercase font-bold ${data.badgeClass}`;
+        document.getElementById('detail-title').textContent = data.title;
+        document.getElementById('detail-timestamp').textContent = data.timestamp;
+        document.getElementById('detail-contact').textContent = data.contact;
+        document.getElementById('detail-provider').textContent = data.provider;
+        document.getElementById('detail-model').textContent = data.model;
+
+        const rulesContainer = document.getElementById('detail-rules');
+        rulesContainer.innerHTML = data.rules.map(r => `
+          <span class="px-2.5 py-1 rounded-lg bg-surface-container-low text-on-surface font-data-mono text-label-sm flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+            ${r}
+          </span>
+        `).join('');
+
+        document.getElementById('detail-json').querySelector('code').textContent = data.json;
+      });
+    });
+
+    filterTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        filterTabs.forEach(t => {
+          t.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+          t.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+        });
+        tab.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+        tab.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+
+        const filter = tab.getAttribute('data-filter');
+        cards.forEach(card => {
+          if (filter === 'all' || card.getAttribute('data-category') === filter) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        const text = document.getElementById('detail-json').innerText;
+        navigator.clipboard.writeText(text).then(() => {
+          copyLabel.textContent = 'Copied';
+          setTimeout(() => { copyLabel.textContent = 'Copy'; }, 1500);
+        });
+      });
+    }
+  })();
+</script></main></div></body></html>

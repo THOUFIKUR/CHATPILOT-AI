@@ -1,0 +1,29 @@
+{
+  "migration_version": "20261125220000_chatpilot_extension_schema",
+  "migration_file": "supabase_extension.sql",
+  "rollback_file": "supabase_rollback.sql",
+  "target_project_ref": "bxtqwqarxddrnkshwezg",
+  "target_database_engine": "PostgreSQL 17 (ap-northeast-1)",
+  "status": "applied_and_verified_in_production",
+  "checksum_sha256": "db48e2f2817aa96a8eeeffb9ab534096cfff2b335bbbd81a9b6d565a5ab0f3f2",
+  "byte_size": 15269,
+  "execution_timestamp_utc": "2026-11-25T16:57:41Z",
+  "execution_timestamp_ist": "2026-11-25T22:27:41+05:30",
+  "execution_result": "SUCCESS",
+  "tables_added": [
+    "chat_import_batches",
+    "chat_import_sources",
+    "contact_style_profiles",
+    "contact_relationships",
+    "response_policies",
+    "message_attachments",
+    "response_feedback",
+    "assistant_sessions",
+    "assistant_session_messages"
+  ],
+  "total_public_tables": 24,
+  "core_tables_preserved": 15,
+  "core_rows_preserved": 49,
+  "whatsapp_histories_imported": 0,
+  "approval_gate": "Gate A (COMPLETED)"
+}

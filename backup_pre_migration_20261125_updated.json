@@ -1,0 +1,706 @@
+{
+  "contacts": [
+    {
+      "id": "e7edf369-d549-4fae-9835-44a0be83b4d5",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "display_name": "Rahul",
+      "phone_e164": null,
+      "whatsapp_jid": "rahul@s.whatsapp.net",
+      "is_selected": true,
+      "auto_reply_enabled": true,
+      "reply_mode": "approval",
+      "preferred_language": "Auto",
+      "notes": null,
+      "created_at": "2026-11-25T15:30:32.693598+00:00",
+      "updated_at": "2026-11-25T15:30:32.693598+00:00"
+    },
+    {
+      "id": "6a3a3ec0-bf0a-489c-9a5e-daca982bd224",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "display_name": "Karthik",
+      "phone_e164": null,
+      "whatsapp_jid": "karthik@s.whatsapp.net",
+      "is_selected": true,
+      "auto_reply_enabled": true,
+      "reply_mode": "approval",
+      "preferred_language": "Auto",
+      "notes": null,
+      "created_at": "2026-11-25T15:38:39.063636+00:00",
+      "updated_at": "2026-11-25T15:38:39.063636+00:00"
+    },
+    {
+      "id": "ec5872a7-5918-4bc2-9e48-4c1764d2e3cd",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "display_name": "Bank Alert",
+      "phone_e164": null,
+      "whatsapp_jid": "bankalert@s.whatsapp.net",
+      "is_selected": true,
+      "auto_reply_enabled": true,
+      "reply_mode": "approval",
+      "preferred_language": "Auto",
+      "notes": null,
+      "created_at": "2026-11-25T15:38:52.85344+00:00",
+      "updated_at": "2026-11-25T15:38:52.85344+00:00"
+    }
+  ],
+  "chatpilot_groups": [],
+  "conversations": [
+    {
+      "id": "ada6e28c-4e0b-4a94-ae61-f2e6ee06b46c",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "conversation_type": "contact",
+      "contact_id": "e7edf369-d549-4fae-9835-44a0be83b4d5",
+      "group_id": null,
+      "title": "Test Conv",
+      "last_message_at": null,
+      "created_at": "2026-11-25T15:31:40.987049+00:00",
+      "updated_at": "2026-11-25T15:31:40.987049+00:00"
+    },
+    {
+      "id": "90eb5c0d-ee06-4091-9f2a-acac0fd0d063",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "conversation_type": "contact",
+      "contact_id": "6a3a3ec0-bf0a-489c-9a5e-daca982bd224",
+      "group_id": null,
+      "title": "Chat with Karthik",
+      "last_message_at": null,
+      "created_at": "2026-11-25T15:38:39.59475+00:00",
+      "updated_at": "2026-11-25T15:38:39.59475+00:00"
+    },
+    {
+      "id": "681ec6e0-d068-402a-821e-1e1433f5a4c9",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "conversation_type": "contact",
+      "contact_id": "ec5872a7-5918-4bc2-9e48-4c1764d2e3cd",
+      "group_id": null,
+      "title": "Chat with Bank Alert",
+      "last_message_at": null,
+      "created_at": "2026-11-25T15:38:53.657917+00:00",
+      "updated_at": "2026-11-25T15:38:53.657917+00:00"
+    }
+  ],
+  "messages": [
+    {
+      "id": "6e18d89b-a8c3-4931-8d12-2c24d97d01e0",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "conversation_id": "ada6e28c-4e0b-4a94-ae61-f2e6ee06b46c",
+      "external_message_id": null,
+      "direction": "incoming",
+      "sender_identifier": null,
+      "sender_name": "Rahul",
+      "body": "Test body",
+      "message_type": "text",
+      "source": "manual",
+      "message_timestamp": "2026-11-25T15:31:53.237028+00:00",
+      "metadata": {},
+      "created_at": "2026-11-25T15:31:53.237028+00:00"
+    },
+    {
+      "id": "c858c1b4-48cd-4b15-b4bd-72650721bc58",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "conversation_id": "ada6e28c-4e0b-4a94-ae61-f2e6ee06b46c",
+      "external_message_id": null,
+      "direction": "incoming",
+      "sender_identifier": null,
+      "sender_name": null,
+      "body": "Test source manual",
+      "message_type": "text",
+      "source": "manual",
+      "message_timestamp": "2026-11-25T15:32:44.838007+00:00",
+      "metadata": {},
+      "created_at": "2026-11-25T15:32:44.838007+00:00"
+    },
+    {
+      "id": "8afe32a4-00ce-4272-b433-2961e42c5f3e",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "conversation_id": "ada6e28c-4e0b-4a94-ae61-f2e6ee06b46c",
+      "external_message_id": null,
+      "direction": "incoming",
+      "sender_identifier": null,
+      "sender_name": null,
+      "body": "Test source notification",
+      "message_type": "text",
+      "source": "notification",
+      "message_timestamp": "2026-11-25T15:33:02.585223+00:00",
+      "metadata": {},
+      "created_at": "2026-11-25T15:33:02.585223+00:00"
+    },
+    {
+      "id": "32c88290-32fa-4fa9-a9a0-4c999d4cc777",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "conversation_id": "ada6e28c-4e0b-4a94-ae61-f2e6ee06b46c",
+      "external_message_id": null,
+      "direction": "incoming",
+      "sender_identifier": null,
+      "sender_name": null,
+      "body": "Test source manual",
+      "message_type": "text",
+      "source": "manual",
+      "message_timestamp": "2026-11-25T15:33:04.702749+00:00",
+      "metadata": {},
+      "created_at": "2026-11-25T15:33:04.702749+00:00"
+    },
+    {
+      "id": "5edd9fff-d666-4a9d-9acd-40fd10cf281d",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "conversation_id": "ada6e28c-4e0b-4a94-ae61-f2e6ee06b46c",
+      "external_message_id": null,
+      "direction": "incoming",
+      "sender_identifier": null,
+      "sender_name": "Rahul",
+      "body": "File send pannalama da?",
+      "message_type": "text",
+      "source": "notification",
+      "message_timestamp": "2026-11-25T15:34:18.757874+00:00",
+      "metadata": {},
+      "created_at": "2026-11-25T15:34:18.757874+00:00"
+    },
+    {
+      "id": "3790febd-b81d-4a2c-9190-f09deecd9a2b",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "conversation_id": "ada6e28c-4e0b-4a94-ae61-f2e6ee06b46c",
+      "external_message_id": null,
+      "direction": "incoming",
+      "sender_identifier": null,
+      "sender_name": "Rahul",
+      "body": "File send pannalama da?",
+      "message_type": "text",
+      "source": "notification",
+      "message_timestamp": "2026-11-25T15:34:30.577903+00:00",
+      "metadata": {},
+      "created_at": "2026-11-25T15:34:30.577903+00:00"
+    },
+    {
+      "id": "0fb70885-ef90-495b-acb9-f3b74c8200a5",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "conversation_id": "ada6e28c-4e0b-4a94-ae61-f2e6ee06b46c",
+      "external_message_id": null,
+      "direction": "incoming",
+      "sender_identifier": null,
+      "sender_name": "Rahul",
+      "body": "File send pannalama da?",
+      "message_type": "text",
+      "source": "notification",
+      "message_timestamp": "2026-11-25T15:36:27.219723+00:00",
+      "metadata": {},
+      "created_at": "2026-11-25T15:36:27.219723+00:00"
+    },
+    {
+      "id": "b0e0e69c-ffd0-4aed-88b5-9d71a7b4a1f9",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "conversation_id": "ada6e28c-4e0b-4a94-ae61-f2e6ee06b46c",
+      "external_message_id": null,
+      "direction": "incoming",
+      "sender_identifier": null,
+      "sender_name": "Rahul",
+      "body": "File send pannalama da?",
+      "message_type": "text",
+      "source": "notification",
+      "message_timestamp": "2026-11-25T15:37:15.190621+00:00",
+      "metadata": {},
+      "created_at": "2026-11-25T15:37:15.190621+00:00"
+    },
+    {
+      "id": "88ff15fd-9f08-44a3-aa6c-b5e1ef858db4",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "conversation_id": "ada6e28c-4e0b-4a94-ae61-f2e6ee06b46c",
+      "external_message_id": null,
+      "direction": "incoming",
+      "sender_identifier": null,
+      "sender_name": "Rahul",
+      "body": "File send pannalama da?",
+      "message_type": "text",
+      "source": "notification",
+      "message_timestamp": "2026-11-25T15:38:24.494336+00:00",
+      "metadata": {},
+      "created_at": "2026-11-25T15:38:24.494336+00:00"
+    },
+    {
+      "id": "89dad8d3-f96c-4a47-a858-93693cecc5ca",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "conversation_id": "90eb5c0d-ee06-4091-9f2a-acac0fd0d063",
+      "external_message_id": null,
+      "direction": "incoming",
+      "sender_identifier": null,
+      "sender_name": "Karthik",
+      "body": "Tomorrow plan?",
+      "message_type": "text",
+      "source": "notification",
+      "message_timestamp": "2026-11-25T15:38:39.850794+00:00",
+      "metadata": {},
+      "created_at": "2026-11-25T15:38:39.850794+00:00"
+    },
+    {
+      "id": "64ba0636-9325-4610-a652-b171ca7307cb",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "conversation_id": "681ec6e0-d068-402a-821e-1e1433f5a4c9",
+      "external_message_id": null,
+      "direction": "incoming",
+      "sender_identifier": null,
+      "sender_name": "Bank Alert",
+      "body": "Your bank OTP is 492019",
+      "message_type": "text",
+      "source": "notification",
+      "message_timestamp": "2026-11-25T15:38:53.891865+00:00",
+      "metadata": {},
+      "created_at": "2026-11-25T15:38:53.891865+00:00"
+    }
+  ],
+  "ai_providers": [
+    {
+      "id": "f38fcd6a-76d1-40ef-9ebe-76aa41beeb5a",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "provider_name": "gemini",
+      "model_name": "gemini-flash-lite-latest",
+      "priority": 2,
+      "is_enabled": true,
+      "allow_private_content": true,
+      "monthly_budget": 50.0,
+      "settings": {
+        "top_p": 1.0,
+        "max_tokens": 150,
+        "temperature": 0.7
+      },
+      "created_at": "2026-11-25T15:35:54.952178+00:00",
+      "updated_at": "2026-11-25T15:35:54.952178+00:00"
+    },
+    {
+      "id": "97232f85-4dd5-417a-9533-0489b38ced52",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "provider_name": "openrouter",
+      "model_name": "deepseek/deepseek-chat",
+      "priority": 3,
+      "is_enabled": true,
+      "allow_private_content": true,
+      "monthly_budget": 100.0,
+      "settings": {
+        "top_p": 1.0,
+        "max_tokens": 150,
+        "temperature": 0.7
+      },
+      "created_at": "2026-11-25T15:35:54.952178+00:00",
+      "updated_at": "2026-11-25T15:35:54.952178+00:00"
+    },
+    {
+      "id": "5fadcf52-dd4b-4ed4-9d27-dffc5f1de608",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "provider_name": "groq",
+      "model_name": "qwen/qwen3.8-27b",
+      "priority": 1,
+      "is_enabled": true,
+      "allow_private_content": true,
+      "monthly_budget": 50.0,
+      "settings": {
+        "top_p": 1.0,
+        "max_tokens": 150,
+        "temperature": 0.7
+      },
+      "created_at": "2026-11-25T15:35:54.952178+00:00",
+      "updated_at": "2026-11-25T15:35:54.952178+00:00"
+    }
+  ],
+  "ai_usage_logs": [
+    {
+      "id": "a87aeb61-181a-4d17-a437-4285723453d9",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "provider_name": "groq",
+      "model_name": "openai/gpt-oss-20b",
+      "request_status": "success",
+      "prompt_tokens": 291,
+      "completion_tokens": 150,
+      "estimated_cost": 0.0001,
+      "latency_ms": 1397,
+      "error_code": null,
+      "created_at": "2026-11-25T15:36:30.035726+00:00"
+    },
+    {
+      "id": "42c070f8-abb1-40bb-b234-f441cebeb1e1",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "provider_name": "groq",
+      "model_name": "openai/gpt-oss-20b",
+      "request_status": "success",
+      "prompt_tokens": 294,
+      "completion_tokens": 150,
+      "estimated_cost": 0.0001,
+      "latency_ms": 1420,
+      "error_code": null,
+      "created_at": "2026-11-25T15:37:18.414606+00:00"
+    },
+    {
+      "id": "5f9aa584-c42d-463f-b28e-665de89c0e36",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "provider_name": "groq",
+      "model_name": "qwen/qwen3.8-27b",
+      "request_status": "success",
+      "prompt_tokens": 301,
+      "completion_tokens": 12,
+      "estimated_cost": 0.0001,
+      "latency_ms": 1605,
+      "error_code": null,
+      "created_at": "2026-11-25T15:38:27.911852+00:00"
+    },
+    {
+      "id": "571e7647-4889-40c2-8a72-40ad34039ed6",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "provider_name": "groq",
+      "model_name": "qwen/qwen3.8-27b",
+      "request_status": "success",
+      "prompt_tokens": 203,
+      "completion_tokens": 15,
+      "estimated_cost": 0.0001,
+      "latency_ms": 840,
+      "error_code": null,
+      "created_at": "2026-11-25T15:38:42.251843+00:00"
+    },
+    {
+      "id": "a87acb82-3e41-487b-a7d1-876319151a19",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "provider_name": "groq",
+      "model_name": "qwen/qwen3.8-27b",
+      "request_status": "success",
+      "prompt_tokens": 152,
+      "completion_tokens": 198,
+      "estimated_cost": 0.0001,
+      "latency_ms": 1275,
+      "error_code": null,
+      "created_at": "2026-11-25T16:09:12.550287+00:00"
+    }
+  ],
+  "reply_drafts": [
+    {
+      "id": "4a10a8af-7ce7-4475-8d27-dfd640f03694",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "conversation_id": "ada6e28c-4e0b-4a94-ae61-f2e6ee06b46c",
+      "source_message_id": null,
+      "draft_text": "Test draft",
+      "provider_name": "Groq",
+      "model_name": "openai/gpt-oss-20b",
+      "status": "pending",
+      "approved_at": null,
+      "sent_at": null,
+      "send_result": {},
+      "created_at": "2026-11-25T15:33:48.446099+00:00",
+      "updated_at": "2026-11-25T15:33:48.446099+00:00"
+    },
+    {
+      "id": "d91b0d30-05df-4003-961e-5399d2b8e233",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "conversation_id": "ada6e28c-4e0b-4a94-ae61-f2e6ee06b46c",
+      "source_message_id": "0fb70885-ef90-495b-acb9-f3b74c8200a5",
+      "draft_text": "",
+      "provider_name": "groq",
+      "model_name": "openai/gpt-oss-20b",
+      "status": "pending",
+      "approved_at": null,
+      "sent_at": null,
+      "send_result": {},
+      "created_at": "2026-11-25T15:36:30.289939+00:00",
+      "updated_at": "2026-11-25T15:36:30.289939+00:00"
+    },
+    {
+      "id": "4e181d46-09c0-4dff-9242-60e9187d7285",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "conversation_id": "ada6e28c-4e0b-4a94-ae61-f2e6ee06b46c",
+      "source_message_id": "b0e0e69c-ffd0-4aed-88b5-9d71a7b4a1f9",
+      "draft_text": "The user is asking \"File send pannalama da?\" multiple times. They want a response. According to rules: We should respond as Thoufikur Rahman, casual, friendly, short replies. The user wants to know if we can send a file. We should reply \"Sure, send it to me\" or \"Sure, send it\" in a casual way. Use \"bro\" maybe. Should be brief. We should not mention any commitments we don't know. So \"Sure bro, send it\" or \"Sure, send the file\" is okay. Use Tamil/Tanglish? The user is speaking in Tamil: \"File send pannalama da?\" Means \"Can you send file?\" We respond in English or Tamil",
+      "provider_name": "groq",
+      "model_name": "openai/gpt-oss-20b",
+      "status": "pending",
+      "approved_at": null,
+      "sent_at": null,
+      "send_result": {},
+      "created_at": "2026-11-25T15:37:18.711016+00:00",
+      "updated_at": "2026-11-25T15:37:18.711016+00:00"
+    },
+    {
+      "id": "d6e39ba4-ff7c-4aa6-bb67-46961008e937",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "conversation_id": "ada6e28c-4e0b-4a94-ae61-f2e6ee06b46c",
+      "source_message_id": "88ff15fd-9f08-44a3-aa6c-b5e1ef858db4",
+      "draft_text": "Send panni dichen, check pannu bro.",
+      "provider_name": "groq",
+      "model_name": "qwen/qwen3.8-27b",
+      "status": "pending",
+      "approved_at": null,
+      "sent_at": null,
+      "send_result": {},
+      "created_at": "2026-11-25T15:38:28.171782+00:00",
+      "updated_at": "2026-11-25T15:38:28.171782+00:00"
+    },
+    {
+      "id": "38eec2a7-a2cd-48f3-b5ea-54bdf1300a85",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "conversation_id": "90eb5c0d-ee06-4091-9f2a-acac0fd0d063",
+      "source_message_id": "89dad8d3-f96c-4a47-a858-93693cecc5ca",
+      "draft_text": "Just chilling for now, bro. Anything specific you had in mind?",
+      "provider_name": "groq",
+      "model_name": "qwen/qwen3.8-27b",
+      "status": "pending",
+      "approved_at": null,
+      "sent_at": null,
+      "send_result": {},
+      "created_at": "2026-11-25T15:38:42.554915+00:00",
+      "updated_at": "2026-11-25T15:38:42.554915+00:00"
+    }
+  ],
+  "activity_logs": [
+    {
+      "id": "bd8240a7-6ddf-4ca0-94d1-86c3355a8328",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "event_type": "reply_generated",
+      "description": "Generated draft reply for Rahul using groq (openai/gpt-oss-20b)",
+      "related_conversation_id": "ada6e28c-4e0b-4a94-ae61-f2e6ee06b46c",
+      "metadata": {
+        "model": "openai/gpt-oss-20b",
+        "provider": "groq"
+      },
+      "created_at": "2026-11-25T15:36:30.856128+00:00"
+    },
+    {
+      "id": "8a996a01-db33-4a80-84d1-5b21cfed7b2b",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "event_type": "reply_generated",
+      "description": "Generated draft reply for Rahul using groq (openai/gpt-oss-20b)",
+      "related_conversation_id": "ada6e28c-4e0b-4a94-ae61-f2e6ee06b46c",
+      "metadata": {
+        "model": "openai/gpt-oss-20b",
+        "provider": "groq"
+      },
+      "created_at": "2026-11-25T15:37:18.959085+00:00"
+    },
+    {
+      "id": "cf6418a2-b15a-4828-9f68-8ab685dab2b8",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "event_type": "reply_generated",
+      "description": "Generated draft reply for Rahul using groq (qwen/qwen3.8-27b)",
+      "related_conversation_id": "ada6e28c-4e0b-4a94-ae61-f2e6ee06b46c",
+      "metadata": {
+        "model": "qwen/qwen3.8-27b",
+        "provider": "groq"
+      },
+      "created_at": "2026-11-25T15:38:28.442557+00:00"
+    },
+    {
+      "id": "029d6ee8-a218-4334-9148-78d863ce0b02",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "event_type": "reply_generated",
+      "description": "Generated draft reply for Karthik using groq (qwen/qwen3.8-27b)",
+      "related_conversation_id": "90eb5c0d-ee06-4091-9f2a-acac0fd0d063",
+      "metadata": {
+        "model": "qwen/qwen3.8-27b",
+        "provider": "groq"
+      },
+      "created_at": "2026-11-25T15:38:42.821018+00:00"
+    },
+    {
+      "id": "431c4aa9-7202-4a28-9f70-a4513238f300",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "event_type": "security_block",
+      "description": "Blocked auto-generation for high-risk/sensitive message from Bank Alert",
+      "related_conversation_id": "681ec6e0-d068-402a-821e-1e1433f5a4c9",
+      "metadata": {},
+      "created_at": "2026-11-25T15:38:54.143356+00:00"
+    }
+  ],
+  "integration_events": [
+    {
+      "id": "3fb81d81-c130-4cf8-ab46-1ad33469a48c",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "source": "windows_simulator",
+      "external_event_id": null,
+      "event_type": "whatsapp_incoming_message",
+      "processing_status": "received",
+      "safe_metadata": {
+        "sender": "Rahul",
+        "preview": "File send pannalama da?"
+      },
+      "received_at": "2026-11-25T15:29:11.705273+00:00",
+      "processed_at": null
+    },
+    {
+      "id": "f24b473b-aabe-4bd6-9831-eeae2d14c0e9",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "source": "windows_simulator",
+      "external_event_id": null,
+      "event_type": "whatsapp_incoming_message",
+      "processing_status": "received",
+      "safe_metadata": {
+        "sender": "Rahul",
+        "preview": "File send pannalama da?"
+      },
+      "received_at": "2026-11-25T15:29:23.198299+00:00",
+      "processed_at": null
+    },
+    {
+      "id": "67215ab0-8d57-48df-8715-e30029abca79",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "source": "windows_simulator",
+      "external_event_id": null,
+      "event_type": "whatsapp_incoming_message",
+      "processing_status": "received",
+      "safe_metadata": {
+        "sender": "Rahul",
+        "preview": "File send pannalama da?"
+      },
+      "received_at": "2026-11-25T15:30:32.092059+00:00",
+      "processed_at": null
+    },
+    {
+      "id": "a309c04b-a5bf-486f-a836-67d99d53b6a6",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "source": "windows_simulator",
+      "external_event_id": null,
+      "event_type": "whatsapp_incoming_message",
+      "processing_status": "received",
+      "safe_metadata": {
+        "sender": "Rahul",
+        "preview": "File send pannalama da?"
+      },
+      "received_at": "2026-11-25T15:30:42.181076+00:00",
+      "processed_at": null
+    },
+    {
+      "id": "a54755ed-e702-493a-877a-bbcbf2086f0d",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "source": "windows_simulator",
+      "external_event_id": null,
+      "event_type": "whatsapp_incoming_message",
+      "processing_status": "received",
+      "safe_metadata": {
+        "sender": "Rahul",
+        "preview": "File send pannalama da?"
+      },
+      "received_at": "2026-11-25T15:32:21.341473+00:00",
+      "processed_at": null
+    },
+    {
+      "id": "074e3a25-9dd7-4387-a5c1-c925388d6a84",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "source": "windows_simulator",
+      "external_event_id": null,
+      "event_type": "whatsapp_incoming_message",
+      "processing_status": "received",
+      "safe_metadata": {
+        "sender": "Rahul",
+        "preview": "File send pannalama da?"
+      },
+      "received_at": "2026-11-25T15:32:31.038725+00:00",
+      "processed_at": null
+    },
+    {
+      "id": "82ecc295-1eb7-4414-a0c5-a583149aa64d",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "source": "windows_simulator",
+      "external_event_id": null,
+      "event_type": "whatsapp_incoming_message",
+      "processing_status": "received",
+      "safe_metadata": {
+        "sender": "Rahul",
+        "preview": "File send pannalama da?"
+      },
+      "received_at": "2026-11-25T15:34:17.553775+00:00",
+      "processed_at": null
+    },
+    {
+      "id": "ca4d85b2-248d-4406-ad28-cfac8cb69d8d",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "source": "windows_simulator",
+      "external_event_id": null,
+      "event_type": "whatsapp_incoming_message",
+      "processing_status": "received",
+      "safe_metadata": {
+        "sender": "Rahul",
+        "preview": "File send pannalama da?"
+      },
+      "received_at": "2026-11-25T15:34:29.160803+00:00",
+      "processed_at": null
+    },
+    {
+      "id": "bddcd989-8b5f-4b2f-bf42-fe54810bdd5f",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "source": "windows_simulator",
+      "external_event_id": null,
+      "event_type": "whatsapp_incoming_message",
+      "processing_status": "received",
+      "safe_metadata": {
+        "sender": "Rahul",
+        "preview": "File send pannalama da?"
+      },
+      "received_at": "2026-11-25T15:36:25.884406+00:00",
+      "processed_at": null
+    },
+    {
+      "id": "230d11e7-53ef-4436-b8e9-398c623cb515",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "source": "windows_simulator",
+      "external_event_id": null,
+      "event_type": "whatsapp_incoming_message",
+      "processing_status": "received",
+      "safe_metadata": {
+        "sender": "Rahul",
+        "preview": "File send pannalama da?"
+      },
+      "received_at": "2026-11-25T15:37:14.102498+00:00",
+      "processed_at": null
+    },
+    {
+      "id": "e1c046c5-33e3-4537-ab23-ee8fcf1dba99",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "source": "windows_simulator",
+      "external_event_id": null,
+      "event_type": "whatsapp_incoming_message",
+      "processing_status": "received",
+      "safe_metadata": {
+        "sender": "Rahul",
+        "preview": "File send pannalama da?"
+      },
+      "received_at": "2026-11-25T15:38:23.700384+00:00",
+      "processed_at": null
+    },
+    {
+      "id": "1213acf0-8401-4f4a-8194-09f6c58e6e28",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "source": "windows_simulator",
+      "external_event_id": null,
+      "event_type": "whatsapp_incoming_message",
+      "processing_status": "received",
+      "safe_metadata": {
+        "sender": "Karthik",
+        "preview": "Tomorrow plan?"
+      },
+      "received_at": "2026-11-25T15:38:38.253885+00:00",
+      "processed_at": null
+    },
+    {
+      "id": "4e28ec37-12ab-4781-bf0c-31ed3f4661d5",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "source": "windows_simulator",
+      "external_event_id": null,
+      "event_type": "whatsapp_incoming_message",
+      "processing_status": "received",
+      "safe_metadata": {
+        "sender": "Bank Alert",
+        "preview": "Your bank OTP is 492019"
+      },
+      "received_at": "2026-11-25T15:38:52.062832+00:00",
+      "processed_at": null
+    }
+  ],
+  "app_settings": [
+    {
+      "id": "c5f4bac9-e75d-442e-b95d-e4cd28a1c5d9",
+      "owner_id": "87f9f3d6-c0ac-493d-be13-36403ef5558f",
+      "settings": {
+        "theme": "Light",
+        "user_name": "Thoufikur Rahman",
+        "auto_reply": true,
+        "reply_delay_max": 5,
+        "reply_delay_min": 2,
+        "default_language": "Auto",
+        "notification_enabled": true
+      },
+      "created_at": "2026-11-25T15:35:55.954542+00:00",
+      "updated_at": "2026-11-25T15:35:55.954542+00:00"
+    }
+  ]
+}

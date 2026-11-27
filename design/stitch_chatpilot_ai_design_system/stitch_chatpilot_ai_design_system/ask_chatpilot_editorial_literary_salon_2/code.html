@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=JetBrains+Mono:wght@100..900&amp;family=Newsreader:wght@100..900&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
+@keyframes typesettingShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes inkDotPulse {
+  0%, 80%, 100% { opacity: 0.25; transform: scale(0.85); }
+  40% { opacity: 1; transform: scale(1.1); }
+}
+@keyframes cardFadeInUp {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-typesetting-shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(172, 52, 0, 0.08) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: typesettingShimmer 2.4s infinite linear;
+}
+.animate-ink-dot-1 { animation: inkDotPulse 1.4s infinite ease-in-out 0s; }
+.animate-ink-dot-2 { animation: inkDotPulse 1.4s infinite ease-in-out 0.2s; }
+.animate-ink-dot-3 { animation: inkDotPulse 1.4s infinite ease-in-out 0.4s; }
+.animate-card-enter { animation: cardFadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .animate-typesetting-shimmer,
+  .animate-ink-dot-1,
+  .animate-ink-dot-2,
+  .animate-ink-dot-3,
+  .animate-card-enter,
+  .animate-pulse,
+  .animate-ping {
+    animation: none !important;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
+</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-secondary":"#ffffff","on-primary-container":"#81838e","inverse-surface":"#30312f","on-surface":"#1b1c1a","tertiary-fixed":"#dce1ff","outline-variant":"#c6c6cb","on-primary":"#ffffff","on-primary-fixed":"#181b24","inverse-primary":"#c4c6d1","surface-container":"#efeeeb","surface-container-low":"#f5f3f0","on-secondary-fixed-variant":"#832600","on-background":"#1b1c1a","primary-fixed-dim":"#c4c6d1","on-tertiary-container":"#547aff","error":"#ba1a1a","on-secondary-container":"#5d1900","tertiary":"#000000","surface-variant":"#e4e2df","secondary-fixed-dim":"#ffb59d","surface-container-lowest":"#ffffff","surface":"#fbf9f6","surface-container-highest":"#e4e2df","error-container":"#ffdad6","primary-container":"#181b24","surface-container-high":"#eae8e5","on-primary-fixed-variant":"#444650","on-tertiary-fixed-variant":"#0039b5","background":"#fbf9f6","on-error":"#ffffff","inverse-on-surface":"#f2f0ed","tertiary-container":"#001551","on-tertiary-fixed":"#001551","surface-bright":"#fbf9f6","primary-fixed":"#e0e2ed","primary":"#000000","tertiary-fixed-dim":"#b7c4ff","secondary-container":"#fd6b36","outline":"#76777c","on-error-container":"#93000a","on-secondary-fixed":"#390c00","secondary-fixed":"#ffdbd0","secondary":"#ac3400","surface-dim":"#dbdad7","on-surface-variant":"#46464b","surface-tint":"#5b5e68","on-tertiary":"#ffffff"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"margin-mobile":"1rem","space-xl":"2.5rem","space-sm":"0.5rem","space-md":"1rem","space-lg":"1.5rem","gutter":"1.25rem","margin":"2.5rem","gutter-mobile":"0.75rem","space-xs":"0.25rem"},"fontFamily":{"label-md":["JetBrains Mono"],"label-sm":["JetBrains Mono"],"label-lg":["Geist"],"headline-md":["Newsreader"],"headline-lg-mobile":["Newsreader"],"body-lg":["Newsreader"],"body-sm":["Geist"],"display-lg-mobile":["Newsreader"],"headline-lg":["Newsreader"],"display-lg":["Newsreader"],"data-mono":["JetBrains Mono"],"body-md":["Geist"],"headline-sm":["Newsreader"]},"fontSize":{"label-md":["11px",{"lineHeight":"16px","letterSpacing":"0.04em","fontWeight":"500"}],"label-sm":["10px",{"lineHeight":"14px","letterSpacing":"0.06em","fontWeight":"500"}],"label-lg":["13px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"600"}],"headline-md":["26px",{"lineHeight":"32px","letterSpacing":"0em","fontWeight":"600"}],"headline-lg-mobile":["28px",{"lineHeight":"34px","letterSpacing":"-0.01em","fontWeight":"500"}],"body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"display-lg-mobile":["38px",{"lineHeight":"44px","letterSpacing":"-0.015em","fontWeight":"400"}],"headline-lg":["36px",{"lineHeight":"44px","letterSpacing":"-0.01em","fontWeight":"500"}],"display-lg":["56px",{"lineHeight":"64px","letterSpacing":"-0.02em","fontWeight":"400"}],"data-mono":["13px",{"lineHeight":"18px","letterSpacing":"-0.01em","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"headline-sm":["20px",{"lineHeight":"26px","letterSpacing":"0em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed"><aside class="fixed left-0 top-0 h-full w-[260px] bg-surface-container-low z-50 flex flex-col justify-between border-r border-outline-variant/60 shadow-[0_2px_16px_rgba(20,23,31,0.04)]"><div class="flex flex-col flex-1 min-h-0"><div class="p-space-md border-b border-outline-variant/60 bg-surface-container"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-sm text-label-sm text-secondary uppercase font-bold tracking-widest">CHATPILOT // AI DISPATCH</span><span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full border border-outline-variant/70 bg-surface-container-lowest text-on-surface-variant shadow-xs">SYS.01</span></div><h1 class="font-headline-sm text-headline-sm text-primary tracking-tight font-serif">Gazette &amp; Terminal</h1><div class="mt-space-xs pt-space-xs border-t border-outline-variant/40 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><span>VOL. IXVIII</span><span>EDITION #421</span></div></div><nav class="flex-1 overflow-y-auto px-space-sm py-space-md space-y-1" data-active-classes="bg-primary text-on-primary font-semibold"><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="overview" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">newspaper</span><span>Overview</span></div><span class="font-data-mono text-label-sm opacity-60">01</span></a><a aria-current="page" class="group flex items-center justify-between px-space-sm py-2 rounded-xl transition-all duration-200 uppercase bg-primary text-on-primary font-semibold shadow-[0_2px_8px_rgba(20,23,31,0.12)]" data-path="ask-chatpilot" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">terminal</span><span>Ask ChatPilot</span></div><span class="font-data-mono text-label-sm opacity-60">02</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="reply-inbox" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">mark_email_unread</span><span>Reply Inbox</span></div><span class="px-2 py-0.5 bg-secondary text-on-secondary font-label-sm text-label-sm font-bold rounded-full shadow-xs">2</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="contacts" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">contacts</span><span>Contacts</span></div><span class="font-data-mono text-label-sm opacity-60">04</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="groups" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">hub</span><span>Groups</span></div><span class="font-data-mono text-label-sm opacity-60">05</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="memory" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">history_edu</span><span>Memory</span></div><span class="font-data-mono text-label-sm opacity-60">06</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="ai-providers" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">schema</span><span>AI Providers</span></div><span class="font-data-mono text-label-sm opacity-60">07</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="activity-log" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">receipt_long</span><span>Activity Log</span></div><span class="font-data-mono text-label-sm opacity-60">08</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="dataset-audit" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">fact_check</span><span>Dataset Audit</span></div><span class="font-data-mono text-label-sm opacity-60">09</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="settings" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">settings_input_component</span><span>Settings</span></div><span class="font-data-mono text-label-sm opacity-60">10</span></a></nav></div><div class="p-space-md border-t border-outline-variant/60 bg-surface-container-low"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Local Bridge</span><span class="inline-flex items-center gap-1.5 font-label-sm text-label-sm px-2.5 py-0.5 rounded-full border border-outline-variant/70 bg-surface-container-lowest text-on-surface shadow-xs"><span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>CONNECTED</span></div><div class="pt-space-xs flex items-center gap-space-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-xs"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="min-w-0 flex-1"><p class="font-label-lg text-label-lg text-on-surface truncate">Thoufikur Rahman</p><p class="font-label-sm text-label-sm text-on-surface-variant truncate font-data-mono">DISPATCH CHIEF</p></div></div></div></aside><div class="pl-[260px]"><header class="fixed top-0 left-[260px] right-0 h-16 bg-surface/90 backdrop-blur-md border-b border-outline-variant/60 z-40 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm text-on-surface font-label-md text-label-md"><span class="w-7 h-7 rounded-xl bg-surface-container-high/80 border border-outline-variant/40 flex items-center justify-center text-on-surface-variant"><span class="material-symbols-outlined text-[15px]">calendar_today</span></span><span class="uppercase tracking-wider font-semibold">EDITION: OCT 24, 2024 // 08:30 GMT</span></div><div class="h-4 w-px bg-outline-variant/60"></div><div class="flex items-center gap-2 font-label-md text-label-md text-on-surface"><span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span><span class="font-data-mono tracking-tight">OPERATIONAL 99.8%</span></div><div class="h-4 w-px bg-outline-variant/60"></div><div class="flex items-center gap-2 font-label-md text-label-md"><span class="text-on-surface-variant uppercase font-medium">Global Auto-Reply:</span><span class="px-2.5 py-0.5 rounded-full bg-surface-container-high border border-outline-variant/80 font-data-mono font-bold text-on-surface">ARMED // LIVE</span></div></div><div class="flex items-center gap-space-md"><button class="px-3.5 py-1.5 rounded-xl border border-outline-variant/80 bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container-high hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-1.5 shadow-[0_2px_6px_rgba(20,23,31,0.05)]" type="button"><span class="material-symbols-outlined text-[16px]">upload_file</span><span>Import Corpus</span></button><button class="px-3.5 py-1.5 rounded-xl bg-primary border border-primary text-on-primary font-label-md text-label-md hover:bg-primary-container hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-1.5 shadow-[0_2px_8px_rgba(20,23,31,0.16)]" type="button"><span class="material-symbols-outlined text-[16px]">send</span><span>Simulate Dispatch</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-xs"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="relative pt-16 min-h-screen bg-surface w-full px-8"><div class="flex flex-col w-full pb-10">
+<div class="grid grid-cols-12 gap-gutter w-full pt-4">
+<!-- LEFT DOSSIER & MANUSCRIPT SESSIONS DRAWER -->
+<aside class="col-span-12 xl:col-span-3 flex flex-col space-y-space-md">
+<!-- Panel Header & Action -->
+<div class="bg-surface-container-low p-space-md rounded-2xl border border-outline-variant/50 shadow-[0_2px_12px_rgba(20,23,31,0.04)] flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-bold">DISPATCH DOSSIERS</span>
+</div>
+<span class="font-data-mono text-label-sm text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full border border-outline-variant/40">ARCHIVE</span>
+</div>
+<button class="w-full py-2.5 px-space-sm bg-primary text-on-primary rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-primary-container hover:-translate-y-0.5 transition-all duration-200 shadow-[0_2px_8px_rgba(20,23,31,0.14)] active:translate-y-0" type="button">
+<span class="material-symbols-outlined text-[16px]">edit_note</span>
+<span>+ New Inquest</span>
+</button>
+<!-- Search with book serif style placeholder -->
+<div class="relative mt-space-xs">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-[16px] text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-lowest text-on-surface font-headline-sm text-body-sm pl-9 pr-3 py-2 rounded-xl border border-outline-variant/50 placeholder:text-on-surface-variant/60 focus:outline-none focus:border-secondary/60 focus:bg-surface-container-lowest transition-all" placeholder="Search transcribed folios (⌘K)..." type="text"/>
+</div>
+</div>
+<!-- Session List in Ruled Book Entries -->
+<div class="bg-surface-container-low p-space-sm rounded-2xl border border-outline-variant/50 shadow-[0_2px_12px_rgba(20,23,31,0.04)] flex flex-col gap-2">
+<div class="px-space-xs py-1 flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">ACTIVE INQUESTS</span>
+<span class="font-data-mono text-label-sm">3 ENTRIES</span>
+</div>
+<!-- Folio I: Active -->
+<div class="relative bg-surface-container-lowest p-space-md rounded-xl border border-secondary/30 shadow-[0_3px_12px_rgba(172,52,0,0.06)] hover:shadow-[0_6px_18px_rgba(20,23,31,0.08)] hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group">
+<div class="absolute left-0 top-2 bottom-2 w-1 bg-secondary rounded-r-full"></div>
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-label-sm text-secondary font-bold uppercase tracking-wider flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+              Folio I • Current
+            </span>
+<span class="font-data-mono text-label-sm text-on-surface-variant">08:24 GMT</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-secondary transition-colors font-serif leading-snug">
+            Inquiry into Parveen's Evening Schedule
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 line-clamp-2">
+            Analysis of WhatsApp discourse tone, family honorific adherence ("maa"), and proposed Tanglish dispatch.
+          </p>
+<div class="mt-2.5 pt-2 border-t border-outline-variant/30 flex items-center justify-between text-on-surface-variant font-data-mono text-label-sm">
+<span class="bg-secondary/10 text-secondary border border-secondary/20 px-2 py-0.5 rounded-full text-[10px] font-semibold">REPLY-STAGED</span>
+<span>12 MSGS EXAMINED</span>
+</div>
+</div>
+<!-- Folio II -->
+<div class="bg-surface-container/70 p-space-md rounded-xl border border-outline-variant/40 hover:bg-surface-container-lowest hover:shadow-[0_4px_14px_rgba(20,23,31,0.06)] hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Folio II</span>
+<span class="font-data-mono text-label-sm text-on-surface-variant">YESTERDAY</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors font-serif leading-snug">
+            Weekly Tanglish Tone Divergence Audit
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 line-clamp-1">
+            Lexical drift across 4 private groups and corporate telegram dispatch.
+          </p>
+<div class="mt-2.5 flex items-center gap-2 text-on-surface-variant font-data-mono text-label-sm">
+<span class="bg-surface-container-high px-2 py-0.5 rounded-full border border-outline-variant/40 text-[10px]">AUDITED</span>
+<span>42 KV TRANSCRIPTS</span>
+</div>
+</div>
+<!-- Folio III -->
+<div class="bg-surface-container/70 p-space-md rounded-xl border border-outline-variant/40 hover:bg-surface-container-lowest hover:shadow-[0_4px_14px_rgba(20,23,31,0.06)] hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Folio III</span>
+<span class="font-data-mono text-label-sm text-on-surface-variant">22 OCT</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors font-serif leading-snug">
+            Project Milestone Deliverables &amp; ETA
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 line-clamp-1">
+            Synthesis of product roadmap and automated milestone reminders.
+          </p>
+<div class="mt-2.5 flex items-center gap-2 text-on-surface-variant font-data-mono text-label-sm">
+<span class="bg-surface-container-high px-2 py-0.5 rounded-full border border-outline-variant/40 text-[10px]">ARCHIVED</span>
+<span>8 ACTION ITEMS</span>
+</div>
+</div>
+</div>
+<!-- Private Study Atmospheric Illustration -->
+<div class="bg-surface-container-low p-space-md rounded-2xl border border-outline-variant/50 shadow-[0_2px_12px_rgba(20,23,31,0.04)] flex flex-col gap-2.5 relative overflow-hidden">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">CHAMBER TELEMETRY</span>
+<span class="w-7 h-7 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center"><span class="material-symbols-outlined text-[15px] text-secondary">history_edu</span></span>
+</div>
+<div class="w-full h-28 rounded-xl bg-cover bg-center border border-outline-variant/40 shadow-inner" data-alt="An atmospheric still life of a Victorian oak writing desk with antique brass fountain pens, open vellum manuscript folios with handwritten calligraphy, an inkwell, warm lamplight casting dramatic shadows, and leather-bound books in an executive literary study." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCvmDhi1wpnrUSG0cEc4cLKBE3XPAENQ5C4edO-pjJMOkeKGoTvbhhPV5M_Vxm0FXuuLba5YBqbZ72A1ox-PIhOzLs2YQCVI3rAD2sBciqaMoWxCZ-A1wCAGO-9DhLVpWPuSVvxz74zqXwO_WsHfd1Jgxc_XH-MkzZuN-KgD1eeMUIs7C-Eqt-ulue6rRWxB2dUZM9KwmtdJ2bae6FwFMID3mgMEEn7X809RRYrCsw')"></div>
+<div class="flex items-center justify-between text-on-surface-variant font-data-mono text-label-sm pt-1">
+<span>PARCHMENT REEL #884</span>
+<span class="text-secondary font-bold">INK CALIBRATED</span>
+</div>
+</div>
+<!-- Stamped Notice -->
+<div class="p-space-md bg-surface-container-high rounded-2xl border border-outline-variant/50 shadow-[0_2px_10px_rgba(20,23,31,0.03)] flex flex-col gap-1.5">
+<div class="flex items-center gap-2 text-secondary">
+<span class="w-6 h-6 rounded-lg bg-secondary/10 border border-secondary/20 flex items-center justify-center"><span class="material-symbols-outlined text-[14px]">verified_user</span></span>
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider">CONFIDENTIAL WORKBENCH</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+          Inquests conducted within this chamber are never broadcast to remote contacts without manual clearance stamps. All memory queries resolve via private enclave storage.
+        </p>
+</div>
+</aside>
+<!-- MAIN CONVERSATIONAL READING ROOM -->
+<section class="col-span-12 xl:col-span-9 flex flex-col space-y-space-md">
+<!-- Masthead & Executive Metadata Ribbon -->
+<div class="bg-surface-container-low p-space-md rounded-2xl border border-outline-variant/50 shadow-[0_2px_12px_rgba(20,23,31,0.04)] flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-secondary uppercase font-bold tracking-widest">DISPATCH CORE // SALON EXECUTOR</span>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-highest border border-outline-variant/50 text-on-surface-variant font-data-mono text-label-sm">LATENCY: 42ms</span>
+</div>
+<h2 class="font-headline-lg text-headline-md lg:text-headline-lg font-serif text-on-surface tracking-tight mt-0.5">
+            Literary Salon &amp; Co-Pilot
+          </h2>
+</div>
+<div class="flex items-center gap-2 flex-wrap">
+<!-- Active model badge -->
+<div class="px-3.5 py-1.5 rounded-xl bg-surface-container-lowest border border-outline-variant/50 shadow-[0_2px_8px_rgba(20,23,31,0.04)] flex items-center gap-2.5">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">SYNTHETIC REASONER</span>
+<span class="font-label-md text-label-md font-bold text-on-surface">Groq Qwen-27B &amp; Gemini 2.5 Active</span>
+</div>
+</div>
+<button class="p-2.5 rounded-xl bg-surface-container border border-outline-variant/50 hover:bg-surface-container-high hover:-translate-y-0.5 transition-all duration-200 text-on-surface-variant" title="Executive Inquest Configuration" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</button>
+</div>
+</div>
+<!-- Attached Dossier Context Ribbon -->
+<div class="bg-surface-container-high px-space-md py-2.5 rounded-2xl border border-outline-variant/50 flex items-center justify-between flex-wrap gap-2 text-on-surface shadow-[0_2px_10px_rgba(20,23,31,0.03)]">
+<div class="flex items-center gap-space-sm">
+<span class="w-7 h-7 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center text-secondary"><span class="material-symbols-outlined text-[16px]">folder_shared</span></span>
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md font-bold uppercase tracking-wider">ATTACHED DOSSIER:</span>
+<span class="font-headline-sm text-body-md font-serif font-bold text-on-surface">Parveen</span>
+<span class="font-data-mono text-label-sm text-on-surface-variant">(+91 97901 71303)</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-container-lowest border border-outline-variant/40 font-label-sm text-label-sm text-on-surface-variant font-data-mono">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+            Memory Vault Synced
+          </span>
+<span class="text-on-surface-variant/40">•</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Relationship: Sister</span>
+</div>
+</div>
+<!-- Reading Canvas / Inquest Log -->
+<div class="bg-surface-container-lowest p-space-lg rounded-2xl border border-outline-variant/50 shadow-[0_4px_20px_rgba(20,23,31,0.04)] space-y-space-xl min-h-[480px]">
+<!-- User Query (Right-aligned, tailored ivory card with dark serif ink) -->
+<div class="flex flex-col items-end w-full pl-6 md:pl-24 animate-card-enter">
+<div class="flex items-center gap-2 mb-1.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-mono tracking-wider">DISPATCH CHIEF // THOUFIKUR</span>
+<span class="font-data-mono text-label-sm text-on-surface-variant">08:24:12 GMT</span>
+</div>
+<div class="bg-surface-container-low p-space-md md:p-space-lg rounded-2xl border border-outline-variant/50 shadow-[0_2px_12px_rgba(20,23,31,0.04)] hover:shadow-[0_6px_18px_rgba(20,23,31,0.06)] transition-all duration-200 text-right max-w-2xl">
+<p class="font-headline-sm text-headline-sm text-on-surface font-serif leading-relaxed italic text-left">
+              "Could you summarize Parveen's tone in her latest WhatsApp messages and propose a suitable Tanglish holding draft that adheres to our family honorific rule?"
+            </p>
+<div class="mt-space-sm pt-space-xs border-t border-outline-variant/30 flex items-center justify-end gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">done_all</span>
+<span>VERIFIED INTENT • 1.4 SEC REASONING</span>
+</div>
+</div>
+</div>
+<!-- Assistant Response (Left-aligned, book layout, drop initial cap, quotation blockquote, footnotes) -->
+<div class="flex flex-col items-start w-full pr-4 md:pr-16 space-y-space-md animate-card-enter">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-xl bg-primary flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-on-primary text-[14px]">auto_stories</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-bold uppercase tracking-wider">CHATPILOT EXECUTOR // LITERARY APPRAISAL</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container border border-outline-variant/50 text-on-surface-variant font-data-mono text-label-sm">FOLIO REF #742</span>
+</div>
+<!-- Editorial Article Body -->
+<div class="bg-surface p-space-lg rounded-2xl border border-outline-variant/50 shadow-[0_2px_14px_rgba(20,23,31,0.04)] w-full space-y-space-md">
+<!-- Section Header -->
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-bold">TONE &amp; INTENT APPRAISAL</span>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-low border border-outline-variant/40 font-data-mono text-label-sm text-on-surface-variant">CONFIDENCE 0.98</span>
+</div>
+<!-- Dropped Initial Cap & Prose -->
+<div class="text-on-surface font-body-lg text-body-lg leading-relaxed">
+<p class="relative">
+<span class="float-left text-5xl font-headline-lg font-serif leading-none pr-3 pt-1 text-primary">P</span>
+                arveen's transmission carries an affectionate familial inquiry regarding your evening arrival timing. The cadences exhibit standard Chennai informal Tanglish mixed with high familiarity, punctuated by reassurance regarding her concluded commitments.
+              </p>
+</div>
+<!-- Blockquote with Hairline Left Rule -->
+<div class="bg-surface-container-low p-space-md rounded-2xl border border-outline-variant/40 relative my-space-md pl-space-lg shadow-xs">
+<div class="absolute left-0 top-3 bottom-3 w-1 bg-secondary rounded-r-full"></div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block mb-1">
+                ORIGINAL INBOUND DISPATCH (WHATSAPP // 08:18 GMT)
+              </span>
+<blockquote class="font-headline-md text-headline-sm font-serif text-on-surface italic leading-snug">
+                “Konjam busy ah irukan da. Meeting mudichitu 6 PM-ku call pandren, sariya? ❤️”
+              </blockquote>
+<div class="mt-2 flex items-center gap-3 text-on-surface-variant font-data-mono text-label-sm">
+<span>INTENT: DELAYED CALL SYNC</span>
+<span>•</span>
+<span>AFFINITY: HIGH (EMOTIVE TOKEN)</span>
+</div>
+</div>
+<!-- Proposed Tanglish Holding Draft -->
+<div class="bg-surface-container p-space-md rounded-2xl border border-outline-variant/50 space-y-2">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">PROPOSED EXECUTIVE TANGLISH DRAFT</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-lowest border border-outline-variant/40 font-label-sm text-label-sm text-on-surface-variant">ENFORCING "MAA" RULE</span>
+</div>
+<div class="p-space-sm bg-surface-container-lowest rounded-xl border border-outline-variant/40 shadow-inner">
+<p class="font-headline-sm text-headline-sm text-on-surface font-serif">
+                  "Sari maa, no worries. Mudichitu call pannu. Nan work la irukan. Take care."
+                </p>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant italic">
+                Translation nuance: Acknowledges her meeting without pressure, reinforces affection with "maa", and confirms your operational availability at 18:00.
+              </p>
+</div>
+<!-- Analysis Metadata Table (Parchment Grid) -->
+<div class="pt-space-xs">
+<div class="text-label-sm font-label-sm uppercase tracking-wider text-on-surface-variant mb-2 font-bold">
+                TRANSCRIPTION &amp; SAFETY MATRIX
+              </div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+<div class="bg-surface-container-low p-3 rounded-xl border border-outline-variant/40 hover:border-outline-variant transition-colors">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">CADENCE &amp; LENGTH</span>
+<span class="font-data-mono text-label-md font-bold text-on-surface mt-0.5 block">Casual (12 words)</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Optimal mobile punch</span>
+</div>
+<div class="bg-surface-container-low p-3 rounded-xl border border-outline-variant/40 hover:border-secondary/40 transition-colors">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">HONORIFIC ADHERENCE</span>
+<span class="font-data-mono text-label-md font-bold text-secondary mt-0.5 block">100% Match ("maa")</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Family lexicon safe</span>
+</div>
+<div class="bg-surface-container-low p-3 rounded-xl border border-outline-variant/40 hover:border-outline-variant transition-colors">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">PII &amp; SENTIMENT CHECK</span>
+<span class="font-data-mono text-label-md font-bold text-on-surface mt-0.5 block">Verified Clean</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Zero leak risk</span>
+</div>
+</div>
+</div>
+<!-- Interactive Action Bar -->
+<div class="pt-space-sm flex items-center justify-between flex-wrap gap-space-sm">
+<div class="flex items-center gap-2 flex-wrap">
+<button class="px-4 py-2 bg-primary text-on-primary rounded-xl font-label-md text-label-md hover:bg-primary-container hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-1.5 shadow-[0_2px_8px_rgba(20,23,31,0.16)] active:translate-y-0" type="button">
+<span class="material-symbols-outlined text-[16px] text-secondary">send</span>
+<span>Insert into WhatsApp Outbox</span>
+</button>
+<button class="px-3.5 py-2 bg-surface-container text-on-surface rounded-xl border border-outline-variant/50 font-label-md text-label-md hover:bg-surface-container-high hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+<span>Copy Transcript</span>
+</button>
+<button class="px-3.5 py-2 bg-surface-container text-on-surface rounded-xl border border-outline-variant/50 font-label-md text-label-md hover:bg-surface-container-high hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>Refine Cadence</span>
+</button>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant font-data-mono text-label-sm">
+<button class="p-1.5 rounded-xl hover:bg-surface-container hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[16px]">thumb_up</span></button>
+<button class="p-1.5 rounded-xl hover:bg-surface-container hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[16px]">thumb_down</span></button>
+<button class="p-1.5 rounded-xl hover:bg-surface-container hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[16px]">share</span></button>
+</div>
+</div>
+<!-- Footnote Stamp -->
+<div class="pt-2 border-t border-outline-variant/30 text-on-surface-variant/80 font-data-mono text-label-sm flex items-center justify-between flex-wrap gap-2">
+<span>[1] Evaluated against 42 historical dialog exchanges with Contact #PAR-019.</span>
+<span>TOKEN CONSUMPTION: 384 IN / 192 OUT</span>
+</div>
+</div>
+</div>
+<!-- Bespoke Mechanical Typesetting Thinking State -->
+<div class="w-full flex justify-center py-space-sm">
+<div class="bg-surface-container px-space-md py-2.5 rounded-full border border-outline-variant/60 shadow-[0_2px_10px_rgba(20,23,31,0.05)] animate-typesetting-shimmer flex items-center gap-3">
+<span class="w-6 h-6 rounded-full bg-secondary/10 border border-secondary/20 flex items-center justify-center"><span class="material-symbols-outlined text-[14px] text-secondary animate-pulse">ink_pen</span></span>
+<div class="flex items-center gap-2 font-data-mono text-label-md text-on-surface">
+<span class="font-bold uppercase tracking-wider text-secondary">TYPESETTING CONTEXTUAL ANALYSIS</span>
+<span class="inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-secondary rounded-full animate-ink-dot-1"></span>
+<span class="w-1.5 h-1.5 bg-on-surface rounded-full animate-ink-dot-2"></span>
+<span class="w-1.5 h-1.5 bg-on-surface rounded-full animate-ink-dot-3"></span>
+</span>
+<span class="text-on-surface-variant text-label-sm">[INK SETTLING / 740ms]</span>
+</div>
+<span class="w-1.5 h-4 bg-primary rounded-full inline-block animate-pulse"></span>
+</div>
+</div>
+</div>
+<!-- BOTTOM FLOATING EDITORIAL COMPOSER -->
+<div class="bg-surface-container-low p-space-md rounded-2xl border border-outline-variant/50 shadow-[0_4px_20px_rgba(20,23,31,0.06)] space-y-space-sm">
+<!-- Active Context Chips -->
+<div class="flex items-center justify-between flex-wrap gap-2">
+<div class="flex items-center gap-2 flex-wrap">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest border border-outline-variant/50 shadow-xs text-on-surface font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-semibold font-serif">Parveen (Active Thread)</span>
+<button class="text-on-surface-variant hover:text-secondary ml-1 transition-colors" type="button">×</button>
+</div>
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest border border-outline-variant/50 shadow-xs text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[12px] text-secondary">verified</span>
+<span class="font-serif">Honorifics Enforced ("maa")</span>
+</div>
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container border border-outline-variant/40 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[12px]">lock</span>
+<span>Enclave Isolated</span>
+</div>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-data-mono text-label-sm">
+<span>PRESS ⌘⏎ TO DISPATCH</span>
+</div>
+</div>
+<!-- Input Area / Parchment Canvas -->
+<div class="relative bg-surface-container-lowest p-space-sm rounded-xl border border-outline-variant/50 shadow-inner focus-within:border-secondary/60 transition-colors">
+<textarea class="w-full bg-transparent text-on-surface font-body-lg text-body-md placeholder:font-serif placeholder:italic placeholder:text-on-surface-variant/60 focus:outline-none resize-none p-space-xs" placeholder="Dictate or type instructions for ChatPilot dispatch (e.g. 'Draft a polite delay notice in Tanglish', 'Extract scheduled venues')..." rows="3"></textarea>
+<div class="flex items-center justify-between pt-space-xs">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<button class="p-2 rounded-xl bg-surface-container/60 hover:bg-surface-container-high border border-transparent hover:border-outline-variant/40 transition-all" title="Attach Document Manuscript" type="button">
+<span class="material-symbols-outlined text-[18px]">attachment</span>
+</button>
+<button class="p-2 rounded-xl bg-secondary/10 hover:bg-secondary/15 border border-secondary/20 transition-all" title="Fountain Pen Calligraphy Mode" type="button">
+<span class="material-symbols-outlined text-[18px] text-secondary">history_edu</span>
+</button>
+<button class="p-2 rounded-xl bg-surface-container/60 hover:bg-surface-container-high border border-transparent hover:border-outline-variant/40 transition-all" title="Dictate via Spoken Reel" type="button">
+<span class="material-symbols-outlined text-[18px]">mic</span>
+</button>
+<div class="h-4 w-px bg-outline-variant/60 mx-1"></div>
+<span class="font-label-sm text-label-sm font-data-mono">MODEL: GROQ-27B-FAST</span>
+</div>
+<button class="px-4 py-2 bg-secondary text-on-secondary rounded-xl font-label-md text-label-md hover:bg-on-secondary-container hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-2 shadow-[0_2px_10px_rgba(172,52,0,0.25)] active:translate-y-0" type="button">
+<span class="material-symbols-outlined text-[16px]">ink_pen</span>
+<span>Transcribe &amp; Execute (⏎)</span>
+</button>
+</div>
+</div>
+<!-- Mechanical Reel Status Ticker -->
+<div class="flex items-center justify-between text-on-surface-variant font-data-mono text-label-sm px-1">
+<span class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+            DISPATCH ENGINE READY • STREAM BUFFER: 0% OVERHEAD
+          </span>
+<span>EST. EXECUTION: ~180MS</span>
+</div>
+</div>
+</section>
+</div>
+</div></main></div></body></html>

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=JetBrains+Mono:wght@100..900&amp;family=Newsreader:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes pulseRing {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(172, 52, 0, 0.55);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(172, 52, 0, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(172, 52, 0, 0);
+  }
+}
+@keyframes inkShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.animate-delay-1 { animation-delay: 0.05s; }
+.animate-delay-2 { animation-delay: 0.1s; }
+.animate-delay-3 { animation-delay: 0.15s; }
+.animate-delay-4 { animation-delay: 0.2s; }
+.animate-pulse-ring {
+  animation: pulseRing 2.2s infinite;
+}
+.animate-ink-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.animate-ink-shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  animation: inkShimmer 2.4s infinite linear;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-pulse-ring,
+  .animate-ink-shimmer::after {
+    animation: none !important;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
+</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-secondary":"#ffffff","on-primary-container":"#81838e","inverse-surface":"#30312f","on-surface":"#1b1c1a","tertiary-fixed":"#dce1ff","outline-variant":"#c6c6cb","on-primary":"#ffffff","on-primary-fixed":"#181b24","inverse-primary":"#c4c6d1","surface-container":"#efeeeb","surface-container-low":"#f5f3f0","on-secondary-fixed-variant":"#832600","on-background":"#1b1c1a","primary-fixed-dim":"#c4c6d1","on-tertiary-container":"#547aff","error":"#ba1a1a","on-secondary-container":"#5d1900","tertiary":"#000000","surface-variant":"#e4e2df","secondary-fixed-dim":"#ffb59d","surface-container-lowest":"#ffffff","surface":"#fbf9f6","surface-container-highest":"#e4e2df","error-container":"#ffdad6","primary-container":"#181b24","surface-container-high":"#eae8e5","on-primary-fixed-variant":"#444650","on-tertiary-fixed-variant":"#0039b5","background":"#fbf9f6","on-error":"#ffffff","inverse-on-surface":"#f2f0ed","tertiary-container":"#001551","on-tertiary-fixed":"#001551","surface-bright":"#fbf9f6","primary-fixed":"#e0e2ed","primary":"#000000","tertiary-fixed-dim":"#b7c4ff","secondary-container":"#fd6b36","outline":"#76777c","on-error-container":"#93000a","on-secondary-fixed":"#390c00","secondary-fixed":"#ffdbd0","secondary":"#ac3400","surface-dim":"#dbdad7","on-surface-variant":"#46464b","surface-tint":"#5b5e68","on-tertiary":"#ffffff"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"margin-mobile":"1rem","space-xl":"2.5rem","space-sm":"0.5rem","space-md":"1rem","space-lg":"1.5rem","gutter":"1.25rem","margin":"2.5rem","gutter-mobile":"0.75rem","space-xs":"0.25rem"},"fontFamily":{"label-md":["JetBrains Mono"],"label-sm":["JetBrains Mono"],"label-lg":["Geist"],"headline-md":["Newsreader"],"headline-lg-mobile":["Newsreader"],"body-lg":["Newsreader"],"body-sm":["Geist"],"display-lg-mobile":["Newsreader"],"headline-lg":["Newsreader"],"display-lg":["Newsreader"],"data-mono":["JetBrains Mono"],"body-md":["Geist"],"headline-sm":["Newsreader"]},"fontSize":{"label-md":["11px",{"lineHeight":"16px","letterSpacing":"0.04em","fontWeight":"500"}],"label-sm":["10px",{"lineHeight":"14px","letterSpacing":"0.06em","fontWeight":"500"}],"label-lg":["13px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"600"}],"headline-md":["26px",{"lineHeight":"32px","letterSpacing":"0em","fontWeight":"600"}],"headline-lg-mobile":["28px",{"lineHeight":"34px","letterSpacing":"-0.01em","fontWeight":"500"}],"body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"display-lg-mobile":["38px",{"lineHeight":"44px","letterSpacing":"-0.015em","fontWeight":"400"}],"headline-lg":["36px",{"lineHeight":"44px","letterSpacing":"-0.01em","fontWeight":"500"}],"display-lg":["56px",{"lineHeight":"64px","letterSpacing":"-0.02em","fontWeight":"400"}],"data-mono":["13px",{"lineHeight":"18px","letterSpacing":"-0.01em","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"headline-sm":["20px",{"lineHeight":"26px","letterSpacing":"0em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed"><aside class="fixed left-0 top-0 h-full w-[260px] bg-surface-container-low z-50 flex flex-col justify-between border-r border-outline-variant/60 shadow-[0_1px_12px_rgba(20,23,31,0.04)]"><div class="flex flex-col flex-1 min-h-0"><div class="p-space-md border-b border-outline-variant/60 bg-surface-container"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-sm text-label-sm text-secondary uppercase font-bold tracking-widest">CHATPILOT // AI DISPATCH</span><span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full border border-outline-variant/80 bg-surface-container-lowest text-on-surface-variant">SYS.01</span></div><h1 class="font-headline-sm text-headline-sm text-primary tracking-tight font-serif">Gazette &amp; Terminal</h1><div class="mt-space-xs pt-space-xs border-t border-outline-variant/40 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><span>VOL. IXVIII</span><span>EDITION #421</span></div></div><nav class="flex-1 overflow-y-auto px-space-sm py-space-md space-y-1" data-active-classes="bg-primary text-on-primary font-semibold"><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="overview" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-on-primary/15 flex items-center justify-center transition-transform duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">newspaper</span></span><span>Overview</span></div><span class="font-data-mono text-label-sm opacity-60">01</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="ask-chatpilot" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">terminal</span></span><span>Ask ChatPilot</span></div><span class="font-data-mono text-label-sm opacity-60">02</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="reply-inbox" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">mark_email_unread</span></span><span>Reply Inbox</span></div><span class="px-2 py-0.5 bg-secondary text-on-secondary font-label-sm text-label-sm font-bold rounded-full shadow-sm">2</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="contacts" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">contacts</span></span><span>Contacts</span></div><span class="font-data-mono text-label-sm opacity-60">04</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="groups" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">hub</span></span><span>Groups</span></div><span class="font-data-mono text-label-sm opacity-60">05</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="memory" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">history_edu</span></span><span>Memory</span></div><span class="font-data-mono text-label-sm opacity-60">06</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="ai-providers" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">schema</span></span><span>AI Providers</span></div><span class="font-data-mono text-label-sm opacity-60">07</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="activity-log" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">receipt_long</span></span><span>Activity Log</span></div><span class="font-data-mono text-label-sm opacity-60">08</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="dataset-audit" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">fact_check</span></span><span>Dataset Audit</span></div><span class="font-data-mono text-label-sm opacity-60">09</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="settings" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">settings_input_component</span></span><span>Settings</span></div><span class="font-data-mono text-label-sm opacity-60">10</span></a></nav></div><div class="p-space-md border-t border-outline-variant/60 bg-surface-container-low"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Local Bridge</span><span class="inline-flex items-center gap-1.5 font-label-sm text-label-sm px-2.5 py-0.5 rounded-full border border-outline-variant/70 bg-surface-container-lowest text-on-surface shadow-sm"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse-ring"></span>CONNECTED</span></div><div class="pt-space-xs flex items-center gap-space-sm"><div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="min-w-0 flex-1"><p class="font-label-lg text-label-lg text-on-surface truncate">Thoufikur Rahman</p><p class="font-label-sm text-label-sm text-on-surface-variant truncate font-data-mono">DISPATCH CHIEF</p></div></div></div></aside><div class="pl-[260px]"><header class="fixed top-0 left-[260px] right-0 h-16 bg-surface/90 backdrop-blur-md border-b border-outline-variant/60 z-40 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm text-on-surface font-label-md text-label-md"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 flex items-center justify-center"><span class="material-symbols-outlined text-[16px] text-on-surface-variant">calendar_today</span></span><span class="uppercase tracking-wider font-semibold">EDITION: OCT 24, 2024 // 08:30 GMT</span></div><div class="h-4 w-px bg-outline-variant/60"></div><div class="flex items-center gap-2 font-label-md text-label-md text-on-surface"><span class="w-2 h-2 rounded-full bg-primary"></span><span class="font-data-mono tracking-tight">OPERATIONAL 99.8%</span></div><div class="h-4 w-px bg-outline-variant/60"></div><div class="flex items-center gap-2 font-label-md text-label-md"><span class="text-on-surface-variant uppercase font-medium">Global Auto-Reply:</span><span class="px-2.5 py-0.5 rounded-full bg-surface-container-high border border-outline-variant/80 font-data-mono font-bold text-on-surface">ARMED // LIVE</span></div></div><div class="flex items-center gap-space-md"><button class="px-3.5 py-1.5 rounded-xl border border-outline-variant/80 bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-all duration-200 flex items-center gap-1.5 shadow-sm hover:-translate-y-0.5" type="button"><span class="material-symbols-outlined text-[16px]">upload_file</span><span>Import Corpus</span></button><button class="px-3.5 py-1.5 rounded-xl bg-primary border border-primary text-on-primary font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-all duration-200 flex items-center gap-1.5 shadow-sm hover:-translate-y-0.5" type="button"><span class="material-symbols-outlined text-[16px]">send</span><span>Simulate Dispatch</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="relative pt-16 min-h-screen bg-surface w-full px-8"><div class="flex flex-col w-full gap-8 pb-16">
+<!-- Editorial Page Header -->
+<section class="flex flex-col md:flex-row md:items-end justify-between gap-6 pt-2 animate-fade-in-up">
+<div class="flex flex-col gap-2 max-w-2xl">
+<div class="flex items-center gap-3">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-bold">SYS.10 // CONFIGURATION</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">•</span>
+<span class="font-data-mono text-data-mono text-on-surface-variant">BRIDGE v2.4.1</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Settings &amp; Android Companion</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">System preferences, appearance themes, and Redmi Note 13 Pro 5G bridge configuration.</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="px-4 py-2.5 rounded-xl bg-surface-container-low shadow-sm flex items-center gap-3">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary animate-pulse-ring"></span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">BRIDGE TELEMETRY</span>
+<span class="font-data-mono text-data-mono text-on-surface font-medium">14ms LATENCY // SYNCED</span>
+</div>
+</div>
+<button class="px-5 py-2.5 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg shadow-sm hover:bg-primary-container transition-all duration-200 active:translate-y-px flex items-center gap-2" id="save-settings-btn" type="button">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span>Save Changes</span>
+</button>
+</div>
+</section>
+<!-- Asymmetric Split Layout: Left Sub-Nav (3 cols) + Main Content (9 cols) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Left Sub-Navigation Pill List -->
+<aside class="lg:col-span-3 lg:sticky lg:top-24 flex flex-col gap-4 animate-fade-in-up animate-delay-1">
+<div class="p-3 rounded-2xl bg-surface-container-low shadow-sm flex flex-col gap-1.5" id="settings-subnav">
+<div class="px-3 py-2 flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-widest">SECTIONS</span>
+<span class="font-data-mono text-label-sm text-on-surface-variant">05</span>
+</div>
+<button class="subnav-pill w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg shadow-sm transition-all duration-200 text-left" data-target="section-general" type="button">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+<span>General</span>
+</div>
+<span class="font-data-mono text-label-sm opacity-75">01</span>
+</button>
+<button class="subnav-pill w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-all duration-200 text-left" data-target="section-appearance" type="button">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[18px]">palette</span>
+<span>Appearance</span>
+</div>
+<span class="font-data-mono text-label-sm opacity-60">02</span>
+</button>
+<button class="subnav-pill w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-all duration-200 text-left" data-target="section-android" type="button">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[18px]">smartphone</span>
+<span>Android Companion</span>
+</div>
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+</button>
+<button class="subnav-pill w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-all duration-200 text-left" data-target="section-privacy" type="button">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[18px]">shield_lock</span>
+<span>Privacy &amp; Safety</span>
+</div>
+<span class="font-data-mono text-label-sm opacity-60">04</span>
+</button>
+<button class="subnav-pill w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-all duration-200 text-left" data-target="section-about" type="button">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[18px]">info</span>
+<span>About</span>
+</div>
+<span class="font-data-mono text-label-sm opacity-60">05</span>
+</button>
+</div>
+<!-- Compact Diagnostic Summary -->
+<div class="p-4 rounded-2xl bg-surface-container shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant">LOCAL DAEMON</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-lowest font-data-mono text-label-sm text-on-surface">PID 4812</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">All configuration changes are persisted locally to <span class="font-data-mono text-on-surface">~/.chatpilot/config.toml</span>.</p>
+</div>
+</aside>
+<!-- Main Content Area (9 cols) -->
+<div class="lg:col-span-9 flex flex-col gap-8">
+<!-- 1. General Settings Card -->
+<section class="p-6 md:p-8 rounded-2xl bg-surface-container-lowest shadow-sm flex flex-col gap-6 animate-fade-in-up animate-delay-1" id="section-general">
+<div class="flex items-start justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-primary shadow-sm">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">tune</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase text-secondary font-bold tracking-widest">01 // DISPATCH ENGINE</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">General Settings</h3>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full bg-surface-container font-data-mono text-label-sm text-on-surface-variant">DOC-CFG-01</span>
+</div>
+<!-- Global Auto-Reply Master Toggle -->
+<div class="p-5 rounded-xl bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2.5">
+<span class="font-label-lg text-label-lg text-on-surface">Global Auto-Reply Master Toggle</span>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-high font-data-mono text-label-sm font-bold text-on-surface-variant" id="autoreply-badge">OFF // SAFE MODE</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">When disabled, ChatPilot drafts replies for manual approval in Reply Inbox instead of dispatching automatically.</p>
+</div>
+<button aria-checked="false" class="relative inline-flex h-8 w-14 shrink-0 cursor-pointer rounded-full bg-surface-container-highest p-1 transition-colors duration-200 focus:outline-none" id="autoreply-toggle" role="switch" type="button">
+<span class="pointer-events-none inline-block h-6 w-6 transform rounded-full bg-on-surface-variant shadow-sm transition duration-200 translate-x-0" id="autoreply-knob"></span>
+</button>
+</div>
+<!-- Reply Delay Selector & Language Focus -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Reply Delay Selector -->
+<div class="p-5 rounded-xl bg-surface-container-low flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg text-on-surface">Reply Delay Selector</span>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">schedule</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Human-like typing cadence before dispatch.</p>
+<div class="flex flex-wrap gap-2 pt-1" id="delay-selector">
+<button class="delay-pill px-3.5 py-2 rounded-xl bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-all" data-delay="instant" type="button">0-1s Instant</button>
+<button class="delay-pill px-3.5 py-2 rounded-xl bg-primary text-on-primary font-label-md text-label-md shadow-sm transition-all" data-delay="recommended" type="button">2-5s Recommended</button>
+<button class="delay-pill px-3.5 py-2 rounded-xl bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-all" data-delay="natural" type="button">5-12s Natural</button>
+</div>
+</div>
+<!-- Language Focus -->
+<div class="p-5 rounded-xl bg-surface-container-low flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg text-on-surface">Language Focus</span>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">translate</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Primary linguistic model &amp; slang corpus.</p>
+<div class="flex flex-wrap gap-2 pt-1" id="language-selector">
+<button class="lang-pill px-3.5 py-2 rounded-xl bg-primary text-on-primary font-label-md text-label-md shadow-sm transition-all flex items-center gap-1.5" data-lang="tanglish" type="button">
+<span>Tanglish</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+</button>
+<button class="lang-pill px-3.5 py-2 rounded-xl bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-all" data-lang="english" type="button">English</button>
+<button class="lang-pill px-3.5 py-2 rounded-xl bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-all" data-lang="tamil" type="button">Tamil</button>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. Appearance & Theme Picker Card -->
+<section class="p-6 md:p-8 rounded-2xl bg-surface-container-lowest shadow-sm flex flex-col gap-6 animate-fade-in-up animate-delay-2" id="section-appearance">
+<div class="flex items-start justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed shadow-sm">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">palette</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase text-secondary font-bold tracking-widest">02 // VISUAL SYSTEM</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Appearance &amp; Theme Picker</h3>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full bg-surface-container font-data-mono text-label-sm text-on-surface-variant">ATELIER PAPER</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+<!-- Controls (7 cols) -->
+<div class="lg:col-span-7 flex flex-col gap-5">
+<!-- Mode Picker -->
+<div class="p-5 rounded-xl bg-surface-container-low flex flex-col gap-3">
+<span class="font-label-lg text-label-lg text-on-surface">Interface Mode</span>
+<div class="grid grid-cols-3 gap-2" id="theme-mode-selector">
+<button class="mode-pill py-2.5 px-3 rounded-xl bg-primary text-on-primary font-label-md text-label-md shadow-sm flex items-center justify-center gap-2 transition-all" data-mode="light" type="button">
+<span class="material-symbols-outlined text-[16px]">light_mode</span>
+<span>Light</span>
+</button>
+<button class="mode-pill py-2.5 px-3 rounded-xl bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high flex items-center justify-center gap-2 transition-all" data-mode="dark" type="button">
+<span class="material-symbols-outlined text-[16px]">dark_mode</span>
+<span>Dark</span>
+</button>
+<button class="mode-pill py-2.5 px-3 rounded-xl bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high flex items-center justify-center gap-2 transition-all" data-mode="system" type="button">
+<span class="material-symbols-outlined text-[16px]">contrast</span>
+<span>System</span>
+</button>
+</div>
+</div>
+<!-- 6 Accent Color Swatches -->
+<div class="p-5 rounded-xl bg-surface-container-low flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg text-on-surface">Accent Color</span>
+<span class="font-data-mono text-label-sm text-secondary font-bold" id="selected-accent-label">MONOCHROME SLATE</span>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5" id="accent-swatches">
+<button class="accent-swatch flex items-center gap-2.5 p-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container-high transition-all text-left" data-accent="Emerald" data-swatch="bg-tertiary-container" type="button">
+<span class="w-5 h-5 rounded-full bg-tertiary-container shrink-0"></span>
+<span class="font-body-sm text-body-sm text-on-surface truncate">Emerald</span>
+</button>
+<button class="accent-swatch flex items-center gap-2.5 p-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container-high transition-all text-left" data-accent="Teal" data-swatch="bg-on-tertiary-fixed-variant" type="button">
+<span class="w-5 h-5 rounded-full bg-on-tertiary-fixed-variant shrink-0"></span>
+<span class="font-body-sm text-body-sm text-on-surface truncate">Teal</span>
+</button>
+<button class="accent-swatch flex items-center gap-2.5 p-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container-high transition-all text-left" data-accent="Violet" data-swatch="bg-on-tertiary-container" type="button">
+<span class="w-5 h-5 rounded-full bg-on-tertiary-container shrink-0"></span>
+<span class="font-body-sm text-body-sm text-on-surface truncate">Violet</span>
+</button>
+<button class="accent-swatch flex items-center gap-2.5 p-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container-high transition-all text-left" data-accent="Sapphire" data-swatch="bg-primary-container" type="button">
+<span class="w-5 h-5 rounded-full bg-primary-container shrink-0"></span>
+<span class="font-body-sm text-body-sm text-on-surface truncate">Sapphire</span>
+</button>
+<button class="accent-swatch flex items-center gap-2.5 p-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container-high transition-all text-left" data-accent="Amber" data-swatch="bg-secondary" type="button">
+<span class="w-5 h-5 rounded-full bg-secondary shrink-0"></span>
+<span class="font-body-sm text-body-sm text-on-surface truncate">Amber</span>
+</button>
+<button class="accent-swatch flex items-center gap-2.5 p-2.5 rounded-xl bg-surface-container-high shadow-sm transition-all text-left" data-accent="Monochrome Slate" data-swatch="bg-primary" type="button">
+<span class="w-5 h-5 rounded-full bg-primary shrink-0"></span>
+<span class="font-body-sm text-body-sm text-on-surface font-semibold truncate">Monochrome Slate</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Live Preview Card (5 cols) -->
+<div class="lg:col-span-5 p-5 rounded-xl bg-surface-container flex flex-col justify-between gap-4">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant">LIVE PREVIEW</span>
+<span class="font-data-mono text-label-sm text-on-surface-variant" id="preview-mode-tag">LIGHT // PAPER</span>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-3 transition-all duration-300" id="live-preview-box">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary" id="preview-dot"></span>
+<span class="font-label-md text-label-md text-on-surface uppercase">DISPATCH DRAFT</span>
+</div>
+<span class="font-data-mono text-label-sm text-on-surface-variant">08:42</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">"Machan, I'll wrap the deck by 6 PM and ping you."</p>
+<div class="flex items-center justify-end gap-2 pt-1">
+<span class="px-2.5 py-1 rounded-lg bg-surface-container font-label-sm text-label-sm text-on-surface-variant">Edit</span>
+<span class="px-3 py-1 rounded-lg bg-primary text-on-primary font-label-sm text-label-sm" id="preview-btn">Send</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>Contrast Ratio: 14.2:1</span>
+<span class="font-data-mono">AAA PASS</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. Android Companion Card -->
+<section class="p-6 md:p-8 rounded-2xl bg-surface-container-lowest shadow-sm flex flex-col gap-6 animate-fade-in-up animate-delay-3" id="section-android">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed shadow-sm">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">smartphone</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase text-secondary font-bold tracking-widest">03 // HARDWARE BRIDGE</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Redmi Note 13 Pro 5G (Android 15)</h3>
+</div>
+</div>
+<div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-container-low shadow-sm self-start sm:self-auto">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse-ring"></span>
+<span class="font-data-mono text-label-sm font-bold text-on-surface">CONNECTED // USB-ADB + WS</span>
+</div>
+</div>
+<!-- Status Telemetry Strip -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+<div class="p-4 rounded-xl bg-surface-container-low flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant">Notification Access</span>
+<span class="font-label-lg text-label-lg text-on-surface mt-0.5">Active</span>
+</div>
+<span class="material-symbols-outlined text-[22px] text-secondary" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-low flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant">Background Service</span>
+<span class="font-label-lg text-label-lg text-on-surface mt-0.5">Running</span>
+</div>
+<span class="material-symbols-outlined text-[22px] text-primary" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-low flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant">HyperOS Battery</span>
+<span class="font-label-lg text-label-lg text-on-surface mt-0.5">Unrestricted</span>
+</div>
+<span class="material-symbols-outlined text-[22px] text-on-surface-variant">battery_charging_full</span>
+</div>
+</div>
+<!-- 5-Step Onboarding Checklist -->
+<div class="p-5 rounded-xl bg-surface-container-low flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg text-on-surface">5-Step Companion Onboarding Checklist</span>
+<span class="font-data-mono text-label-sm text-on-surface-variant">5 / 5 VERIFIED</span>
+</div>
+<div class="flex flex-col gap-2" id="onboarding-checklist">
+<div class="flex items-center justify-between p-3 rounded-xl bg-surface-container-lowest">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-data-mono text-label-sm">1</span>
+<span class="font-body-md text-body-md text-on-surface">Install App</span>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container font-data-mono text-label-sm text-on-surface">DONE</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-xl bg-surface-container-lowest">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-data-mono text-label-sm">2</span>
+<span class="font-body-md text-body-md text-on-surface">Enable Notification Access</span>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container font-data-mono text-label-sm text-on-surface">DONE</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-xl bg-surface-container-lowest">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-data-mono text-label-sm">3</span>
+<span class="font-body-md text-body-md text-on-surface">HyperOS Background Permissions</span>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container font-data-mono text-label-sm text-on-surface">DONE</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-xl bg-surface-container-lowest">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-data-mono text-label-sm">4</span>
+<span class="font-body-md text-body-md text-on-surface">Verify Connection</span>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container font-data-mono text-label-sm text-on-surface">DONE</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-xl bg-surface-container-lowest">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-data-mono text-label-sm">5</span>
+<span class="font-body-md text-body-md text-on-surface font-medium">Run Test</span>
+</div>
+<button class="px-3 py-1 rounded-lg bg-primary text-on-primary font-label-sm text-label-sm hover:bg-primary-container transition-all" id="run-bridge-test" type="button">Ping Device</button>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. Privacy & Safety Summary Card -->
+<section class="p-6 md:p-8 rounded-2xl bg-surface-container-lowest shadow-sm flex flex-col gap-6 animate-fade-in-up animate-delay-4" id="section-privacy">
+<div class="flex items-start justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-error-container flex items-center justify-center text-on-error-container shadow-sm">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">shield_lock</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase text-secondary font-bold tracking-widest">04 // GUARDRAILS</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Privacy &amp; Safety</h3>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full bg-surface-container font-data-mono text-label-sm text-on-surface">ZERO-CLOUD PII</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="p-5 rounded-xl bg-surface-container-low flex flex-col gap-2">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-[20px] text-secondary">password</span>
+<span class="font-label-lg text-label-lg">OTP &amp; Banking Redaction</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Incoming SMS or WhatsApp messages containing 4–8 digit OTPs, UPI PINs, or bank account alerts are automatically masked before reaching any LLM context window.</p>
+</div>
+<div class="p-5 rounded-xl bg-surface-container-low flex flex-col gap-2">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-[20px] text-primary">edit_note</span>
+<span class="font-label-lg text-label-lg">Local Draft-Only Defaults</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">By default, all generated responses remain in your local SQLite draft queue. No message is dispatched over the Android bridge without explicit user confirmation or per-contact whitelist.</p>
+</div>
+</div>
+</section>
+<!-- 5. About Card -->
+<section class="p-6 rounded-2xl bg-surface-container-low shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4" id="section-about">
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-widest">05 // ABOUT CHATPILOT</span>
+<p class="font-body-md text-body-md text-on-surface font-medium">Gazette &amp; Terminal Edition #421 — Built for high-craft local AI dispatch.</p>
+</div>
+<span class="font-data-mono text-data-mono text-on-surface-variant">REV 2024.10.24</span>
+</section>
+</div>
+</div>
+</div>
+<script>
+  (function () {
+    // Sub-navigation pill switching & smooth scroll
+    const subnavPills = document.querySelectorAll('.subnav-pill');
+    subnavPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        subnavPills.forEach(p => {
+          p.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+          p.classList.add('text-on-surface-variant', 'hover:bg-surface-container-high', 'hover:text-on-surface');
+        });
+        pill.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+        pill.classList.remove('text-on-surface-variant', 'hover:bg-surface-container-high', 'hover:text-on-surface');
+        const target = document.getElementById(pill.getAttribute('data-target'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Global Auto-Reply Master Toggle
+    const toggleBtn = document.getElementById('autoreply-toggle');
+    const toggleKnob = document.getElementById('autoreply-knob');
+    const toggleBadge = document.getElementById('autoreply-badge');
+    let isArmed = false;
+
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        isArmed = !isArmed;
+        toggleBtn.setAttribute('aria-checked', String(isArmed));
+        if (isArmed) {
+          toggleBtn.classList.remove('bg-surface-container-highest');
+          toggleBtn.classList.add('bg-secondary');
+          toggleKnob.classList.remove('translate-x-0', 'bg-on-surface-variant');
+          toggleKnob.classList.add('translate-x-6', 'bg-on-secondary');
+          toggleBadge.textContent = 'ON // ARMED';
+          toggleBadge.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+          toggleBadge.classList.add('bg-secondary-fixed', 'text-on-secondary-fixed');
+        } else {
+          toggleBtn.classList.add('bg-surface-container-highest');
+          toggleBtn.classList.remove('bg-secondary');
+          toggleKnob.classList.add('translate-x-0', 'bg-on-surface-variant');
+          toggleKnob.classList.remove('translate-x-6', 'bg-on-secondary');
+          toggleBadge.textContent = 'OFF // SAFE MODE';
+          toggleBadge.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+          toggleBadge.classList.remove('bg-secondary-fixed', 'text-on-secondary-fixed');
+        }
+      });
+    }
+
+    // Reply Delay Selector
+    const delayPills = document.querySelectorAll('.delay-pill');
+    delayPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        delayPills.forEach(p => {
+          p.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+          p.classList.add('bg-surface-container-lowest', 'text-on-surface-variant');
+        });
+        pill.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+        pill.classList.remove('bg-surface-container-lowest', 'text-on-surface-variant');
+      });
+    });
+
+    // Language Focus Selector
+    const langPills = document.querySelectorAll('.lang-pill');
+    langPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        langPills.forEach(p => {
+          p.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+          p.classList.add('bg-surface-container-lowest', 'text-on-surface-variant');
+        });
+        pill.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+        pill.classList.remove('bg-surface-container-lowest', 'text-on-surface-variant');
+      });
+    });
+
+    // Theme Mode Selector
+    const modePills = document.querySelectorAll('.mode-pill');
+    const previewModeTag = document.getElementById('preview-mode-tag');
+    modePills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        modePills.forEach(p => {
+          p.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+          p.classList.add('bg-surface-container-lowest', 'text-on-surface-variant');
+        });
+        pill.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+        pill.classList.remove('bg-surface-container-lowest', 'text-on-surface-variant');
+        const mode = pill.getAttribute('data-mode').toUpperCase();
+        if (previewModeTag) previewModeTag.textContent = mode + ' // PAPER';
+      });
+    });
+
+    // Accent Color Swatches
+    const swatches = document.querySelectorAll('.accent-swatch');
+    const accentLabel = document.getElementById('selected-accent-label');
+    const previewDot = document.getElementById('preview-dot');
+    const previewBtn = document.getElementById('preview-btn');
+    const swatchClasses = ['bg-tertiary-container', 'bg-on-tertiary-fixed-variant', 'bg-on-tertiary-container', 'bg-primary-container', 'bg-secondary', 'bg-primary'];
+
+    swatches.forEach(swatch => {
+      swatch.addEventListener('click', () => {
+        swatches.forEach(s => {
+          s.classList.remove('bg-surface-container-high', 'shadow-sm');
+          s.classList.add('bg-surface-container-lowest');
+        });
+        swatch.classList.add('bg-surface-container-high', 'shadow-sm');
+        swatch.classList.remove('bg-surface-container-lowest');
+
+        const name = swatch.getAttribute('data-accent');
+        const cls = swatch.getAttribute('data-swatch');
+        if (accentLabel) accentLabel.textContent = name.toUpperCase();
+        if (previewDot) {
+          swatchClasses.forEach(c => previewDot.classList.remove(c));
+          previewDot.classList.add(cls);
+        }
+        if (previewBtn) {
+          swatchClasses.forEach(c => previewBtn.classList.remove(c));
+          previewBtn.classList.add(cls);
+        }
+      });
+    });
+
+    // Run Bridge Test
+    const testBtn = document.getElementById('run-bridge-test');
+    if (testBtn) {
+      testBtn.addEventListener('click', () => {
+        testBtn.textContent = 'Pinging...';
+        setTimeout(() => {
+          testBtn.textContent = 'Verified (12ms)';
+          testBtn.classList.remove('bg-primary');
+          testBtn.classList.add('bg-secondary');
+        }, 650);
+      });
+    }
+  })();
+</script></main></div></body></html>

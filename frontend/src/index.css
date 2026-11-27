@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #fbf9f6;
+    color: #1b1c1a;
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .pt-safe {
+    padding-top: max(env(safe-area-inset-top, 0px), 1.5rem);
+  }
+}
+
+.font-serif {
+  font-family: 'Times New Roman', Times, 'Newsreader', Georgia, Cambria, serif;
+}
+.font-sans {
+  font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.font-mono {
+  font-family: 'JetBrains Mono', Consolas, Monaco, monospace;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  display: none;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #c6c6cb;
+  border-radius: 9999px;
+}

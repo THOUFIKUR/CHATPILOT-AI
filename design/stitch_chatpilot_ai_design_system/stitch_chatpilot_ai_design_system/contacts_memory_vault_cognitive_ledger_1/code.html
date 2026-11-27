@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:wght@100..900&family=Newsreader:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-secondary":"#ffffff","on-primary-container":"#81838e","inverse-surface":"#30312f","on-surface":"#1b1c1a","tertiary-fixed":"#dce1ff","outline-variant":"#c6c6cb","on-primary":"#ffffff","on-primary-fixed":"#181b24","inverse-primary":"#c4c6d1","surface-container":"#efeeeb","surface-container-low":"#f5f3f0","on-secondary-fixed-variant":"#832600","on-background":"#1b1c1a","primary-fixed-dim":"#c4c6d1","on-tertiary-container":"#547aff","error":"#ba1a1a","on-secondary-container":"#5d1900","tertiary":"#000000","surface-variant":"#e4e2df","secondary-fixed-dim":"#ffb59d","surface-container-lowest":"#ffffff","surface":"#fbf9f6","surface-container-highest":"#e4e2df","error-container":"#ffdad6","primary-container":"#181b24","surface-container-high":"#eae8e5","on-primary-fixed-variant":"#444650","on-tertiary-fixed-variant":"#0039b5","background":"#fbf9f6","on-error":"#ffffff","inverse-on-surface":"#f2f0ed","tertiary-container":"#001551","on-tertiary-fixed":"#001551","surface-bright":"#fbf9f6","primary-fixed":"#e0e2ed","primary":"#000000","tertiary-fixed-dim":"#b7c4ff","secondary-container":"#fd6b36","outline":"#76777c","on-error-container":"#93000a","on-secondary-fixed":"#390c00","secondary-fixed":"#ffdbd0","secondary":"#ac3400","surface-dim":"#dbdad7","on-surface-variant":"#46464b","surface-tint":"#5b5e68","on-tertiary":"#ffffff"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"margin-mobile":"1rem","space-xl":"2.5rem","space-sm":"0.5rem","space-md":"1rem","space-lg":"1.5rem","gutter":"1.25rem","margin":"2.5rem","gutter-mobile":"0.75rem","space-xs":"0.25rem"},"fontFamily":{"label-md":["JetBrains Mono"],"label-sm":["JetBrains Mono"],"label-lg":["Geist"],"headline-md":["Newsreader"],"headline-lg-mobile":["Newsreader"],"body-lg":["Newsreader"],"body-sm":["Geist"],"display-lg-mobile":["Newsreader"],"headline-lg":["Newsreader"],"display-lg":["Newsreader"],"data-mono":["JetBrains Mono"],"body-md":["Geist"],"headline-sm":["Newsreader"]},"fontSize":{"label-md":["11px",{"lineHeight":"16px","letterSpacing":"0.04em","fontWeight":"500"}],"label-sm":["10px",{"lineHeight":"14px","letterSpacing":"0.06em","fontWeight":"500"}],"label-lg":["13px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"600"}],"headline-md":["26px",{"lineHeight":"32px","letterSpacing":"0em","fontWeight":"600"}],"headline-lg-mobile":["28px",{"lineHeight":"34px","letterSpacing":"-0.01em","fontWeight":"500"}],"body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"display-lg-mobile":["38px",{"lineHeight":"44px","letterSpacing":"-0.015em","fontWeight":"400"}],"headline-lg":["36px",{"lineHeight":"44px","letterSpacing":"-0.01em","fontWeight":"500"}],"display-lg":["56px",{"lineHeight":"64px","letterSpacing":"-0.02em","fontWeight":"400"}],"data-mono":["13px",{"lineHeight":"18px","letterSpacing":"-0.01em","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"headline-sm":["20px",{"lineHeight":"26px","letterSpacing":"0em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed"><aside class="fixed left-0 top-0 h-full w-[260px] bg-surface-container-low z-50 flex flex-col justify-between border-r border-outline-variant/60 shadow-[0_1px_8px_rgba(0,0,0,0.03)]"><div class="flex flex-col flex-1 min-h-0"><div class="p-space-md border-b border-outline-variant/60 bg-surface-container"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-sm text-label-sm text-secondary uppercase font-bold tracking-widest">CHATPILOT // AI DISPATCH</span><span class="font-label-sm text-label-sm px-1.5 py-0.5 border border-outline-variant bg-surface-container-lowest text-on-surface-variant">SYS.01</span></div><h1 class="font-headline-sm text-headline-sm text-primary tracking-tight font-serif">Gazette & Terminal</h1><div class="mt-space-xs pt-space-xs border-t border-outline-variant/40 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><span>VOL. IXVIII</span><span>EDITION #421</span></div></div><nav class="flex-1 overflow-y-auto px-space-sm py-space-md space-y-0.5" data-active-classes="bg-primary text-on-primary font-semibold"><a class="group flex items-center justify-between px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md uppercase" data-path="overview" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">newspaper</span><span>Overview</span></div><span class="font-data-mono text-label-sm opacity-60">01</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md uppercase" data-path="ask-chatpilot" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">terminal</span><span>Ask ChatPilot</span></div><span class="font-data-mono text-label-sm opacity-60">02</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md uppercase" data-path="reply-inbox" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">mark_email_unread</span><span>Reply Inbox</span></div><span class="px-1.5 py-0.2 bg-secondary text-on-secondary font-label-sm text-label-sm font-bold rounded-sm">2</span></a><a aria-current="page" class="group flex items-center justify-between px-space-sm py-2 rounded transition-colors uppercase bg-primary text-on-primary font-semibold" data-path="contacts" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">contacts</span><span>Contacts</span></div><span class="font-data-mono text-label-sm opacity-60">04</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md uppercase" data-path="groups" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">hub</span><span>Groups</span></div><span class="font-data-mono text-label-sm opacity-60">05</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md uppercase" data-path="memory" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">history_edu</span><span>Memory</span></div><span class="font-data-mono text-label-sm opacity-60">06</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md uppercase" data-path="ai-providers" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">schema</span><span>AI Providers</span></div><span class="font-data-mono text-label-sm opacity-60">07</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md uppercase" data-path="activity-log" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">receipt_long</span><span>Activity Log</span></div><span class="font-data-mono text-label-sm opacity-60">08</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md uppercase" data-path="dataset-audit" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">fact_check</span><span>Dataset Audit</span></div><span class="font-data-mono text-label-sm opacity-60">09</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md uppercase" data-path="settings" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">settings_input_component</span><span>Settings</span></div><span class="font-data-mono text-label-sm opacity-60">10</span></a></nav></div><div class="p-space-md border-t border-outline-variant/60 bg-surface-container-low"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Local Bridge</span><span class="inline-flex items-center gap-1 font-label-sm text-label-sm px-2 py-0.5 rounded border border-outline-variant bg-surface-container-lowest text-on-surface"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>CONNECTED</span></div><div class="pt-space-xs flex items-center gap-space-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="min-w-0 flex-1"><p class="font-label-lg text-label-lg text-on-surface truncate">Thoufikur Rahman</p><p class="font-label-sm text-label-sm text-on-surface-variant truncate font-data-mono">DISPATCH CHIEF</p></div></div></div></aside><div class="pl-[260px]"><header class="fixed top-0 left-[260px] right-0 h-16 bg-surface/90 backdrop-blur-md border-b border-outline-variant/60 z-40 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm text-on-surface font-label-md text-label-md"><span class="material-symbols-outlined text-[16px] text-on-surface-variant">calendar_today</span><span class="uppercase tracking-wider font-semibold">EDITION: OCT 24, 2024 // 08:30 GMT</span></div><div class="h-4 w-px bg-outline-variant/60"></div><div class="flex items-center gap-2 font-label-md text-label-md text-on-surface"><span class="w-2 h-2 rounded-full bg-primary"></span><span class="font-data-mono tracking-tight">OPERATIONAL 99.8%</span></div><div class="h-4 w-px bg-outline-variant/60"></div><div class="flex items-center gap-2 font-label-md text-label-md"><span class="text-on-surface-variant uppercase font-medium">Global Auto-Reply:</span><span class="px-2 py-0.5 bg-surface-container-high border border-outline-variant/80 font-data-mono font-bold text-on-surface">ARMED // LIVE</span></div></div><div class="flex items-center gap-space-md"><button class="px-3 py-1.5 border border-outline bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-colors flex items-center gap-1.5 shadow-[1px_1px_0px_rgba(20,23,31,0.08)]" type="button"><span class="material-symbols-outlined text-[16px]">upload_file</span><span>Import Corpus</span></button><button class="px-3 py-1.5 bg-primary border border-primary text-on-primary font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-colors flex items-center gap-1.5 shadow-[1px_1px_0px_rgba(20,23,31,0.2)]" type="button"><span class="material-symbols-outlined text-[16px]">send</span><span>Simulate Dispatch</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="relative pt-16 min-h-screen bg-surface w-full px-8"><div class="flex flex-col w-full pb-16">
+<!-- Top Tonal Scrim & Header Breadcrumb Area -->
+<div class="relative py-8 bg-surface-container-low px-8 -mx-8 shadow-sm">
+<div class="max-w-[1440px] mx-auto flex flex-col gap-6">
+<!-- Top Ledger Folio Navigation Line -->
+<div class="flex flex-wrap items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 bg-primary text-on-primary font-data-mono text-label-sm uppercase tracking-wider">ARCHIVAL FOLIO 04/06</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-data-mono text-label-sm text-on-surface-variant uppercase">DEPT. OF INTERPERSONAL DISPATCH // SEC. COGNITIVE LEDGER</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant font-data-mono text-label-sm">
+<span>CLASSIFICATION: CONFIDENTIAL</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>INDEX REVISED: TODAY 08:14 GMT</span>
+</div>
+</div>
+<!-- Main Broadsheet Title Unit -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-2 max-w-3xl">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight font-serif italic">
+            Registry of Correspondents & Cognitive Ledger
+          </h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl leading-relaxed">
+            Individual rule enforcement, language cadence directives, and deterministic vector memory vaults compiled for low-latency neural synthesis.
+          </p>
+</div>
+<!-- Wax Seal Badge & Quick Telemetry -->
+<div class="flex items-center gap-4 self-start md:self-auto bg-surface-container p-3 rounded-lg shadow-sm">
+<div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-on-secondary shadow-md relative">
+<span class="material-symbols-outlined text-[24px]">verified</span>
+<span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-surface-container-lowest text-secondary flex items-center justify-center text-[10px] font-bold">✓</span>
+</div>
+<div class="pr-2">
+<p class="font-label-sm text-label-sm uppercase text-secondary font-bold tracking-widest">ENFORCED COMPLIANCE</p>
+<p class="font-data-mono text-label-md text-on-surface">SYNAPSE-V4 // ARMED</p>
+</div>
+</div>
+</div>
+<!-- Filter Controls & Archival Search Band -->
+<div class="pt-4 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+<!-- Search Field styled as Print Catalog Index Query -->
+<div class="relative flex-1 max-w-2xl">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input class="w-full pl-10 pr-4 py-2.5 bg-surface-container-lowest text-on-surface font-body-sm text-body-sm rounded shadow-sm focus:outline-none placeholder:text-on-surface-variant/60" placeholder="Filter correspondents by moniker, telephone number, or affinity group..." type="text"/>
+<kbd class="absolute right-3 top-1/2 -translate-y-1/2 font-data-mono text-label-sm px-1.5 py-0.5 bg-surface-container text-on-surface-variant rounded">⌘K</kbd>
+</div>
+<!-- Archival Stamped Badges / Filter Chips -->
+<div class="flex flex-wrap items-center gap-2">
+<button class="px-3 py-1.5 rounded bg-primary text-on-primary font-label-md text-label-md flex items-center gap-2 shadow-sm transition-transform active:translate-y-0.5" type="button">
+<span>All Correspondents</span>
+<span class="font-data-mono text-[10px] px-1.5 py-0.2 bg-on-primary/20 rounded">14</span>
+</button>
+<button class="px-3 py-1.5 rounded bg-surface-container-highest text-on-surface font-label-md text-label-md flex items-center gap-2 hover:bg-surface-container transition-colors" type="button">
+<span>Active Selected</span>
+<span class="font-data-mono text-[10px] px-1.5 py-0.2 bg-surface-container-lowest text-on-surface rounded">01</span>
+</button>
+<button class="px-3 py-1.5 rounded bg-surface-container-highest text-on-surface font-label-md text-label-md flex items-center gap-2 hover:bg-surface-container transition-colors" type="button">
+<span>Autonomous Enabled</span>
+<span class="font-data-mono text-[10px] px-1.5 py-0.2 bg-surface-container-lowest text-on-surface-variant rounded">00</span>
+</button>
+<button class="px-3 py-1.5 rounded bg-secondary-container text-on-secondary-container font-label-md text-label-md flex items-center gap-2 hover:brightness-95 transition-all shadow-sm" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+<span>Ratification Required</span>
+<span class="font-data-mono text-[10px] px-1.5 py-0.2 bg-surface-container-lowest font-bold text-secondary rounded">01</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Asymmetric Split Layout: Broadsheet Table + Dossier Canvas -->
+<div class="mt-8 grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+<!-- LEFT PANE: Correspondents Catalog Table (5 Cols / 45%) -->
+<div class="xl:col-span-5 flex flex-col gap-6">
+<!-- Catalog Container Card -->
+<div class="bg-surface-container-lowest rounded-lg shadow-md p-6">
+<div class="flex items-center justify-between pb-4">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-secondary text-[20px]">contacts</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-serif">Catalog of Entries</h2>
+</div>
+<span class="font-data-mono text-label-sm text-on-surface-variant">REC: 001 - 004 OF 014</span>
+</div>
+<!-- Ledger Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-md text-label-md uppercase tracking-wider">
+<th class="py-2.5 px-3">Subject & Moniker</th>
+<th class="py-2.5 px-3">Protocol Phone</th>
+<th class="py-2.5 px-3">Status</th>
+<th class="py-2.5 px-3 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 font-body-sm text-body-sm">
+<!-- Row 1: Parveen (Mom) - SELECTED ACTIVE -->
+<tr class="bg-surface-container-high transition-colors group cursor-pointer">
+<td class="py-3 px-3">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-7 bg-secondary rounded-sm"></span>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface font-bold">Parveen</p>
+<p class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Mom // Primary Anchor</p>
+</div>
+</div>
+</td>
+<td class="py-3 px-3 font-data-mono text-label-sm text-on-surface">
+                  +91 97901 71303
+                </td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-error-container text-error rounded font-label-sm text-label-sm font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                    Review Need
+                  </span>
+</td>
+<td class="py-3 px-3 text-right">
+<button class="px-2 py-1 bg-primary text-on-primary font-label-sm text-label-sm rounded hover:bg-surface-container-highest hover:text-on-surface transition-colors shadow-sm" type="button">
+                    Active
+                  </button>
+</td>
+</tr>
+<!-- Row 2: Alexander Scott -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low transition-colors group">
+<td class="py-3 px-3">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-7 bg-transparent rounded-sm"></span>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Alexander Scott</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Corporate Lead // Apex HQ</p>
+</div>
+</div>
+</td>
+<td class="py-3 px-3 font-data-mono text-label-sm text-on-surface-variant">
+                  +1 (415) 890-2101
+                </td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-surface-container-high text-on-surface-variant rounded font-label-sm text-label-sm uppercase">
+                    Standby
+                  </span>
+</td>
+<td class="py-3 px-3 text-right">
+<button class="px-2 py-1 bg-surface-container-high text-on-surface font-label-sm text-label-sm rounded hover:bg-primary hover:text-on-primary transition-colors" type="button">
+                    Inspect
+                  </button>
+</td>
+</tr>
+<!-- Row 3: Logistics Desk -->
+<tr class="bg-surface-container-low hover:bg-surface-container transition-colors group">
+<td class="py-3 px-3">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-7 bg-transparent rounded-sm"></span>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Delivery / Logistics</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Transit Courier Gate</p>
+</div>
+</div>
+</td>
+<td class="py-3 px-3 font-data-mono text-label-sm text-on-surface-variant">
+                  +91 94441 00982
+                </td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-surface-container-highest text-on-surface font-label-sm text-label-sm uppercase font-semibold">
+                    Auto-Gate
+                  </span>
+</td>
+<td class="py-3 px-3 text-right">
+<button class="px-2 py-1 bg-surface-container-high text-on-surface font-label-sm text-label-sm rounded hover:bg-primary hover:text-on-primary transition-colors" type="button">
+                    Inspect
+                  </button>
+</td>
+</tr>
+<!-- Row 4: DevOps Alert Hub -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low transition-colors group">
+<td class="py-3 px-3">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-7 bg-transparent rounded-sm"></span>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface-variant">DevOps Alert Hub</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant/70 uppercase">Monitoring Engine</p>
+</div>
+</div>
+</td>
+<td class="py-3 px-3 font-data-mono text-label-sm text-on-surface-variant/70">
+                  +44 7700 900388
+                </td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-surface-container text-on-surface-variant/70 rounded font-label-sm text-label-sm uppercase">
+                    Inactive
+                  </span>
+</td>
+<td class="py-3 px-3 text-right">
+<button class="px-2 py-1 bg-surface-container text-on-surface-variant font-label-sm text-label-sm rounded hover:bg-primary hover:text-on-primary transition-colors" type="button">
+                    Inspect
+                  </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Ledger Footer Telemetry & Quick Action Bar -->
+<div class="mt-4 pt-4 bg-surface-container-low p-3 rounded flex items-center justify-between text-on-surface-variant">
+<div class="flex items-center gap-2 font-data-mono text-label-sm">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>AUTOPILOT ARMED COUNT: 0 / 14</span>
+</div>
+<button class="px-3 py-1 bg-surface-container-lowest text-on-surface font-label-md text-label-md rounded shadow-sm hover:bg-primary hover:text-on-primary transition-colors flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-[15px]">person_add</span>
+<span>New Correspondent</span>
+</button>
+</div>
+</div>
+<!-- Historical Archival Card Snapshot / Editorial Illustration Motif -->
+<div class="relative bg-surface-container-high rounded-lg p-6 overflow-hidden shadow-sm">
+<div class="relative z-10 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="font-data-mono text-label-sm text-secondary uppercase font-bold tracking-widest">MEMORANDUM // RULES OF DISPATCH</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">auto_stories</span>
+</div>
+<p class="font-headline-sm text-headline-sm text-on-surface font-serif italic">
+            "Directives inscribed in this ledger supersede all stochastic weights of the underlying large model."
+          </p>
+<div class="flex items-center justify-between pt-2">
+<span class="font-body-sm text-body-sm text-on-surface-variant">System Invariant: Rule Vector Zero Variance</span>
+<span class="font-data-mono text-label-sm text-on-surface font-bold">SEC. 4.9.1</span>
+</div>
+</div>
+</div>
+<!-- Quick Context Graph Visualizer (SVG) -->
+<div class="bg-surface-container-lowest rounded-lg p-5 shadow-sm space-y-4">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase text-on-surface font-semibold tracking-wider">Semantic Memory Density</span>
+<span class="font-data-mono text-label-sm text-secondary">4 CLUSTERS IDENTIFIED</span>
+</div>
+<!-- Inline Vector Space Mini Graph -->
+<div class="w-full h-32 bg-surface-container-low rounded relative p-2 flex items-center justify-center">
+<svg class="w-full h-full text-on-surface-variant/40" fill="none" viewbox="0 0 320 100">
+<!-- Node Links -->
+<line stroke="currentColor" stroke-dasharray="3 3" stroke-width="1" x1="40" x2="110" y1="50" y2="25"></line>
+<line stroke="currentColor" stroke-width="1.5" x1="110" x2="190" y1="25" y2="40"></line>
+<line stroke="currentColor" stroke-dasharray="2 2" stroke-width="1" x1="190" x2="270" y1="40" y2="30"></line>
+<line stroke="currentColor" stroke-width="1" x1="110" x2="160" y1="25" y2="80"></line>
+<line stroke="currentColor" stroke-width="1.5" x1="160" x2="240" y1="80" y2="75"></line>
+<!-- Nodes -->
+<circle cx="40" cy="50" fill="currentColor" r="4"></circle>
+<circle class="fill-secondary" cx="110" cy="25" r="7"></circle>
+<circle class="fill-primary" cx="190" cy="40" r="5"></circle>
+<circle cx="270" cy="30" fill="currentColor" r="4"></circle>
+<circle class="fill-primary" cx="160" cy="80" r="6"></circle>
+<circle class="fill-secondary-container" cx="240" cy="75" r="5"></circle>
+</svg>
+<div class="absolute bottom-2 left-3 font-data-mono text-label-sm text-on-surface-variant">
+            Anchor: Mom (Root Parent)
+          </div>
+<div class="absolute top-2 right-3 font-data-mono text-label-sm text-secondary font-bold">
+            Distance: 0.12 Cosine
+          </div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Vector proximity determines injection priority during context window compilation.
+        </p>
+</div>
+</div>
+<!-- RIGHT PANE: Persona Vault & Memory Ledger (7 Cols / 55%) -->
+<div class="xl:col-span-7 flex flex-col gap-6">
+<!-- Dossier Sheet Head -->
+<div class="bg-surface-container-lowest rounded-lg shadow-md p-6 sm:p-8 space-y-6">
+<!-- Engraved Dossier Masthead -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 bg-surface-container-low p-4 rounded-lg">
+<div class="flex items-center gap-4">
+<!-- Heraldic / Archival Monogram Seal -->
+<div class="w-14 h-14 rounded bg-primary text-on-primary flex flex-col items-center justify-center shadow-md font-serif">
+<span class="font-headline-md text-headline-md font-bold tracking-tighter">PR</span>
+<span class="font-data-mono text-[9px] uppercase tracking-widest text-secondary-fixed">MOM</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-data-mono text-label-sm px-2 py-0.5 bg-surface-container-highest text-on-surface rounded">DOSSIER #PAR-713</span>
+<span class="font-data-mono text-label-sm text-secondary uppercase font-bold">CONFIDENTIAL</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface font-serif mt-1">Correspondent Dossier: Parveen</h2>
+<p class="font-label-md text-label-md text-on-surface-variant">Telephony Route: +91 97901 71303 // SIM Slot 01</p>
+</div>
+</div>
+<!-- Stamped Physical Seal -->
+<div class="self-start sm:self-center px-3 py-1.5 bg-secondary-fixed text-on-secondary-fixed rounded flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span class="font-data-mono text-label-sm font-bold uppercase tracking-wider">MOM PROTOCOL: LOCKED</span>
+</div>
+</div>
+<!-- Rule Matrix: Grid of Fixed Telemetry Cards -->
+<div>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase font-semibold tracking-wider">Autonomous Dispatch Governance</span>
+<div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+<!-- Matrix 1: Autopilot -->
+<div class="p-3.5 bg-surface-container rounded flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>AUTOPILOT MODE</span>
+<span class="material-symbols-outlined text-[16px] text-error">lock</span>
+</div>
+<div class="my-2">
+<p class="font-headline-sm text-headline-sm text-on-surface font-serif">STRICT OFF</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Every outbound response demands human ratification.</p>
+</div>
+<div class="pt-2 flex items-center gap-1.5 font-data-mono text-label-sm text-error font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                NO DIRECT AUTO-SEND
+              </div>
+</div>
+<!-- Matrix 2: Language Engine -->
+<div class="p-3.5 bg-surface-container rounded flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>LANGUAGE DIALECT</span>
+<span class="material-symbols-outlined text-[16px] text-secondary">translate</span>
+</div>
+<div class="my-2">
+<p class="font-headline-sm text-headline-sm text-on-surface font-serif">TANGLISH</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Familial Colloquial Tamil + English romanized scripts.</p>
+</div>
+<div class="pt-2 flex items-center gap-1.5 font-data-mono text-label-sm text-secondary font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                CADENCE: FAMILIAL
+              </div>
+</div>
+<!-- Matrix 3: Daily Cap -->
+<div class="p-3.5 bg-surface-container rounded flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>DAILY TRANSMIT CAP</span>
+<span class="material-symbols-outlined text-[16px]">speed</span>
+</div>
+<div class="my-2">
+<p class="font-headline-sm text-headline-sm text-on-surface font-serif">2 DISPATCHES</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Max limit per solar day to prevent automated spamming.</p>
+</div>
+<div class="pt-2 flex items-center gap-1.5 font-data-mono text-label-sm text-on-surface font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                CURRENT USED: 0 / 2
+              </div>
+</div>
+</div>
+</div>
+<!-- Memory Vault Ledger Table (Handcrafted Archival Cards) -->
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px]">history_edu</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-serif">Inscribed Memory Directives</h3>
+</div>
+<span class="font-data-mono text-label-sm text-on-surface-variant">ACTIVE VECTORS: 04</span>
+</div>
+<!-- The Table / List of Archival Facts -->
+<div class="space-y-2">
+<!-- Fact I -->
+<div class="p-3.5 bg-surface-container-low rounded flex items-start gap-4 hover:bg-surface-container transition-colors">
+<span class="font-data-mono text-label-sm text-secondary font-bold pt-0.5">FACT.01</span>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Relationship & Affection Baseline</span>
+<span class="px-1.5 py-0.2 bg-surface-container-highest text-on-surface-variant font-data-mono text-[10px] rounded">RELATIONAL</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+                  Mother and primary domestic anchor. Tone must invariably reflect genuine warmth, gentle filial respect, and quiet obedience. Never employ sarcastic or curt quips.
+                </p>
+</div>
+<button class="text-on-surface-variant hover:text-error transition-colors p-1" title="Revoke Fact" type="button">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- Fact II -->
+<div class="p-3.5 bg-surface-container-low rounded flex items-start gap-4 hover:bg-surface-container transition-colors">
+<span class="font-data-mono text-label-sm text-secondary font-bold pt-0.5">FACT.02</span>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Honorific Mandate</span>
+<span class="px-1.5 py-0.2 bg-secondary-container text-on-secondary-container font-data-mono text-[10px] rounded font-bold">STRICT GRAMMAR</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+                  Address invariably as <span class="font-semibold text-on-surface">"maa"</span>. Under no circumstance generate formal English greetings (e.g., "Dear Mother", "Greetings", "Hope this finds you well").
+                </p>
+</div>
+<button class="text-on-surface-variant hover:text-error transition-colors p-1" title="Revoke Fact" type="button">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- Fact III -->
+<div class="p-3.5 bg-surface-container-low rounded flex items-start gap-4 hover:bg-surface-container transition-colors">
+<span class="font-data-mono text-label-sm text-secondary font-bold pt-0.5">FACT.03</span>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Response Cadence Directives</span>
+<span class="px-1.5 py-0.2 bg-surface-container-highest text-on-surface-variant font-data-mono text-[10px] rounded">CADENCE</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+                  Ultra-concise brevity: constrain draft between 1 and 7 words. Mimic spontaneous SMS replies (e.g., "Aama maa, reach aagiten", "Sapten maa"). Never draft multi-paragraph corporate responses.
+                </p>
+</div>
+<button class="text-on-surface-variant hover:text-error transition-colors p-1" title="Revoke Fact" type="button">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- Fact IV -->
+<div class="p-3.5 bg-surface-container-low rounded flex items-start gap-4 hover:bg-surface-container transition-colors">
+<span class="font-data-mono text-label-sm text-error font-bold pt-0.5">FACT.04</span>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<span class="font-label-lg text-label-lg text-error font-semibold">Prohibited Information Domains</span>
+<span class="px-1.5 py-0.2 bg-error-container text-error font-data-mono text-[10px] rounded font-bold">FIREWALL</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+                  Strictly veto any disclosure of financial pins, banking account credentials, confidential contracts, or precise geolocation schedules. Halt generation if queries probe these domains.
+                </p>
+</div>
+<button class="text-on-surface-variant hover:text-error transition-colors p-1" title="Revoke Fact" type="button">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Compiled Neural Directives (Syntax-highlighted editorial prompt box) -->
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase text-on-surface font-semibold tracking-wider">Auto-Synthesized Model Context Header</span>
+<span class="font-data-mono text-label-sm text-on-surface-variant">TARGET: GROQ / GEMINI 1.5 FLASH</span>
+</div>
+<div class="relative bg-primary-container text-primary-fixed p-4 rounded font-data-mono text-data-mono overflow-x-auto shadow-inner">
+<div class="flex items-center justify-between pb-2 mb-2 bg-on-primary-fixed/20 -mx-4 -mt-4 px-4 pt-2.5">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="text-label-sm text-primary-fixed-dim">SYSTEM_PROMPT_INJECTION_V2.TXT</span>
+</div>
+<span class="text-label-sm text-secondary-fixed">87 TOKENS</span>
+</div>
+<pre class="leading-relaxed whitespace-pre-wrap"><span class="text-secondary-fixed">[PERSONA_CORRESPONDENT: "PARVEEN"]</span>
+<span class="text-primary-fixed-dim">AFFINITY:</span> Mother (First-order family)
+<span class="text-primary-fixed-dim">REQUIRED_SALUTATION:</span> Invariably "maa". Reject English formal greetings.
+<span class="text-primary-fixed-dim">CADENCE_RESTRICTION:</span> 1 to 7 words only. Format: Tanglish SMS colloquial.
+<span class="text-secondary-fixed">FORBIDDEN_KNOWLEDGE:</span> Banking credentials, OTPs, contract values.
+<span class="text-primary-fixed-dim">DISPATCH_MODE:</span> DRAFT_ONLY (Do not execute autodial/autosend).
+<span class="text-primary-fixed-dim">EXAMPLE:</span> "Seri maa, night call panren."</pre>
+</div>
+</div>
+<!-- Tactile Ledger Control Actions -->
+<div class="pt-4 flex flex-wrap items-center justify-between gap-4">
+<button class="px-4 py-2.5 bg-surface-container-highest text-on-surface font-label-md text-label-md uppercase rounded hover:bg-surface-container transition-colors flex items-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+<span>Inscribe New Fact to Ledger</span>
+</button>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2.5 bg-surface-container text-error font-label-md text-label-md uppercase rounded hover:bg-error-container transition-colors flex items-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]">cleaning_services</span>
+<span>Flush Memory Vector</span>
+</button>
+<button class="px-5 py-2.5 bg-primary text-on-primary font-label-md text-label-md uppercase rounded hover:bg-surface-container-highest hover:text-on-surface transition-all shadow-md flex items-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]">save</span>
+<span>Commit Directives</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Historical Verification / Activity Stamp Strip -->
+<div class="p-4 bg-surface-container-low rounded-lg flex items-center justify-between text-on-surface-variant font-data-mono text-label-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary">fingerprint</span>
+<span>CRYPTOGRAPHIC HASH: e4a7...99bf</span>
+</div>
+<div>PREVIOUS RATIFICATION: YESTERDAY 21:40 BY T. RAHMAN</div>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

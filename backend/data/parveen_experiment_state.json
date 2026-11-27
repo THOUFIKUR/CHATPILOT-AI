@@ -1,0 +1,374 @@
+{
+  "experiment_name": "Parveen Single-Contact WhatsApp Auto-Reply Test",
+  "target_contact": {
+    "display_name": "Parveen",
+    "phone_number": "9790171303",
+    "canonical_phone": "+919790171303",
+    "country": "India"
+  },
+  "is_enabled": true,
+  "is_emergency_stopped": false,
+  "is_completed": false,
+  "max_replies_allowed": 2,
+  "successful_replies_count": 11,
+  "processed_notification_ids": [
+    "winrt_45147",
+    "1",
+    "1",
+    "ccc259ba-0bbb-460d-8e88-bbd093597840",
+    "winrt_45246",
+    "winrt_45249",
+    "winrt_45253",
+    "winrt_45256",
+    "winrt_45260",
+    "winrt_45263",
+    "winrt_45300"
+  ],
+  "processed_message_signatures": [
+    "Parveen / \u0645\u0648\u0645\u064a\u0627\u0621_hhh_winrt_45147",
+    "\u2764\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_hhh_1",
+    "\u2764\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_hhh_1",
+    "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_Eppa varuviga?_ccc259ba-0bbb-460d-8e88-bbd093597840",
+    "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_ippo vaachu vaada daiii_winrt_45246",
+    "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_all good la?_winrt_45249",
+    "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_ohhh apdiya_winrt_45253",
+    "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_eppa dai_winrt_45256",
+    "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_two or one_winrt_45260",
+    "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_why did u choose that one?_winrt_45263",
+    "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_reply varuma?_winrt_45300"
+  ],
+  "last_event_timestamp": "2026-11-27T03:21:08.086705+00:00",
+  "last_reply_details": {
+    "timestamp": "2026-11-27T03:21:08.086705+00:00",
+    "incoming_message": "reply varuma?",
+    "sender": "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621",
+    "sender_phone": "+919790171303",
+    "generated_reply": "Ippo varum maa",
+    "provider": "groq",
+    "model": "qwen/qwen3.8-27b",
+    "latency_ms": 1872,
+    "submission_result": "message_sent_and_verified",
+    "native_reply_action_available": false
+  },
+  "diagnostic_logs": [
+    {
+      "timestamp": "2026-11-26T11:35:26.199563+00:00",
+      "stage": "RESET",
+      "level": "INFO",
+      "message": "Experiment state reset to fresh defaults.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T12:42:59.930751+00:00",
+      "stage": "LIFECYCLE",
+      "level": "INFO",
+      "message": "Experiment paused by user.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T12:43:01.033066+00:00",
+      "stage": "LIFECYCLE",
+      "level": "INFO",
+      "message": "Experiment started/resumed by user.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T12:43:24.178719+00:00",
+      "stage": "AI_GENERATION",
+      "level": "INFO",
+      "message": "Generating personalized reply for incoming message: 'hhh'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T12:43:26.807393+00:00",
+      "stage": "AI_GENERATION",
+      "level": "INFO",
+      "message": "Generating personalized reply for incoming message: 'hhh'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T12:43:34.462662+00:00",
+      "stage": "ONE_SHOT_COMPLETE",
+      "level": "INFO",
+      "message": "One-shot reply complete. Experiment auto-disabled. Reply: 'Ok maa'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T12:43:34.758529+00:00",
+      "stage": "AI_GENERATION",
+      "level": "INFO",
+      "message": "Generating personalized reply for incoming message: 'hhh'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T12:43:41.506461+00:00",
+      "stage": "ONE_SHOT_COMPLETE",
+      "level": "INFO",
+      "message": "One-shot reply complete. Experiment auto-disabled. Reply: 'Ok maa'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T12:43:48.676215+00:00",
+      "stage": "ONE_SHOT_COMPLETE",
+      "level": "INFO",
+      "message": "One-shot reply complete. Experiment auto-disabled. Reply: 'Ok maa'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T12:44:12.014803+00:00",
+      "stage": "LIFECYCLE",
+      "level": "INFO",
+      "message": "Experiment paused by user.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T13:07:51.942430+00:00",
+      "stage": "LIFECYCLE",
+      "level": "INFO",
+      "message": "Experiment paused by user.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T13:07:54.881821+00:00",
+      "stage": "LIFECYCLE",
+      "level": "INFO",
+      "message": "Experiment paused by user.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T13:12:35.334992+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: 1-shot limit reached. Experiment is completed.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T13:19:22.065006+00:00",
+      "stage": "LIFECYCLE",
+      "level": "INFO",
+      "message": "Experiment paused by user.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T13:39:41.476334+00:00",
+      "stage": "LIFECYCLE",
+      "level": "INFO",
+      "message": "Experiment paused by user.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T14:41:51.554968+00:00",
+      "stage": "LIFECYCLE",
+      "level": "INFO",
+      "message": "Experiment paused by user.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T15:10:39.489682+00:00",
+      "stage": "LIFECYCLE",
+      "level": "INFO",
+      "message": "Experiment paused by user.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T15:37:49.714372+00:00",
+      "stage": "LIFECYCLE",
+      "level": "INFO",
+      "message": "Experiment paused by user.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T15:38:15.823149+00:00",
+      "stage": "LIFECYCLE",
+      "level": "INFO",
+      "message": "Experiment paused by user.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T15:40:41.335443+00:00",
+      "stage": "LIFECYCLE",
+      "level": "INFO",
+      "message": "Experiment paused by user.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T15:41:11.787609+00:00",
+      "stage": "LIFECYCLE",
+      "level": "INFO",
+      "message": "Experiment paused by user.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:04:49.461780+00:00",
+      "stage": "AI_GENERATION",
+      "level": "INFO",
+      "message": "Generating personalized reply for incoming message: 'Eppa varuviga?'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:04:51.983960+00:00",
+      "stage": "DELAY",
+      "level": "INFO",
+      "message": "Holding for authoritative 2-second response delay...",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:05:00.926461+00:00",
+      "stage": "ONE_SHOT_COMPLETE",
+      "level": "INFO",
+      "message": "One-shot reply complete. Experiment auto-disabled. Reply: 'Train la express'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:07:22.513114+00:00",
+      "stage": "AI_GENERATION",
+      "level": "INFO",
+      "message": "Generating personalized reply for incoming message: 'ippo vaachu vaada daiii'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:07:25.234334+00:00",
+      "stage": "DELAY",
+      "level": "INFO",
+      "message": "Holding for authoritative 2-second response delay...",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:07:32.555694+00:00",
+      "stage": "ONE_SHOT_COMPLETE",
+      "level": "INFO",
+      "message": "One-shot reply complete. Experiment auto-disabled. Reply: 'Ok maa'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:07:49.863890+00:00",
+      "stage": "AI_GENERATION",
+      "level": "INFO",
+      "message": "Generating personalized reply for incoming message: 'all good la?'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:07:52.341921+00:00",
+      "stage": "DELAY",
+      "level": "INFO",
+      "message": "Holding for authoritative 2-second response delay...",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:07:58.996574+00:00",
+      "stage": "ONE_SHOT_COMPLETE",
+      "level": "INFO",
+      "message": "One-shot reply complete. Experiment auto-disabled. Reply: 'Aha maa'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:15:20.682759+00:00",
+      "stage": "AI_GENERATION",
+      "level": "INFO",
+      "message": "Generating personalized reply for incoming message: 'ohhh apdiya'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:15:24.110808+00:00",
+      "stage": "DELAY",
+      "level": "INFO",
+      "message": "Holding for authoritative 2-second response delay...",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:15:31.523473+00:00",
+      "stage": "ONE_SHOT_COMPLETE",
+      "level": "INFO",
+      "message": "One-shot reply complete. Experiment auto-disabled. Reply: 'Inna thaa.'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:15:52.771930+00:00",
+      "stage": "AI_GENERATION",
+      "level": "INFO",
+      "message": "Generating personalized reply for incoming message: 'eppa dai'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:15:54.906925+00:00",
+      "stage": "DELAY",
+      "level": "INFO",
+      "message": "Holding for authoritative 2-second response delay...",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:16:02.097052+00:00",
+      "stage": "ONE_SHOT_COMPLETE",
+      "level": "INFO",
+      "message": "One-shot reply complete. Experiment auto-disabled. Reply: 'Ippo share panren'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:21:04.412158+00:00",
+      "stage": "AI_GENERATION",
+      "level": "INFO",
+      "message": "Generating personalized reply for incoming message: 'two or one'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:21:06.445146+00:00",
+      "stage": "DELAY",
+      "level": "INFO",
+      "message": "Holding for authoritative 2-second response delay...",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:21:13.441818+00:00",
+      "stage": "ONE_SHOT_COMPLETE",
+      "level": "INFO",
+      "message": "One-shot reply complete. Experiment auto-disabled. Reply: 'One'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:21:30.251570+00:00",
+      "stage": "AI_GENERATION",
+      "level": "INFO",
+      "message": "Generating personalized reply for incoming message: 'why did u choose that one?'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:21:32.331101+00:00",
+      "stage": "DELAY",
+      "level": "INFO",
+      "message": "Holding for authoritative 2-second response delay...",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-26T16:21:39.267411+00:00",
+      "stage": "ONE_SHOT_COMPLETE",
+      "level": "INFO",
+      "message": "One-shot reply complete. Experiment auto-disabled. Reply: 'Nalla vishayam nadichirukku maa'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T03:21:08.091380+00:00",
+      "stage": "AI_GENERATION",
+      "level": "INFO",
+      "message": "Generating personalized reply for incoming message: 'reply varuma?'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T03:21:11.526542+00:00",
+      "stage": "DELAY",
+      "level": "INFO",
+      "message": "Holding for authoritative 2-second response delay...",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T03:21:18.861408+00:00",
+      "stage": "ONE_SHOT_COMPLETE",
+      "level": "INFO",
+      "message": "One-shot reply complete. Experiment auto-disabled. Reply: 'Ippo varum maa'",
+      "details": null
+    }
+  ],
+  "reply_mode": "automatic",
+  "native_reply_action_available": false,
+  "sending_mechanism": "native_windows_notification_reply_check",
+  "hourly_reply_timestamps": []
+}

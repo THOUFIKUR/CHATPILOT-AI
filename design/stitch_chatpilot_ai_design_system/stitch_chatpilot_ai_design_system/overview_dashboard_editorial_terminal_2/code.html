@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=JetBrains+Mono:wght@100..900&amp;family=Newsreader:wght@100..900&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes pulseRing {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(172, 52, 0, 0.55);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(172, 52, 0, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(172, 52, 0, 0);
+  }
+}
+@keyframes inkShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.animate-delay-1 { animation-delay: 0.05s; }
+.animate-delay-2 { animation-delay: 0.1s; }
+.animate-delay-3 { animation-delay: 0.15s; }
+.animate-delay-4 { animation-delay: 0.2s; }
+.animate-pulse-ring {
+  animation: pulseRing 2.2s infinite;
+}
+.animate-ink-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.animate-ink-shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  animation: inkShimmer 2.4s infinite linear;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-pulse-ring,
+  .animate-ink-shimmer::after {
+    animation: none !important;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
+</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-secondary":"#ffffff","on-primary-container":"#81838e","inverse-surface":"#30312f","on-surface":"#1b1c1a","tertiary-fixed":"#dce1ff","outline-variant":"#c6c6cb","on-primary":"#ffffff","on-primary-fixed":"#181b24","inverse-primary":"#c4c6d1","surface-container":"#efeeeb","surface-container-low":"#f5f3f0","on-secondary-fixed-variant":"#832600","on-background":"#1b1c1a","primary-fixed-dim":"#c4c6d1","on-tertiary-container":"#547aff","error":"#ba1a1a","on-secondary-container":"#5d1900","tertiary":"#000000","surface-variant":"#e4e2df","secondary-fixed-dim":"#ffb59d","surface-container-lowest":"#ffffff","surface":"#fbf9f6","surface-container-highest":"#e4e2df","error-container":"#ffdad6","primary-container":"#181b24","surface-container-high":"#eae8e5","on-primary-fixed-variant":"#444650","on-tertiary-fixed-variant":"#0039b5","background":"#fbf9f6","on-error":"#ffffff","inverse-on-surface":"#f2f0ed","tertiary-container":"#001551","on-tertiary-fixed":"#001551","surface-bright":"#fbf9f6","primary-fixed":"#e0e2ed","primary":"#000000","tertiary-fixed-dim":"#b7c4ff","secondary-container":"#fd6b36","outline":"#76777c","on-error-container":"#93000a","on-secondary-fixed":"#390c00","secondary-fixed":"#ffdbd0","secondary":"#ac3400","surface-dim":"#dbdad7","on-surface-variant":"#46464b","surface-tint":"#5b5e68","on-tertiary":"#ffffff"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"margin-mobile":"1rem","space-xl":"2.5rem","space-sm":"0.5rem","space-md":"1rem","space-lg":"1.5rem","gutter":"1.25rem","margin":"2.5rem","gutter-mobile":"0.75rem","space-xs":"0.25rem"},"fontFamily":{"label-md":["JetBrains Mono"],"label-sm":["JetBrains Mono"],"label-lg":["Geist"],"headline-md":["Newsreader"],"headline-lg-mobile":["Newsreader"],"body-lg":["Newsreader"],"body-sm":["Geist"],"display-lg-mobile":["Newsreader"],"headline-lg":["Newsreader"],"display-lg":["Newsreader"],"data-mono":["JetBrains Mono"],"body-md":["Geist"],"headline-sm":["Newsreader"]},"fontSize":{"label-md":["11px",{"lineHeight":"16px","letterSpacing":"0.04em","fontWeight":"500"}],"label-sm":["10px",{"lineHeight":"14px","letterSpacing":"0.06em","fontWeight":"500"}],"label-lg":["13px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"600"}],"headline-md":["26px",{"lineHeight":"32px","letterSpacing":"0em","fontWeight":"600"}],"headline-lg-mobile":["28px",{"lineHeight":"34px","letterSpacing":"-0.01em","fontWeight":"500"}],"body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"display-lg-mobile":["38px",{"lineHeight":"44px","letterSpacing":"-0.015em","fontWeight":"400"}],"headline-lg":["36px",{"lineHeight":"44px","letterSpacing":"-0.01em","fontWeight":"500"}],"display-lg":["56px",{"lineHeight":"64px","letterSpacing":"-0.02em","fontWeight":"400"}],"data-mono":["13px",{"lineHeight":"18px","letterSpacing":"-0.01em","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"headline-sm":["20px",{"lineHeight":"26px","letterSpacing":"0em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed"><aside class="fixed left-0 top-0 h-full w-[260px] bg-surface-container-low z-50 flex flex-col justify-between border-r border-outline-variant/60 shadow-[0_1px_12px_rgba(20,23,31,0.04)]"><div class="flex flex-col flex-1 min-h-0"><div class="p-space-md border-b border-outline-variant/60 bg-surface-container"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-sm text-label-sm text-secondary uppercase font-bold tracking-widest">CHATPILOT // AI DISPATCH</span><span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full border border-outline-variant/80 bg-surface-container-lowest text-on-surface-variant">SYS.01</span></div><h1 class="font-headline-sm text-headline-sm text-primary tracking-tight font-serif">Gazette &amp; Terminal</h1><div class="mt-space-xs pt-space-xs border-t border-outline-variant/40 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><span>VOL. IXVIII</span><span>EDITION #421</span></div></div><nav class="flex-1 overflow-y-auto px-space-sm py-space-md space-y-1" data-active-classes="bg-primary text-on-primary font-semibold"><a aria-current="page" class="group flex items-center justify-between px-space-sm py-2 rounded-xl transition-all duration-200 uppercase bg-primary text-on-primary font-semibold shadow-sm" data-path="overview" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-on-primary/15 flex items-center justify-center transition-transform duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">newspaper</span></span><span>Overview</span></div><span class="font-data-mono text-label-sm opacity-60">01</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="ask-chatpilot" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">terminal</span></span><span>Ask ChatPilot</span></div><span class="font-data-mono text-label-sm opacity-60">02</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="reply-inbox" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">mark_email_unread</span></span><span>Reply Inbox</span></div><span class="px-2 py-0.5 bg-secondary text-on-secondary font-label-sm text-label-sm font-bold rounded-full shadow-sm">2</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="contacts" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">contacts</span></span><span>Contacts</span></div><span class="font-data-mono text-label-sm opacity-60">04</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="groups" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">hub</span></span><span>Groups</span></div><span class="font-data-mono text-label-sm opacity-60">05</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="memory" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">history_edu</span></span><span>Memory</span></div><span class="font-data-mono text-label-sm opacity-60">06</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="ai-providers" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">schema</span></span><span>AI Providers</span></div><span class="font-data-mono text-label-sm opacity-60">07</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="activity-log" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">receipt_long</span></span><span>Activity Log</span></div><span class="font-data-mono text-label-sm opacity-60">08</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="dataset-audit" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">fact_check</span></span><span>Dataset Audit</span></div><span class="font-data-mono text-label-sm opacity-60">09</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="settings" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">settings_input_component</span></span><span>Settings</span></div><span class="font-data-mono text-label-sm opacity-60">10</span></a></nav></div><div class="p-space-md border-t border-outline-variant/60 bg-surface-container-low"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Local Bridge</span><span class="inline-flex items-center gap-1.5 font-label-sm text-label-sm px-2.5 py-0.5 rounded-full border border-outline-variant/70 bg-surface-container-lowest text-on-surface shadow-sm"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse-ring"></span>CONNECTED</span></div><div class="pt-space-xs flex items-center gap-space-sm"><div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="min-w-0 flex-1"><p class="font-label-lg text-label-lg text-on-surface truncate">Thoufikur Rahman</p><p class="font-label-sm text-label-sm text-on-surface-variant truncate font-data-mono">DISPATCH CHIEF</p></div></div></div></aside><div class="pl-[260px]"><header class="fixed top-0 left-[260px] right-0 h-16 bg-surface/90 backdrop-blur-md border-b border-outline-variant/60 z-40 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm text-on-surface font-label-md text-label-md"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 flex items-center justify-center"><span class="material-symbols-outlined text-[16px] text-on-surface-variant">calendar_today</span></span><span class="uppercase tracking-wider font-semibold">EDITION: OCT 24, 2024 // 08:30 GMT</span></div><div class="h-4 w-px bg-outline-variant/60"></div><div class="flex items-center gap-2 font-label-md text-label-md text-on-surface"><span class="w-2 h-2 rounded-full bg-primary"></span><span class="font-data-mono tracking-tight">OPERATIONAL 99.8%</span></div><div class="h-4 w-px bg-outline-variant/60"></div><div class="flex items-center gap-2 font-label-md text-label-md"><span class="text-on-surface-variant uppercase font-medium">Global Auto-Reply:</span><span class="px-2.5 py-0.5 rounded-full bg-surface-container-high border border-outline-variant/80 font-data-mono font-bold text-on-surface">ARMED // LIVE</span></div></div><div class="flex items-center gap-space-md"><button class="px-3.5 py-1.5 rounded-xl border border-outline-variant/80 bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-all duration-200 flex items-center gap-1.5 shadow-sm hover:-translate-y-0.5" type="button"><span class="material-symbols-outlined text-[16px]">upload_file</span><span>Import Corpus</span></button><button class="px-3.5 py-1.5 rounded-xl bg-primary border border-primary text-on-primary font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-all duration-200 flex items-center gap-1.5 shadow-sm hover:-translate-y-0.5" type="button"><span class="material-symbols-outlined text-[16px]">send</span><span>Simulate Dispatch</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="relative pt-16 min-h-screen bg-surface w-full px-8"><div class="flex flex-col w-full pb-16 pt-4">
+<!-- MASTHEAD SECTION -->
+<section class="relative bg-surface-container-low rounded-2xl border border-outline-variant/50 px-space-lg py-space-xl mb-space-lg shadow-[0_4px_20px_-4px_rgba(20,23,31,0.06)] animate-fade-in-up">
+<!-- Archival Top Registry Slug -->
+<div class="flex flex-wrap items-center justify-between gap-4 pb-space-sm mb-space-md border-b border-outline-variant/40">
+<div class="flex items-center gap-space-sm font-label-sm text-label-sm text-secondary uppercase font-bold tracking-widest">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse-ring"></span>
+<span>VOL. IV — NO. 142 • WEDNESDAY EDITION • LOCAL BRIDGED GATEWAY</span>
+</div>
+<div class="flex items-center gap-space-md font-label-sm text-label-sm text-on-surface-variant font-data-mono">
+<span>SECURITY CLASSIFICATION: CLASS-A TIER</span>
+<span class="text-outline-variant">•</span>
+<span>LATENCY TARGET: &lt; 900MS</span>
+<span class="text-outline-variant">•</span>
+<span class="text-secondary font-bold">TELETYPE: ONLINE</span>
+</div>
+</div>
+<!-- Editorial Lead Title & Controls -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-y-space-md gap-x-space-lg items-end">
+<div class="xl:col-span-7">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest block mb-space-xs font-serif italic">The ChatPilot Dispatch // Realtime Telemetry</span>
+<h1 class="font-display-lg text-display-lg text-on-surface font-serif tracking-tight leading-none mb-space-sm">
+          Executive System Overview &amp; Telegram Dispatch
+        </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
+          Operational telemetric ledger, inbound wire ratification queue, and multi-model routing core. 
+          All incoming correspondence strictly quarantined behind cryptographic gatekeepers before operator dissemination.
+        </p>
+</div>
+<!-- Master Hardware Toggle & Action Column -->
+<div class="xl:col-span-5 flex flex-col items-start xl:items-end justify-between gap-space-md">
+<!-- Mechanical Switch Stamping -->
+<div class="w-full sm:w-auto bg-surface-container-highest rounded-xl border border-outline-variant/60 p-space-md shadow-inner flex flex-col gap-space-xs">
+<div class="flex items-center justify-between gap-space-lg">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface font-bold">
+              MASTER DISPATCH GATE:
+            </span>
+<!-- Mechanical Toggle Control -->
+<button class="relative inline-flex items-center h-6 w-14 px-0.5 rounded-full bg-primary-container cursor-pointer transition-colors duration-200" id="master-toggle" type="button">
+<span class="w-5 h-5 rounded-full bg-surface-container-lowest shadow-[1px_1px_1px_rgba(0,0,0,0.4)] transform translate-x-0 transition-transform duration-150 ease-out flex items-center justify-center" id="master-toggle-knob">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+</span>
+</button>
+</div>
+<div class="flex items-center gap-1.5 text-secondary font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+<span>INERT (DRAFT MODE ONLY)</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant/90 max-w-xs leading-normal pt-1 border-t border-outline-variant/30">
+            Incoming transmissions queued for human operator ratification; zero autonomous broadcasts.
+          </p>
+</div>
+<!-- Wire Action Triggers -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<button class="px-space-md py-2 rounded-xl bg-primary text-on-primary font-label-md text-label-md uppercase tracking-wider hover:bg-primary-container hover:text-on-primary-container transition-all duration-200 active:translate-y-0.5 flex items-center gap-2 shadow-sm hover:-translate-y-0.5 hover:shadow-md" id="sim-btn" type="button">
+<span class="material-symbols-outlined text-[15px]">sensors</span>
+<span>Simulate Incoming Wire [Mock]</span>
+</button>
+<button class="px-space-md py-2 rounded-xl border border-outline-variant/70 bg-surface-container-lowest text-on-surface font-label-md text-label-md uppercase tracking-wider hover:bg-surface-container-high transition-all duration-200 active:translate-y-0.5 flex items-center gap-2 shadow-sm hover:-translate-y-0.5 hover:shadow-md" type="button">
+<span class="material-symbols-outlined text-[15px]">inventory_2</span>
+<span>Import Corpus (.TXT)</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- METRIC LEDGER BLOCKS (4 Columns) -->
+<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-space-md mb-space-lg">
+<!-- Ledger 1 -->
+<div class="group bg-surface-container-lowest rounded-2xl border border-outline-variant/50 p-space-md relative flex flex-col justify-between shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md animate-fade-in-up animate-delay-1">
+<div class="flex items-center justify-between pb-space-xs mb-space-sm border-b border-outline-variant/40">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest font-serif">REGISTRY CODE // CH-01</span>
+<span class="w-8 h-8 rounded-xl bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">satellite_alt</span>
+</span>
+</div>
+<div>
+<p class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant mb-1">Registered Channels</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg font-serif text-on-surface font-bold tracking-tight">01</span>
+<span class="font-data-mono text-label-sm text-on-surface-variant">Active / 14 Total</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs border-t border-outline-variant/30 flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant font-serif italic">Parveen (Mother)</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high font-data-mono text-on-surface font-bold">ROUTE #WH-09</span>
+</div>
+</div>
+<!-- Ledger 2 -->
+<div class="group bg-surface-container-lowest rounded-2xl border border-outline-variant/50 p-space-md relative flex flex-col justify-between shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md animate-fade-in-up animate-delay-2">
+<div class="flex items-center justify-between pb-space-xs mb-space-sm border-b border-outline-variant/40">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest font-serif font-bold">HOLD STATUS // AWAIT</span>
+<span class="w-8 h-8 rounded-xl bg-secondary/10 group-hover:bg-secondary/15 flex items-center justify-center transition-all duration-200 group-hover:scale-105">
+<span class="material-symbols-outlined text-[16px] text-secondary">pending_actions</span>
+</span>
+</div>
+<div>
+<p class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant mb-1">Pending Ratification</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg font-serif text-secondary font-bold tracking-tight">02</span>
+<span class="font-data-mono text-label-sm text-secondary uppercase font-bold">Drafts Held</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs border-t border-outline-variant/30 flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-serif italic">Wax Stamp Quarantine</span>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-data-mono text-label-sm uppercase font-bold shadow-sm">
+          HUMAN REVIEW
+        </span>
+</div>
+</div>
+<!-- Ledger 3 -->
+<div class="group bg-surface-container-lowest rounded-2xl border border-outline-variant/50 p-space-md relative flex flex-col justify-between shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md animate-fade-in-up animate-delay-3">
+<div class="flex items-center justify-between pb-space-xs mb-space-sm border-b border-outline-variant/40">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest font-serif">DISPATCH EXHAUSTION</span>
+<span class="w-8 h-8 rounded-xl bg-amber-600/10 group-hover:bg-amber-600/15 flex items-center justify-center transition-all duration-200 group-hover:scale-105">
+<span class="material-symbols-outlined text-[16px] text-amber-700">hourglass_bottom</span>
+</span>
+</div>
+<div>
+<p class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant mb-1">Daily Wire Quota</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg font-serif text-on-surface font-bold tracking-tight">02</span>
+<span class="font-data-mono text-label-sm text-on-surface-variant">/ 02 Safety Cap Max</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs border-t border-outline-variant/30 flex items-center justify-between font-label-sm text-label-sm">
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden flex items-center">
+<div class="bg-primary h-1.5 w-full rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Ledger 4 -->
+<div class="group bg-surface-container-lowest rounded-2xl border border-outline-variant/50 p-space-md relative flex flex-col justify-between shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md animate-fade-in-up animate-delay-4">
+<div class="flex items-center justify-between pb-space-xs mb-space-sm border-b border-outline-variant/40">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest font-serif">PII / CIPHER FILTER</span>
+<span class="w-8 h-8 rounded-xl bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">verified_user</span>
+</span>
+</div>
+<div>
+<p class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant mb-1">Defensive Shield</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg font-serif text-on-surface font-bold tracking-tight">100%</span>
+<span class="font-data-mono text-label-sm text-on-surface font-bold uppercase">Guarded</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs border-t border-outline-variant/30 flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant font-serif italic">Regex OTP Sanitizer Active</span>
+<span class="font-data-mono text-label-sm text-secondary font-bold">0 LEAKS</span>
+</div>
+</div>
+</section>
+<!-- MAIN COMPUTATIONAL GRID: AI Engines (4 cols) & Teletype Machine (8 cols) -->
+<section class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg mb-space-lg items-start">
+<!-- AI COMPUTATIONAL ENGINES (Letterpress Cards) -->
+<div class="xl:col-span-5 flex flex-col gap-space-md">
+<div class="flex items-center justify-between border-b border-outline-variant/40 pb-space-xs">
+<h2 class="font-headline-sm text-headline-sm font-serif text-on-surface tracking-tight">AI Engine Matrix</h2>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-high font-label-sm text-label-sm font-data-mono text-on-surface-variant">3 CORES ONLINE</span>
+</div>
+<!-- Card 1: Groq Cloud (Primary) -->
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/50 p-space-md shadow-sm relative pl-space-lg overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-secondary"></div>
+<div class="flex items-center justify-between mb-space-xs">
+<div class="flex items-center gap-2">
+<span class="font-label-lg text-label-lg font-serif font-bold text-on-surface">Groq Cloud Telemetry</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary text-on-secondary font-label-sm text-label-sm font-bold">PRIMARY ACTIVE</span>
+</div>
+<span class="font-data-mono text-label-sm text-on-surface font-bold">780ms</span>
+</div>
+<p class="font-data-mono text-body-sm text-on-surface-variant mb-space-sm font-bold">model: qwen/qwen3.8-27b-instruct</p>
+<!-- Metrics bar -->
+<div class="space-y-1">
+<div class="flex justify-between font-label-sm text-label-sm text-on-surface-variant font-data-mono">
+<span>QUOTA CONSUMPTION</span>
+<span class="font-bold text-on-surface">64% (64,000 / 100k Tks)</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden flex">
+<div class="bg-on-surface h-full w-[64%] rounded-full"></div>
+</div>
+</div>
+<div class="mt-space-sm pt-space-xs border-t border-outline-variant/30 flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Inference Rate: 114 tps</span>
+<span class="font-data-mono text-secondary">WARM TENSOR INSTANCE</span>
+</div>
+</div>
+<!-- Card 2: Google Gemini (Multimodal) -->
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/50 p-space-md shadow-sm relative pl-space-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+<div class="flex items-center justify-between mb-space-xs">
+<div class="flex items-center gap-2">
+<span class="font-label-lg text-label-lg font-serif font-bold text-on-surface">Google Gemini Engine</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-bold">VISION / AUDIO</span>
+</div>
+<span class="font-data-mono text-label-sm text-on-surface">1,120ms</span>
+</div>
+<p class="font-data-mono text-body-sm text-on-surface-variant mb-space-sm">model: gemini-2.5-flash-pro</p>
+<div class="space-y-1">
+<div class="flex justify-between font-label-sm text-label-sm text-on-surface-variant font-data-mono">
+<span>MULTIMODAL AUDIO PIPELINE</span>
+<span class="font-bold text-on-surface">28% (Audio Ingestion)</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden flex">
+<div class="bg-outline h-full w-[28%] rounded-full"></div>
+</div>
+</div>
+<div class="mt-space-sm pt-space-xs border-t border-outline-variant/30 flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Transcription: Whisper-Base Enroute</span>
+<span class="font-data-mono text-on-surface">IDLE POOL</span>
+</div>
+</div>
+<!-- Card 3: OpenRouter Fallback -->
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/50 p-space-md shadow-sm relative pl-space-md opacity-90 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+<div class="flex items-center justify-between mb-space-xs">
+<div class="flex items-center gap-2">
+<span class="font-label-lg text-label-lg font-serif font-bold text-on-surface">OpenRouter Bridge</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">STANDBY FALLBACK</span>
+</div>
+<span class="font-data-mono text-label-sm text-on-surface-variant">1,410ms</span>
+</div>
+<p class="font-data-mono text-body-sm text-on-surface-variant mb-space-sm">model: deepseek/deepseek-chat-v3</p>
+<div class="mt-space-sm pt-space-xs border-t border-outline-variant/30 flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Automatic Circuit Breaker: ARMED</span>
+<span class="font-data-mono">0 ERRORS / 24H</span>
+</div>
+</div>
+</div>
+<!-- TELETYPE ENGINE & INK PULSE MONITOR (Editorial Terminal Box) -->
+<div class="xl:col-span-7 flex flex-col h-full">
+<div class="flex items-center justify-between border-b border-outline-variant/40 pb-space-xs mb-space-md">
+<div class="flex items-center gap-2">
+<span class="w-7 h-7 rounded-xl bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-secondary">precision_manufacturing</span>
+</span>
+<h2 class="font-headline-sm text-headline-sm font-serif text-on-surface tracking-tight">Teletype Mechanical Inker</h2>
+</div>
+<div class="flex items-center gap-space-sm font-label-sm text-label-sm font-data-mono">
+<span class="inline-block w-2 h-2 rounded-full bg-secondary animate-pulse-ring"></span>
+<span class="text-secondary font-bold">PRESS-CARRIER ACTIVE</span>
+</div>
+</div>
+<!-- Physical Teletype Console Surface -->
+<div class="bg-primary-container text-on-primary-container rounded-2xl p-space-lg shadow-md flex-1 flex flex-col justify-between font-data-mono border border-primary/80">
+<div>
+<div class="flex items-center justify-between pb-space-sm mb-space-md border-b border-on-primary-container/20 font-label-sm text-label-sm">
+<span class="text-on-secondary uppercase">MONOTYPE DISPATCH RUNNER // PORT: 5432</span>
+<span>CHATPILOT CORE DAEMON v4.12</span>
+</div>
+<!-- Mechanical ASCII Output Stream -->
+<div class="space-y-3 font-data-mono text-body-sm leading-relaxed text-surface-container-highest">
+<p class="flex items-center gap-2 text-surface-container-high">
+<span class="text-secondary font-bold">[14:28:11]</span>
+<span>SYNAPSE INGESTION &gt;&gt; INBOUND WIRE DETECTED (ORIGIN: +91 97901 71303)</span>
+</p>
+<p class="flex items-center gap-2 text-surface-container-high">
+<span class="text-secondary font-bold">[14:28:12]</span>
+<span>PARSING NATURAL SPEECH (TAMIL-LATIN CORPUS MATRIX) &gt;&gt; TOKEN COUNT: 14</span>
+</p>
+<p class="flex items-center gap-2 text-surface-container-high">
+<span class="text-secondary font-bold">[14:28:12]</span>
+<span>DEFENSIVE CIPHER SCAN: NO OTP, NO IFSC/CVV, CLEAN PROTOCOL.</span>
+</p>
+<div class="p-space-sm rounded-xl bg-primary/40 border border-on-primary-container/30 my-space-sm text-on-secondary">
+<p class="text-secondary font-bold mb-1">// TYPESETTER CURRENT DRAFT CASSETTE:</p>
+<p class="font-serif italic text-body-md text-surface-bright pl-2 border-l border-secondary">
+                "Irukken maa, 10 mins la varren, bridge traffic cleared. Don't worry, tea potu veinga."
+              </p>
+</div>
+<p class="flex items-center gap-2 text-on-primary font-bold">
+<span>TYPESETTING DRAFT... [████████████░░] 82%</span>
+<span class="inline-block w-2.5 h-4 bg-secondary animate-pulse ml-1 rounded-sm"></span>
+</p>
+</div>
+</div>
+<!-- Mechanical Ink Reservoir Gauge & Controls -->
+<div class="mt-space-lg pt-space-md border-t border-on-primary-container/30">
+<div class="flex items-center justify-between text-label-sm font-label-sm mb-1.5">
+<span class="text-on-primary-container uppercase">Thermal Ink Ribbon Saturation</span>
+<span class="text-surface-bright font-bold">88.4% HIGH DENSITY</span>
+</div>
+<!-- Lead Inking Line Tracker -->
+<div class="w-full bg-primary h-2 rounded-full relative overflow-hidden">
+<div class="bg-secondary h-full w-[88.4%] rounded-full relative animate-ink-shimmer">
+<div class="absolute right-0 top-0 bottom-0 w-2 bg-on-secondary animate-ping"></div>
+</div>
+</div>
+<div class="flex items-center justify-between mt-space-sm text-label-sm font-label-sm text-on-primary-container/80">
+<span>OPERATOR RATIFICATION MANDATE: STRICT</span>
+<span class="text-on-secondary">ENCRYPTED AT REST (AES-256)</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- LIVE WHATSAPP WIRE FEED & INGESTION TABLE (Editorial Broadside Table) -->
+<section class="bg-surface-container-lowest rounded-2xl border border-outline-variant/50 shadow-sm mb-space-lg overflow-hidden">
+<!-- Section Sub-Header -->
+<div class="p-space-md border-b border-outline-variant/60 flex flex-wrap items-center justify-between gap-space-md bg-surface-container-low">
+<div>
+<div class="flex items-center gap-2 mb-0.5">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-primary text-on-primary font-data-mono font-bold">TABLE ID: LF-99</span>
+<h2 class="font-headline-sm text-headline-sm font-serif text-on-surface">Live WhatsApp Inbound Wire &amp; Ratification Table</h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant font-serif">
+          Verbatim ingest transcripts paired against context-derived machine drafts. Action is irreversible upon telegraphic transmission.
+        </p>
+</div>
+<!-- Filter Controls -->
+<div class="flex items-center gap-1.5 bg-surface-container p-1 rounded-full border border-outline-variant/50 font-label-sm text-label-sm font-data-mono">
+<button class="px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface font-bold shadow-sm transition-all duration-200" type="button">
+          ALL INBOUND (03)
+        </button>
+<button class="px-3 py-1 rounded-full bg-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/50 transition-all duration-200" type="button">
+          RATIFIED (142)
+        </button>
+<button class="px-3 py-1 rounded-full bg-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/50 transition-all duration-200" type="button">
+          SANCTION BLOCKED (19)
+        </button>
+</div>
+</div>
+<!-- Editorial Table Canvas -->
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface font-label-md text-label-md uppercase border-b-2 border-primary tracking-wider font-data-mono">
+<th class="py-space-sm px-space-md">Transmission ID</th>
+<th class="py-space-sm px-space-md">Origin Contact</th>
+<th class="py-space-sm px-space-md">Inbound Transcript</th>
+<th class="py-space-sm px-space-md">Proposed Draft (Tanglish)</th>
+<th class="py-space-sm px-space-md text-right">Latency / Engine</th>
+<th class="py-space-sm px-space-md text-center">Action Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/40 font-body-sm text-body-sm">
+<!-- ROW 1: Pending Ratification (Active Focus) -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low transition-colors relative border-l-4 border-l-secondary">
+<!-- Col 1: ID -->
+<td class="py-space-md px-space-md font-data-mono font-bold text-on-surface align-top whitespace-nowrap">
+<span class="text-secondary font-bold">#TX-9021</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant font-normal">14:28:11 IST</span>
+</td>
+<!-- Col 2: Sender -->
+<td class="py-space-md px-space-md align-top whitespace-nowrap">
+<div class="font-serif font-bold text-body-md text-on-surface">Parveen</div>
+<div class="font-data-mono text-label-sm text-on-surface-variant">+91 97901 71303</div>
+<span class="inline-block mt-1 font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant">RELATION: MOTHER</span>
+</td>
+<!-- Col 3: Verbatim -->
+<td class="py-space-md px-space-md align-top max-w-xs">
+<div class="font-serif italic text-body-md text-on-surface leading-snug">
+                "Eppa varuviga? Veetla ellarum wait pannitu irukkom."
+              </div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mt-1">
+                Transl: <span class="italic font-serif">"When will you arrive? Everyone is waiting at home."</span>
+</div>
+</td>
+<!-- Col 4: Proposed Draft -->
+<td class="py-space-md px-space-md align-top max-w-sm">
+<div class="p-space-sm rounded-xl bg-surface-container-low border border-outline-variant/60 font-serif text-on-surface leading-snug">
+                "Irukken maa, 10 mins la varren, bridge traffic clear aaiduchi. Tea potu veinga."
+              </div>
+<div class="flex items-center gap-2 mt-1.5 font-label-sm text-label-sm text-on-surface-variant font-data-mono">
+<span class="text-secondary font-bold">CONFIDENCE: 98.4%</span>
+<span>•</span>
+<span>TONE: REASSURING AFFECTION</span>
+</div>
+</td>
+<!-- Col 5: Latency -->
+<td class="py-space-md px-space-md align-top text-right whitespace-nowrap font-data-mono">
+<div class="font-bold text-on-surface">780ms</div>
+<div class="text-label-sm text-secondary font-bold">Groq / Qwen-27B</div>
+<div class="text-label-sm text-on-surface-variant">TEMP: 0.35</div>
+</td>
+<!-- Col 6: Ratification Action -->
+<td class="py-space-md px-space-md align-top text-center whitespace-nowrap">
+<div class="flex flex-col gap-1.5 items-center">
+<button class="w-full px-3 py-1.5 rounded-xl bg-primary text-on-primary font-label-sm text-label-sm uppercase font-bold hover:bg-primary-container transition-all duration-200 shadow-sm hover:-translate-y-0.5" type="button">
+                  Approve &amp; Wire
+                </button>
+<div class="flex items-center gap-1 w-full">
+<button class="flex-1 px-2 py-1 rounded-lg bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-surface-container-highest transition-colors" type="button">
+                    Edit
+                  </button>
+<button class="flex-1 px-2 py-1 rounded-lg bg-surface-container text-error font-label-sm text-label-sm hover:bg-error-container transition-colors" type="button">
+                    Drop
+                  </button>
+</div>
+</div>
+</td>
+</tr>
+<!-- ROW 2: Voice Memo Transcribed -->
+<tr class="bg-surface-container-low/50 hover:bg-surface-container-low transition-colors">
+<!-- Col 1: ID -->
+<td class="py-space-md px-space-md font-data-mono text-on-surface align-top whitespace-nowrap">
+<span class="font-bold text-on-surface">#TX-9018</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">13:54:02 IST</span>
+</td>
+<!-- Col 2: Sender -->
+<td class="py-space-md px-space-md align-top whitespace-nowrap">
+<div class="font-serif font-bold text-body-md text-on-surface">Parveen</div>
+<div class="font-data-mono text-label-sm text-on-surface-variant">+91 97901 71303</div>
+<span class="inline-block mt-1 font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant">AUDIO MEMO [14S]</span>
+</td>
+<!-- Col 3: Verbatim -->
+<td class="py-space-md px-space-md align-top max-w-xs">
+<div class="flex items-center gap-2 mb-1">
+<span class="w-6 h-6 rounded-lg bg-[#14171f]/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-[15px] text-on-surface">mic</span>
+</span>
+<span class="font-data-mono text-label-sm font-bold text-on-surface">VOICE_INGEST_44KHZ.AAC</span>
+</div>
+<div class="font-serif text-on-surface-variant italic leading-snug">
+                Audio transcript: Dinner plan inquiry regarding idiyappam preference vs dosa.
+              </div>
+</td>
+<!-- Col 4: Proposed Draft -->
+<td class="py-space-md px-space-md align-top max-w-sm">
+<div class="p-space-sm rounded-xl bg-surface-container font-serif text-on-surface-variant line-through leading-snug">
+                "Idiyappam nalla irukkum maa, adhuve panni vaiyunga."
+              </div>
+<div class="mt-1 font-label-sm text-label-sm text-on-surface-variant font-data-mono">
+                FLAG: AUTO-SUPERSEDED BY RECENT WIRE #TX-9021
+              </div>
+</td>
+<!-- Col 5: Latency -->
+<td class="py-space-md px-space-md align-top text-right whitespace-nowrap font-data-mono">
+<div class="font-bold text-on-surface">1,120ms</div>
+<div class="text-label-sm text-on-surface-variant">Gemini Flash (Audio)</div>
+</td>
+<!-- Col 6: Ratification Action -->
+<td class="py-space-md px-space-md align-top text-center whitespace-nowrap">
+<span class="inline-block px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-data-mono text-label-sm uppercase font-bold">
+                COMMITTED TO MEMORY
+              </span>
+</td>
+</tr>
+<!-- ROW 3: Security Regex Intercept -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<!-- Col 1: ID -->
+<td class="py-space-md px-space-md font-data-mono text-on-surface align-top whitespace-nowrap">
+<span class="font-bold text-error">#TX-8994</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">11:12:49 IST</span>
+</td>
+<!-- Col 2: Sender -->
+<td class="py-space-md px-space-md align-top whitespace-nowrap">
+<div class="font-serif font-bold text-body-md text-on-surface">Unknown Sender</div>
+<div class="font-data-mono text-label-sm text-on-surface-variant">+91 98402 91122</div>
+<span class="inline-block mt-1 font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-bold">UNLISTED SINK</span>
+</td>
+<!-- Col 3: Verbatim -->
+<td class="py-space-md px-space-md align-top max-w-xs">
+<div class="font-data-mono text-body-sm text-error bg-error-container/40 rounded-xl p-2 leading-snug">
+                "Dear customer, your verification OTP is 492-108 for net banking transaction of Rs. 14,200. Do not share..."
+              </div>
+</td>
+<!-- Col 4: Proposed Draft -->
+<td class="py-space-md px-space-md align-top max-w-sm">
+<div class="p-space-sm rounded-xl bg-surface-container text-error font-data-mono text-label-sm leading-snug">
+                [TRANSMISSION MUTED — ZERO DRAFT PRODUCED]
+              </div>
+<div class="mt-1 font-label-sm text-label-sm text-error font-data-mono font-bold">
+                DEFENSE TRIGGER: REGEX_OTP_BLOCK (HIGH CONFIDENCE)
+              </div>
+</td>
+<!-- Col 5: Latency -->
+<td class="py-space-md px-space-md align-top text-right whitespace-nowrap font-data-mono">
+<div class="font-bold text-on-surface">12ms</div>
+<div class="text-label-sm text-on-surface-variant">Kernel Regex Core</div>
+</td>
+<!-- Col 6: Ratification Action -->
+<td class="py-space-md px-space-md align-top text-center whitespace-nowrap">
+<span class="inline-block px-2.5 py-1 rounded-full bg-error-container text-on-error-container font-data-mono text-label-sm uppercase font-bold">
+                DEFENSE ISOLATED
+              </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Editorial Table Footer Pagination & Ledger Total -->
+<div class="p-space-md border-t border-outline-variant/60 bg-surface-container-low flex flex-wrap items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md font-label-sm text-label-sm text-on-surface-variant font-data-mono">
+<span>SHOWING 3 OF 142 ENTRIES IN THE CURRENT ROTATION</span>
+<span>•</span>
+<span>ARCHIVE PURGE INTERVAL: 30 DAYS</span>
+</div>
+<div class="flex items-center gap-2 font-data-mono text-label-sm">
+<button class="px-2.5 py-1 rounded-lg bg-surface-container-highest text-on-surface disabled:opacity-40" disabled="" type="button">&lt;&lt; FIRST</button>
+<span class="px-3 py-1 rounded-full bg-primary text-on-primary font-bold">SHEET 01</span>
+<button class="px-2.5 py-1 rounded-lg bg-surface-container-highest text-on-surface hover:bg-surface-container-high transition-colors" type="button">SHEET 02 &gt;&gt;</button>
+</div>
+</div>
+</section>
+<!-- RECENT DISPATCH AUDIT & SYSTEM STATUS BANNER -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- Col 1 -->
+<div class="bg-surface-container rounded-2xl border border-outline-variant/50 p-space-md shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+<div class="flex items-center justify-between mb-space-xs font-label-sm text-label-sm font-data-mono text-on-surface-variant">
+<span>GATEWAY TELEMETRY</span>
+<span class="text-secondary font-bold">LOCAL BRIDGE // PASS</span>
+</div>
+<p class="font-headline-sm text-headline-sm font-serif text-on-surface mb-1">WhatsApp Web Node</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant font-serif">
+        Chromium headful wrapper hooked on local websocket <code class="font-data-mono bg-surface-container-high px-1.5 py-0.5 rounded">ws://127.0.0.1:8989</code> with persistent user session token active.
+      </p>
+</div>
+<!-- Col 2 -->
+<div class="bg-surface-container rounded-2xl border border-outline-variant/50 p-space-md shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+<div class="flex items-center justify-between mb-space-xs font-label-sm text-label-sm font-data-mono text-on-surface-variant">
+<span>VECTOR REPOSITORY</span>
+<span class="font-bold text-on-surface">CHROMA DB // 4,810 NODES</span>
+</div>
+<p class="font-headline-sm text-headline-sm font-serif text-on-surface mb-1">Mother Persona Memory</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant font-serif">
+        Embeddings synthesized from 6-month historical corpus. Retrieval threshold pinned at cosine similarity &gt; 0.78 for colloquial Tanglish.
+      </p>
+</div>
+<!-- Col 3 -->
+<div class="bg-surface-container rounded-2xl border border-outline-variant/50 p-space-md shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+<div class="flex items-center justify-between mb-space-xs font-label-sm text-label-sm font-data-mono text-on-surface-variant">
+<span>CIRCUIT CEILING</span>
+<span class="text-secondary font-bold">TRIPWIRE ARMED</span>
+</div>
+<p class="font-headline-sm text-headline-sm font-serif text-on-surface mb-1">Human In The Loop Rule</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant font-serif">
+        Under zero circumstances does an outbound wire transmit without tactile mouse ratification or biometric terminal signature.
+      </p>
+</div>
+</section>
+</div>
+<script>
+  // Micro-interaction for the mechanical Master Dispatch Gate
+  (function initMasterSwitch() {
+    const toggleBtn = document.getElementById('master-toggle');
+    const knob = document.getElementById('master-toggle-knob');
+    if (!toggleBtn || !knob) return;
+
+    let armed = false;
+    toggleBtn.addEventListener('click', () => {
+      armed = !armed;
+      if (armed) {
+        knob.classList.remove('translate-x-0');
+        knob.classList.add('translate-x-8');
+        toggleBtn.classList.remove('bg-primary-container');
+        toggleBtn.classList.add('bg-secondary');
+      } else {
+        knob.classList.remove('translate-x-8');
+        knob.classList.add('translate-x-0');
+        toggleBtn.classList.remove('bg-secondary');
+        toggleBtn.classList.add('bg-primary-container');
+      }
+    });
+
+    const simBtn = document.getElementById('sim-btn');
+    if (simBtn) {
+      simBtn.addEventListener('click', () => {
+        simBtn.classList.add('opacity-75');
+        setTimeout(() => {
+          simBtn.classList.remove('opacity-75');
+        }, 150);
+      });
+    }
+  })();
+</script></main></div></body></html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=JetBrains+Mono:wght@100..900&amp;family=Newsreader:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes pulseRing {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(172, 52, 0, 0.55);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(172, 52, 0, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(172, 52, 0, 0);
+  }
+}
+@keyframes inkShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.animate-delay-1 { animation-delay: 0.05s; }
+.animate-delay-2 { animation-delay: 0.1s; }
+.animate-delay-3 { animation-delay: 0.15s; }
+.animate-delay-4 { animation-delay: 0.2s; }
+.animate-pulse-ring {
+  animation: pulseRing 2.2s infinite;
+}
+.animate-ink-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.animate-ink-shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  animation: inkShimmer 2.4s infinite linear;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-pulse-ring,
+  .animate-ink-shimmer::after {
+    animation: none !important;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
+</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-secondary":"#ffffff","on-primary-container":"#81838e","inverse-surface":"#30312f","on-surface":"#1b1c1a","tertiary-fixed":"#dce1ff","outline-variant":"#c6c6cb","on-primary":"#ffffff","on-primary-fixed":"#181b24","inverse-primary":"#c4c6d1","surface-container":"#efeeeb","surface-container-low":"#f5f3f0","on-secondary-fixed-variant":"#832600","on-background":"#1b1c1a","primary-fixed-dim":"#c4c6d1","on-tertiary-container":"#547aff","error":"#ba1a1a","on-secondary-container":"#5d1900","tertiary":"#000000","surface-variant":"#e4e2df","secondary-fixed-dim":"#ffb59d","surface-container-lowest":"#ffffff","surface":"#fbf9f6","surface-container-highest":"#e4e2df","error-container":"#ffdad6","primary-container":"#181b24","surface-container-high":"#eae8e5","on-primary-fixed-variant":"#444650","on-tertiary-fixed-variant":"#0039b5","background":"#fbf9f6","on-error":"#ffffff","inverse-on-surface":"#f2f0ed","tertiary-container":"#001551","on-tertiary-fixed":"#001551","surface-bright":"#fbf9f6","primary-fixed":"#e0e2ed","primary":"#000000","tertiary-fixed-dim":"#b7c4ff","secondary-container":"#fd6b36","outline":"#76777c","on-error-container":"#93000a","on-secondary-fixed":"#390c00","secondary-fixed":"#ffdbd0","secondary":"#ac3400","surface-dim":"#dbdad7","on-surface-variant":"#46464b","surface-tint":"#5b5e68","on-tertiary":"#ffffff"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"margin-mobile":"1rem","space-xl":"2.5rem","space-sm":"0.5rem","space-md":"1rem","space-lg":"1.5rem","gutter":"1.25rem","margin":"2.5rem","gutter-mobile":"0.75rem","space-xs":"0.25rem"},"fontFamily":{"label-md":["JetBrains Mono"],"label-sm":["JetBrains Mono"],"label-lg":["Geist"],"headline-md":["Newsreader"],"headline-lg-mobile":["Newsreader"],"body-lg":["Newsreader"],"body-sm":["Geist"],"display-lg-mobile":["Newsreader"],"headline-lg":["Newsreader"],"display-lg":["Newsreader"],"data-mono":["JetBrains Mono"],"body-md":["Geist"],"headline-sm":["Newsreader"]},"fontSize":{"label-md":["11px",{"lineHeight":"16px","letterSpacing":"0.04em","fontWeight":"500"}],"label-sm":["10px",{"lineHeight":"14px","letterSpacing":"0.06em","fontWeight":"500"}],"label-lg":["13px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"600"}],"headline-md":["26px",{"lineHeight":"32px","letterSpacing":"0em","fontWeight":"600"}],"headline-lg-mobile":["28px",{"lineHeight":"34px","letterSpacing":"-0.01em","fontWeight":"500"}],"body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"display-lg-mobile":["38px",{"lineHeight":"44px","letterSpacing":"-0.015em","fontWeight":"400"}],"headline-lg":["36px",{"lineHeight":"44px","letterSpacing":"-0.01em","fontWeight":"500"}],"display-lg":["56px",{"lineHeight":"64px","letterSpacing":"-0.02em","fontWeight":"400"}],"data-mono":["13px",{"lineHeight":"18px","letterSpacing":"-0.01em","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"headline-sm":["20px",{"lineHeight":"26px","letterSpacing":"0em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed"><aside class="fixed left-0 top-0 h-full w-[260px] bg-surface-container-low z-50 flex flex-col justify-between border-r border-outline-variant/60 shadow-[0_1px_12px_rgba(20,23,31,0.04)]"><div class="flex flex-col flex-1 min-h-0"><div class="p-space-md border-b border-outline-variant/60 bg-surface-container"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-sm text-label-sm text-secondary uppercase font-bold tracking-widest">CHATPILOT // AI DISPATCH</span><span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full border border-outline-variant/80 bg-surface-container-lowest text-on-surface-variant">SYS.01</span></div><h1 class="font-headline-sm text-headline-sm text-primary tracking-tight font-serif">Gazette &amp; Terminal</h1><div class="mt-space-xs pt-space-xs border-t border-outline-variant/40 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><span>VOL. IXVIII</span><span>EDITION #421</span></div></div><nav class="flex-1 overflow-y-auto px-space-sm py-space-md space-y-1" data-active-classes="bg-primary text-on-primary font-semibold"><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="overview" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-on-primary/15 flex items-center justify-center transition-transform duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">newspaper</span></span><span>Overview</span></div><span class="font-data-mono text-label-sm opacity-60">01</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="ask-chatpilot" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">terminal</span></span><span>Ask ChatPilot</span></div><span class="font-data-mono text-label-sm opacity-60">02</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="reply-inbox" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">mark_email_unread</span></span><span>Reply Inbox</span></div><span class="px-2 py-0.5 bg-secondary text-on-secondary font-label-sm text-label-sm font-bold rounded-full shadow-sm">2</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="contacts" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">contacts</span></span><span>Contacts</span></div><span class="font-data-mono text-label-sm opacity-60">04</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="groups" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">hub</span></span><span>Groups</span></div><span class="font-data-mono text-label-sm opacity-60">05</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="memory" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">history_edu</span></span><span>Memory</span></div><span class="font-data-mono text-label-sm opacity-60">06</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="ai-providers" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">schema</span></span><span>AI Providers</span></div><span class="font-data-mono text-label-sm opacity-60">07</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="activity-log" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">receipt_long</span></span><span>Activity Log</span></div><span class="font-data-mono text-label-sm opacity-60">08</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="dataset-audit" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">fact_check</span></span><span>Dataset Audit</span></div><span class="font-data-mono text-label-sm opacity-60">09</span></a><a class="group flex items-center justify-between px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200 font-label-md text-label-md uppercase" data-path="settings" href="#"><div class="flex items-center gap-space-sm"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 group-hover:bg-[#14171f]/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105"><span class="material-symbols-outlined text-[16px]">settings_input_component</span></span><span>Settings</span></div><span class="font-data-mono text-label-sm opacity-60">10</span></a></nav></div><div class="p-space-md border-t border-outline-variant/60 bg-surface-container-low"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Local Bridge</span><span class="inline-flex items-center gap-1.5 font-label-sm text-label-sm px-2.5 py-0.5 rounded-full border border-outline-variant/70 bg-surface-container-lowest text-on-surface shadow-sm"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse-ring"></span>CONNECTED</span></div><div class="pt-space-xs flex items-center gap-space-sm"><div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="min-w-0 flex-1"><p class="font-label-lg text-label-lg text-on-surface truncate">Thoufikur Rahman</p><p class="font-label-sm text-label-sm text-on-surface-variant truncate font-data-mono">DISPATCH CHIEF</p></div></div></div></aside><div class="pl-[260px]"><header class="fixed top-0 left-[260px] right-0 h-16 bg-surface/90 backdrop-blur-md border-b border-outline-variant/60 z-40 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm text-on-surface font-label-md text-label-md"><span class="w-7 h-7 rounded-lg bg-[#14171f]/5 flex items-center justify-center"><span class="material-symbols-outlined text-[16px] text-on-surface-variant">calendar_today</span></span><span class="uppercase tracking-wider font-semibold">EDITION: OCT 24, 2024 // 08:30 GMT</span></div><div class="h-4 w-px bg-outline-variant/60"></div><div class="flex items-center gap-2 font-label-md text-label-md text-on-surface"><span class="w-2 h-2 rounded-full bg-primary"></span><span class="font-data-mono tracking-tight">OPERATIONAL 99.8%</span></div><div class="h-4 w-px bg-outline-variant/60"></div><div class="flex items-center gap-2 font-label-md text-label-md"><span class="text-on-surface-variant uppercase font-medium">Global Auto-Reply:</span><span class="px-2.5 py-0.5 rounded-full bg-surface-container-high border border-outline-variant/80 font-data-mono font-bold text-on-surface">ARMED // LIVE</span></div></div><div class="flex items-center gap-space-md"><button class="px-3.5 py-1.5 rounded-xl border border-outline-variant/80 bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-all duration-200 flex items-center gap-1.5 shadow-sm hover:-translate-y-0.5" type="button"><span class="material-symbols-outlined text-[16px]">upload_file</span><span>Import Corpus</span></button><button class="px-3.5 py-1.5 rounded-xl bg-primary border border-primary text-on-primary font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-all duration-200 flex items-center gap-1.5 shadow-sm hover:-translate-y-0.5" type="button"><span class="material-symbols-outlined text-[16px]">send</span><span>Simulate Dispatch</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="relative pt-16 min-h-screen bg-surface w-full px-8"><div class="flex flex-col w-full">
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md pb-space-lg animate-fade-in-up">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">SECTION 05 // GROUP CHANNELS</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">•</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">DISPATCH GOVERNANCE</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">WhatsApp Groups</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Monitor group conversations and manage group restrictions.</p>
+</div>
+<div class="flex items-center gap-space-sm bg-surface-container-low px-space-md py-space-sm rounded-2xl shadow-sm">
+<div class="flex flex-col pr-space-md">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Total Groups</span>
+<span class="font-data-mono text-data-mono text-on-surface font-semibold">04</span>
+</div>
+<div class="flex flex-col px-space-md bg-surface-container-lowest rounded-xl py-1 shadow-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Monitored</span>
+<span class="font-data-mono text-data-mono text-secondary font-semibold">02</span>
+</div>
+<div class="flex flex-col pl-space-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Auto-Reply</span>
+<span class="font-data-mono text-data-mono text-on-surface font-semibold">100% LOCKED</span>
+</div>
+</div>
+</div>
+<div class="rounded-2xl bg-secondary-fixed/50 p-space-md shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-md mb-space-lg animate-fade-in-up animate-delay-1">
+<div class="flex items-start sm:items-center gap-space-md">
+<div class="w-11 h-11 rounded-xl bg-secondary text-on-secondary flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">gpp_maybe</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-secondary-fixed">Group Safety Active</span>
+<p class="font-body-md text-body-md text-on-secondary-fixed-variant">Automated replies to groups are disabled by default to prevent unauthorized bulk responses.</p>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full bg-surface-container-lowest text-secondary font-label-sm text-label-sm uppercase tracking-wider shrink-0 shadow-sm">SAFEGUARD // ENFORCED</span>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-space-md mb-space-lg animate-fade-in-up animate-delay-2">
+<div class="flex flex-wrap items-center gap-space-sm" id="group-filter-tabs">
+<button class="filter-tab px-4 py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md uppercase shadow-sm transition-all duration-200 cursor-pointer" data-filter="all" type="button">
+        All Groups (4)
+      </button>
+<button class="filter-tab px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md uppercase transition-all duration-200 cursor-pointer" data-filter="monitored" type="button">
+        Monitored for Summaries (2)
+      </button>
+<button class="filter-tab px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md uppercase transition-all duration-200 cursor-pointer" data-filter="locked" type="button">
+        Locked (4)
+      </button>
+</div>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm uppercase">
+<span class="material-symbols-outlined text-[16px]">sync</span>
+<span>SYNCED 2M AGO</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start animate-fade-in-up animate-delay-3">
+<div class="lg:col-span-7 flex flex-col gap-space-md" id="groups-list">
+<div class="group-card relative rounded-2xl bg-surface-container-lowest p-space-md shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer overflow-hidden" data-group-id="family-home" data-locked="true" data-monitored="true">
+<div class="active-indicator absolute left-0 top-0 bottom-0 w-1.5 bg-secondary"></div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md pl-space-sm">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-12 h-12 rounded-xl bg-primary text-on-primary flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[22px]">home</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center gap-space-sm">
+<h3 class="font-headline-sm text-headline-sm text-on-surface truncate">Family &amp; Home</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">• 6 PARTICIPANTS</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Last activity 14m ago • Daily digest scheduled 20:00 GMT</p>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-space-xs shrink-0">
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm uppercase">Monitored: ON</span>
+<span class="px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">lock</span>
+              Auto-Reply: LOCKED
+            </span>
+</div>
+</div>
+</div>
+<div class="group-card relative rounded-2xl bg-surface-container-low p-space-md shadow-sm hover:bg-surface-container-lowest hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer overflow-hidden" data-group-id="eng-devops" data-locked="true" data-monitored="true">
+<div class="active-indicator hidden absolute left-0 top-0 bottom-0 w-1.5 bg-secondary"></div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md pl-space-sm">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest text-on-surface flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">terminal</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center gap-space-sm">
+<h3 class="font-headline-sm text-headline-sm text-on-surface truncate">Engineering &amp; DevOps Sync</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">• 18 PARTICIPANTS</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Last activity 1h ago • Incident &amp; deploy alerts indexed</p>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-space-xs shrink-0">
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm uppercase">Monitored: ON</span>
+<span class="px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">lock</span>
+              Auto-Reply: LOCKED
+            </span>
+</div>
+</div>
+</div>
+<div class="group-card relative rounded-2xl bg-surface-container-low p-space-md shadow-sm hover:bg-surface-container-lowest hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer overflow-hidden" data-group-id="college-alumni" data-locked="true" data-monitored="false">
+<div class="active-indicator hidden absolute left-0 top-0 bottom-0 w-1.5 bg-secondary"></div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md pl-space-sm">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest text-on-surface-variant flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">school</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center gap-space-sm">
+<h3 class="font-headline-sm text-headline-sm text-on-surface truncate">College Alumni 2020</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">• 42 PARTICIPANTS</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Last activity yesterday • Summaries paused</p>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-space-xs shrink-0">
+<span class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase">Monitored: OFF</span>
+<span class="px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">lock</span>
+              Auto-Reply: LOCKED
+            </span>
+</div>
+</div>
+</div>
+<div class="group-card relative rounded-2xl bg-surface-container-low p-space-md shadow-sm hover:bg-surface-container-lowest hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer overflow-hidden" data-group-id="apartment-residents" data-locked="true" data-monitored="false">
+<div class="active-indicator hidden absolute left-0 top-0 bottom-0 w-1.5 bg-secondary"></div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md pl-space-sm">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest text-on-surface-variant flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">apartment</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center gap-space-sm">
+<h3 class="font-headline-sm text-headline-sm text-on-surface truncate">Apartment Residents</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">• 84 PARTICIPANTS</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Last activity 3d ago • Summaries paused</p>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-space-xs shrink-0">
+<span class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase">Monitored: OFF</span>
+<span class="px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">lock</span>
+              Auto-Reply: LOCKED
+            </span>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-5 rounded-2xl bg-surface-container-lowest p-space-lg shadow-md flex flex-col gap-space-lg" id="group-detail-panel">
+<div class="flex items-start justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-primary text-on-primary flex items-center justify-center shadow-sm" id="detail-icon-box">
+<span class="material-symbols-outlined text-[24px]" id="detail-icon">home</span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest" id="detail-slug">DOC-GRP-01 // 6 PARTICIPANTS</span>
+<h3 class="font-headline-md text-headline-md text-on-surface" id="detail-title">Family &amp; Home</h3>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-data-mono text-label-sm" id="detail-activity">14m ago</span>
+</div>
+<div class="flex flex-col gap-space-md bg-surface-container-low rounded-2xl p-space-md">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Group Policy Controls</span>
+<div class="flex items-center justify-between gap-space-md bg-surface-container-lowest rounded-xl p-space-md shadow-sm">
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Monitored for Summaries</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Include group messages in daily AI digest.</p>
+</div>
+<button aria-pressed="true" class="w-12 h-7 rounded-full bg-primary p-1 transition-colors duration-200 flex items-center justify-end cursor-pointer" id="toggle-monitored" type="button">
+<span class="w-5 h-5 rounded-full bg-on-primary shadow-sm transition-transform duration-200"></span>
+</button>
+</div>
+<div class="flex flex-col gap-space-sm bg-surface-container-lowest rounded-xl p-space-md shadow-sm">
+<div class="flex items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary">lock</span>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Auto-Reply Dispatch</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Locked by Global Group Safety</p>
+</div>
+</div>
+<button class="w-12 h-7 rounded-full bg-surface-container-highest p-1 flex items-center justify-start opacity-60 cursor-not-allowed" disabled="" title="Locked by Group Safety Policy" type="button">
+<span class="w-5 h-5 rounded-full bg-outline shadow-sm"></span>
+</button>
+</div>
+<div class="rounded-xl bg-secondary-fixed/40 p-space-sm flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5">warning</span>
+<p class="font-body-sm text-body-sm text-on-secondary-fixed-variant">Confirmation required: Unlocking group auto-replies requires explicit admin override in Settings to prevent accidental bulk messaging.</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-space-sm bg-surface-container-low rounded-2xl p-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Summary Digest Preview</span>
+<span class="font-data-mono text-label-sm text-secondary" id="detail-digest-time">TODAY // 08:15 GMT</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface" id="detail-digest-text">
+          Mom confirmed Sunday dinner at 18:30. Dad shared the plumber's invoice for the kitchen sink, and Sarah asked if anyone needs groceries before 17:00.
+        </p>
+<div class="pt-space-sm flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">7-Day Message Cadence</span>
+<svg class="w-28 h-7 text-secondary" fill="none" viewbox="0 0 112 28" xmlns="http://www.w3.org/2000/svg">
+<path d="M2 22L18 16L34 19L50 8L66 13L82 5L98 11L110 4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<circle cx="110" cy="4" fill="currentColor" r="2.5"></circle>
+</svg>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    const groupData = {
+      "family-home": {
+        title: "Family & Home",
+        slug: "DOC-GRP-01 // 6 PARTICIPANTS",
+        icon: "home",
+        activity: "14m ago",
+        monitored: true,
+        digestTime: "TODAY // 08:15 GMT",
+        digestText: "Mom confirmed Sunday dinner at 18:30. Dad shared the plumber's invoice for the kitchen sink, and Sarah asked if anyone needs groceries before 17:00."
+      },
+      "eng-devops": {
+        title: "Engineering & DevOps Sync",
+        slug: "DOC-GRP-02 // 18 PARTICIPANTS",
+        icon: "terminal",
+        activity: "1h ago",
+        monitored: true,
+        digestTime: "TODAY // 07:30 GMT",
+        digestText: "v2.4.1 hotfix deployed to eu-west-1 with zero packet loss. Marcus flagged elevated Redis latency on worker-03; mitigation scheduled for 14:00."
+      },
+      "college-alumni": {
+        title: "College Alumni 2020",
+        slug: "DOC-GRP-03 // 42 PARTICIPANTS",
+        icon: "school",
+        activity: "yesterday",
+        monitored: false,
+        digestTime: "PAUSED // NO DIGEST",
+        digestText: "Monitoring is currently disabled for this group. Enable 'Monitored for Summaries' above to include future threads in your daily briefing."
+      },
+      "apartment-residents": {
+        title: "Apartment Residents",
+        slug: "DOC-GRP-04 // 84 PARTICIPANTS",
+        icon: "apartment",
+        activity: "3d ago",
+        monitored: false,
+        digestTime: "PAUSED // NO DIGEST",
+        digestText: "Monitoring is currently disabled for this group. Enable 'Monitored for Summaries' above to include building notices in your daily briefing."
+      }
+    };
+
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    const groupCards = document.querySelectorAll('.group-card');
+    const toggleMonitoredBtn = document.getElementById('toggle-monitored');
+    let currentGroupId = 'family-home';
+
+    filterTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        filterTabs.forEach(t => {
+          t.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+          t.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+        });
+        tab.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+        tab.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+
+        const filter = tab.getAttribute('data-filter');
+        groupCards.forEach(card => {
+          const isMonitored = card.getAttribute('data-monitored') === 'true';
+          const isLocked = card.getAttribute('data-locked') === 'true';
+          if (filter === 'all' || (filter === 'monitored' && isMonitored) || (filter === 'locked' && isLocked)) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    function updateDetailPanel(id) {
+      const data = groupData[id];
+      if (!data) return;
+      currentGroupId = id;
+      document.getElementById('detail-title').textContent = data.title;
+      document.getElementById('detail-slug').textContent = data.slug;
+      document.getElementById('detail-icon').textContent = data.icon;
+      document.getElementById('detail-activity').textContent = data.activity;
+      document.getElementById('detail-digest-time').textContent = data.digestTime;
+      document.getElementById('detail-digest-text').textContent = data.digestText;
+
+      if (data.monitored) {
+        toggleMonitoredBtn.setAttribute('aria-pressed', 'true');
+        toggleMonitoredBtn.classList.remove('bg-surface-container-highest', 'justify-start');
+        toggleMonitoredBtn.classList.add('bg-primary', 'justify-end');
+      } else {
+        toggleMonitoredBtn.setAttribute('aria-pressed', 'false');
+        toggleMonitoredBtn.classList.remove('bg-primary', 'justify-end');
+        toggleMonitoredBtn.classList.add('bg-surface-container-highest', 'justify-start');
+      }
+    }
+
+    groupCards.forEach(card => {
+      card.addEventListener('click', () => {
+        groupCards.forEach(c => {
+          c.classList.remove('bg-surface-container-lowest', 'shadow-md');
+          c.classList.add('bg-surface-container-low', 'shadow-sm');
+          c.querySelector('.active-indicator').classList.add('hidden');
+        });
+        card.classList.remove('bg-surface-container-low', 'shadow-sm');
+        card.classList.add('bg-surface-container-lowest', 'shadow-md');
+        card.querySelector('.active-indicator').classList.remove('hidden');
+
+        updateDetailPanel(card.getAttribute('data-group-id'));
+      });
+    });
+
+    toggleMonitoredBtn.addEventListener('click', () => {
+      const data = groupData[currentGroupId];
+      data.monitored = !data.monitored;
+      updateDetailPanel(currentGroupId);
+    });
+  })();
+</script></main></div></body></html>
