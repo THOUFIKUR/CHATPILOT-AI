@@ -1,9 +1,12 @@
 import { supabase } from './supabase';
 
-export const API_BASE = 
+const rawApiBase = 
   (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
     ? "http://127.0.0.1:8000/api"
     : (import.meta.env.VITE_API_BASE_URL || "https://chatpilot-backend-5js6.onrender.com/api");
+
+const normalizedApiBase = rawApiBase.replace(/\/+$/, '');
+export const API_BASE = normalizedApiBase.endsWith('/api') ? normalizedApiBase : `${normalizedApiBase}/api`;
 
 export async function fetchApi<T = any>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_BASE}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
