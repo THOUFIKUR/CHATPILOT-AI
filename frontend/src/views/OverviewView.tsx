@@ -266,12 +266,12 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ onNavigate }) => {
               return (
                 <div key={idx} className="p-3.5 bg-[#f5f3f0] rounded-xl border border-[#c6c6cb]/40 flex flex-col gap-2 text-xs">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div className="flex items-center gap-2.5">
-                      <span className="font-mono text-[10px] text-[#ac3400] font-bold">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 min-w-0">
+                      <span className="font-mono text-[10px] text-[#ac3400] font-bold shrink-0">
                         [{new Date(act.created_at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}]
                       </span>
-                      <span className="font-bold text-[#1b1c1a]">{act.action || act.event_type || 'Incoming Transmission'}</span>
-                      <span className="text-[#46464b]">{act.details || act.description || 'Logged via gateway'}</span>
+                      <span className="font-bold text-[#1b1c1a] break-all">{act.action || act.event_type || 'Incoming Transmission'}</span>
+                      <span className="text-[#46464b] break-words">{act.details || act.description || 'Logged via gateway'}</span>
                     </div>
                     <span className="font-mono text-[10px] font-bold px-2 py-0.5 bg-white rounded-full border border-[#c6c6cb] text-[#46464b] shrink-0 self-start sm:self-auto">
                       {act.status || 'PROCESSED'}
