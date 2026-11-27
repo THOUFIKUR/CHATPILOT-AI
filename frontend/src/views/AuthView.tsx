@@ -1,16 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Lock, 
-  Mail, 
-  User, 
+import {
+  Lock,
+  Mail,
+  User,
   Phone,
-  Eye, 
-  EyeOff, 
-  ArrowRight, 
-  AlertTriangle, 
-  CheckCircle2, 
-  Smartphone, 
-  Monitor, 
+  Eye,
+  EyeOff,
+  ArrowRight,
+  AlertTriangle,
+  CheckCircle2,
+  Smartphone,
+  Monitor,
   LogOut,
   Sparkles,
   Zap,
@@ -21,19 +21,18 @@ import {
 } from 'lucide-react';
 import { api } from '../lib/api';
 import { supabase, getDeviceIdentifier } from '../lib/supabase';
-import { SecretIndicator } from '../components/SecretIndicator';
 
 interface AuthViewProps {
   onAuthenticated: (user: any) => void;
   initialRevocationMessage?: string | null;
 }
 
-export const AuthView: React.FC<AuthViewProps> = ({ 
-  onAuthenticated, 
-  initialRevocationMessage 
+export const AuthView: React.FC<AuthViewProps> = ({
+  onAuthenticated,
+  initialRevocationMessage
 }) => {
   const [mode, setMode] = useState<'login' | 'register' | 'forgot' | 'link-sent' | 'create-new-password' | 'recovery-success'>('login');
-  
+
   // Fields
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -326,32 +325,28 @@ export const AuthView: React.FC<AuthViewProps> = ({
 
       {/* Main Container Card (matching Desktop & Tablet view from reference image) */}
       <div className="w-full max-w-5xl bg-[#fdfaf6]/90 backdrop-blur-md border border-[#ede5dc] rounded-[2.5rem] shadow-xl overflow-hidden relative z-10 grid grid-cols-1 lg:grid-cols-12 min-h-[640px]">
-        
+
         {/* ==================== LEFT HERO PANEL ==================== */}
         <div className="lg:col-span-6 p-8 md:p-12 flex flex-col justify-between relative border-b lg:border-b-0 lg:border-r border-[#ede5dc]/60">
           {/* Brand Header */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-[#1b1c1a] text-[#f8a88b] flex items-center justify-center shadow-md shadow-[#1b1c1a]/10">
-                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect width="18" height="14" x="3" y="6" rx="3"/>
-                  <path d="M12 2v4"/>
-                  <circle cx="8.5" cy="12.5" r="1.5" fill="currentColor"/>
-                  <circle cx="15.5" cy="12.5" r="1.5" fill="currentColor"/>
-                  <path d="M9 16h6"/>
-                </svg>
-              </div>
-              <div>
-                <h1 className="font-serif text-xl font-bold tracking-tight text-[#1b1c1a] leading-tight">
-                  ChatPilot AI
-                </h1>
-                <p className="text-[11px] text-[#76777c] font-sans">
-                  Personal AI Companion
-                </p>
-              </div>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-[#1b1c1a] text-[#f8a88b] flex items-center justify-center shadow-md shadow-[#1b1c1a]/10">
+              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect width="18" height="14" x="3" y="6" rx="3" />
+                <path d="M12 2v4" />
+                <circle cx="8.5" cy="12.5" r="1.5" fill="currentColor" />
+                <circle cx="15.5" cy="12.5" r="1.5" fill="currentColor" />
+                <path d="M9 16h6" />
+              </svg>
             </div>
-            {/* Secret indication mark only Thoufikur knows */}
-            <SecretIndicator compact={true} />
+            <div>
+              <h1 className="font-serif text-xl font-bold tracking-tight text-[#1b1c1a] leading-tight">
+                ChatPilot AI
+              </h1>
+              <p className="text-[11px] text-[#76777c] font-sans">
+                Personal AI Companion
+              </p>
+            </div>
           </div>
 
           {/* Center 3D Cute Robot Character with Floating Icons */}
@@ -386,7 +381,7 @@ export const AuthView: React.FC<AuthViewProps> = ({
                   <div className="w-28 h-24 bg-gradient-to-b from-[#f29f79] via-[#e57f52] to-[#c85e33] rounded-[2rem] shadow-xl border-2 border-white/60 flex items-center justify-center p-3 relative overflow-hidden">
                     {/* Soft specular highlight */}
                     <div className="absolute top-1 left-3 right-3 h-5 bg-white/30 rounded-full blur-[1px]" />
-                    
+
                     {/* Cute eyes */}
                     <div className="flex gap-6 items-center">
                       <div className="w-2.5 h-5 bg-[#1b1c1a] rounded-full" />
@@ -403,24 +398,24 @@ export const AuthView: React.FC<AuthViewProps> = ({
               {/* Floating App Badge: WhatsApp (Green) */}
               <div className="absolute left-2 top-14 w-9 h-9 rounded-2xl bg-white shadow-md border border-[#c6e9cf] flex items-center justify-center animate-bounce duration-1000">
                 <svg className="w-5 h-5 text-[#25D366]" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm5.78 14.07c-.24.68-1.4 1.34-1.95 1.42-.51.08-1.18.12-3.41-.8-2.85-1.18-4.67-4.08-4.81-4.27-.14-.19-1.16-1.55-1.16-2.95 0-1.41.73-2.1 1-2.39.24-.26.54-.33.72-.33.18 0 .36 0 .52.01.17.01.4.06.62.59.24.57.81 1.98.88 2.12.07.14.12.31.02.49-.09.19-.14.31-.29.47-.14.17-.3.37-.43.5-.14.14-.29.3-.12.59.17.29.74 1.22 1.6 1.98 1.1 0.98 2.03 1.28 2.32 1.43.29.14.46.12.63-.07.17-.19.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.95.93.29.14.48.22.55.33.07.12.07.7-.17 1.38z"/>
+                  <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm5.78 14.07c-.24.68-1.4 1.34-1.95 1.42-.51.08-1.18.12-3.41-.8-2.85-1.18-4.67-4.08-4.81-4.27-.14-.19-1.16-1.55-1.16-2.95 0-1.41.73-2.1 1-2.39.24-.26.54-.33.72-.33.18 0 .36 0 .52.01.17.01.4.06.62.59.24.57.81 1.98.88 2.12.07.14.12.31.02.49-.09.19-.14.31-.29.47-.14.17-.3.37-.43.5-.14.14-.29.3-.12.59.17.29.74 1.22 1.6 1.98 1.1 0.98 2.03 1.28 2.32 1.43.29.14.46.12.63-.07.17-.19.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.95.93.29.14.48.22.55.33.07.12.07.7-.17 1.38z" />
                 </svg>
               </div>
 
               {/* Floating App Badge: Gmail (Envelope) */}
               <div className="absolute right-3 top-10 w-9 h-9 rounded-2xl bg-white shadow-md border border-[#fbd4c6] flex items-center justify-center animate-pulse">
                 <svg className="w-5 h-5 text-[#c84b1a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect width="20" height="16" x="2" y="4" rx="2"/>
-                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                  <rect width="20" height="16" x="2" y="4" rx="2" />
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                 </svg>
               </div>
 
               {/* Floating App Badge: Google Drive (Triangle) */}
               <div className="absolute right-5 bottom-8 w-9 h-9 rounded-2xl bg-white shadow-md border border-[#d2e3fc] flex items-center justify-center">
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
-                  <path fill="#4285F4" d="M8.2 2.5L2.3 12.8l4.4 7.7 5.9-10.3z"/>
-                  <path fill="#0F9D58" d="M15.8 2.5H8.2l5.9 10.3h7.6z"/>
-                  <path fill="#FFBA00" d="M21.7 12.8H14.1L8.2 23h7.6z"/>
+                  <path fill="#4285F4" d="M8.2 2.5L2.3 12.8l4.4 7.7 5.9-10.3z" />
+                  <path fill="#0F9D58" d="M15.8 2.5H8.2l5.9 10.3h7.6z" />
+                  <path fill="#FFBA00" d="M21.7 12.8H14.1L8.2 23h7.6z" />
                 </svg>
               </div>
             </div>
@@ -457,24 +452,24 @@ export const AuthView: React.FC<AuthViewProps> = ({
         {/* ==================== RIGHT FORM CARD ==================== */}
         <div className="lg:col-span-6 p-6 sm:p-10 md:p-12 flex flex-col justify-center bg-white/95">
           <div className="max-w-md w-full mx-auto space-y-6">
-            
+
             {/* Form Header */}
             <div>
               <h2 className="font-serif text-3xl md:text-4xl font-bold tracking-tight text-[#1b1c1a]">
-                {mode === 'login' ? 'Welcome back' 
-                  : mode === 'register' ? 'Create Account' 
-                  : mode === 'forgot' ? 'Forgot your password?' 
-                  : mode === 'link-sent' ? 'Reset Link Sent' 
-                  : mode === 'create-new-password' ? 'Create New Password' 
-                  : 'Password Updated'}
+                {mode === 'login' ? 'Welcome back'
+                  : mode === 'register' ? 'Create Account'
+                    : mode === 'forgot' ? 'Forgot your password?'
+                      : mode === 'link-sent' ? 'Reset Link Sent'
+                        : mode === 'create-new-password' ? 'Create New Password'
+                          : 'Password Updated'}
               </h2>
               <p className="text-xs md:text-sm text-[#76777c] mt-1 font-sans">
-                {mode === 'login' ? 'Your personal AI companion is ready.' 
-                  : mode === 'register' ? 'Join ChatPilot AI to automate and assist.' 
-                  : mode === 'forgot' ? 'Enter your registered email address to receive a password reset link.' 
-                  : mode === 'link-sent' ? `We sent a reset link to ${email || 'your email'}. Tap the link to change your password.` 
-                  : mode === 'create-new-password' ? 'Set a strong new password for your account.' 
-                  : 'Your credentials have been securely updated.'}
+                {mode === 'login' ? 'Your personal AI companion is ready.'
+                  : mode === 'register' ? 'Join ChatPilot AI to automate and assist.'
+                    : mode === 'forgot' ? 'Enter your registered email address to receive a password reset link.'
+                      : mode === 'link-sent' ? `We sent a reset link to ${email || 'your email'}. Tap the link to change your password.`
+                        : mode === 'create-new-password' ? 'Set a strong new password for your account.'
+                          : 'Your credentials have been securely updated.'}
               </p>
             </div>
 
@@ -541,9 +536,8 @@ export const AuthView: React.FC<AuthViewProps> = ({
                       onChange={(e) => setRememberMe(e.target.checked)}
                       className="hidden"
                     />
-                    <div className={`w-4 h-4 rounded-md border flex items-center justify-center transition ${
-                      rememberMe ? 'bg-[#c84b1a] border-[#c84b1a] text-white' : 'border-[#c6c6cb] bg-white'
-                    }`}>
+                    <div className={`w-4 h-4 rounded-md border flex items-center justify-center transition ${rememberMe ? 'bg-[#c84b1a] border-[#c84b1a] text-white' : 'border-[#c6c6cb] bg-white'
+                      }`}>
                       {rememberMe && <Check className="w-3 h-3 stroke-[3]" />}
                     </div>
                     <span className="text-[#46464b] font-medium">Remember me</span>
@@ -815,10 +809,10 @@ export const AuthView: React.FC<AuthViewProps> = ({
                     className="w-full py-2.5 px-4 bg-white hover:bg-[#faf7f4] border border-[#e3dad1] rounded-xl flex items-center justify-center gap-3 text-xs font-semibold text-[#1b1c1a] shadow-2xs transition active:scale-[0.99]"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24">
-                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
                     </svg>
                     <span>Continue with Google</span>
                   </button>
@@ -831,7 +825,7 @@ export const AuthView: React.FC<AuthViewProps> = ({
                     className="w-full py-2.5 px-4 bg-white hover:bg-[#faf7f4] border border-[#e3dad1] rounded-xl flex items-center justify-center gap-3 text-xs font-semibold text-[#1b1c1a] shadow-2xs transition active:scale-[0.99]"
                   >
                     <svg className="w-4 h-4 fill-current text-[#1b1c1a]" viewBox="0 0 24 24">
-                      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
                     </svg>
                     <span>Continue with GitHub</span>
                   </button>
@@ -847,10 +841,10 @@ export const AuthView: React.FC<AuthViewProps> = ({
                     title="Sign in with Google"
                   >
                     <svg className="w-5 h-5" viewBox="0 0 24 24">
-                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
                     </svg>
                   </button>
 
@@ -862,7 +856,7 @@ export const AuthView: React.FC<AuthViewProps> = ({
                     title="Sign in with GitHub"
                   >
                     <svg className="w-5 h-5 fill-current text-[#1b1c1a]" viewBox="0 0 24 24">
-                      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
                     </svg>
                   </button>
                 </div>

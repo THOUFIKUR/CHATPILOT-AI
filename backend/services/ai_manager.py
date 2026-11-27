@@ -52,13 +52,24 @@ class AIProviderManager:
     ) -> Dict[str, Any]:
         """Generate response with fallback across enabled providers."""
         # Query provider configurations ordered by priority
-        db_providers = self.supabase.table("ai_providers")\
-            .select("*")\
-            .eq("is_enabled", True)\
-            .order("priority", desc=False)\
-            .execute()
-        
-        provider_list = db_providers.data or []
+        try:
+            db_providers = self.supabase.table("ai_providers")\
+                .select("*")\
+                .eq("is_enabled", True)\
+                .order("priority", desc=False)\
+                .execute()
+            provider_list = db_providers.data or []
+        except Exception as e:
+            logger.warning(f"Failed to fetch AI providers from database: {e}")
+            provider_list = []
+
+        if not provider_list:
+            logger.info("Using default provider list (Groq, Gemini, OpenRouter)")
+            provider_list = [
+                {"provider_name": "groq", "model_name": "qwen/qwen3.8-27b", "priority": 1, "is_enabled": True},
+                {"provider_name": "gemini", "model_name": "gemini-flash-lite-latest", "priority": 2, "is_enabled": True},
+                {"provider_name": "openrouter", "model_name": "deepseek/deepseek-chat", "priority": 3, "is_enabled": True},
+            ]
         
         # If preferred provider is requested, prioritize it
         if preferred_provider:

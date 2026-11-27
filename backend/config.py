@@ -1,11 +1,16 @@
 import os
 from dotenv import load_dotenv
 
-env_path = os.path.join(os.path.dirname(__file__), ".env")
-if os.path.exists(env_path):
-    load_dotenv(env_path)
+# Check backend/.env first, then root .env
+backend_env = os.path.join(os.path.dirname(__file__), ".env")
+root_env = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env")
+
+if os.path.exists(backend_env):
+    load_dotenv(backend_env, override=True)
+elif os.path.exists(root_env):
+    load_dotenv(root_env, override=True)
 else:
-    load_dotenv()
+    load_dotenv(override=True)
 
 class Settings:
     SUPABASE_URL: str = os.getenv("SUPABASE_URL", "https://bxtqwqarxddrnkshwezg.supabase.co")
