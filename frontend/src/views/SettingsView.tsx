@@ -29,6 +29,48 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onLogout }) => {
   const [accountSafetyStatus, setAccountSafetyStatus] = useState('nominal');
   const [saved, setSaved] = useState(false);
   const [activeDevice, setActiveDevice] = useState<any>(null);
+  const [androidDiag, setAndroidDiag] = useState<any>(null);
+  const [safeTestResult, setSafeTestResult] = useState<string | null>(null);
+  const [testingPipeline, setTestingPipeline] = useState(false);
+
+  const refreshAndroidDiag = () => {
+    try {
+      const bridge = (window as any).AndroidApp;
+      if (bridge && typeof bridge.getNotificationDiagnostics === 'function') {
+        const parsed = JSON.parse(bridge.getNotificationDiagnostics());
+        setAndroidDiag(parsed);
+      }
+    } catch (e) {
+      console.error('Android diagnostics read note:', e);
+    }
+  };
+
+  const runSafePipelineTest = async () => {
+    setTestingPipeline(true);
+    setSafeTestResult(null);
+    try {
+      const res = await fetch(`${(await import('../lib/api')).API_BASE}/webhooks/whatsapp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sender: 'Parveen',
+          title: 'Parveen',
+          message: 'Safe diagnostic ping',
+          platform: 'android',
+          source: 'android_diagnostics_safe_test',
+          has_native_reply_action: true,
+          test_mode: true
+        })
+      });
+      const data = await res.json();
+      setSafeTestResult(`HTTP ${res.status} — ${data.pipeline_status || data.status} (${data.reason || 'ok'})`);
+      refreshAndroidDiag();
+    } catch (e: any) {
+      setSafeTestResult(`Test failed: ${e?.message || 'Network error'}`);
+    } finally {
+      setTestingPipeline(false);
+    }
+  };
 
   // Change password form
   const [currentPassword, setCurrentPassword] = useState('');
@@ -43,6 +85,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onLogout }) => {
   useEffect(() => {
     loadSettings();
     api.getActiveDevice().then(setActiveDevice).catch(() => {});
+    refreshAndroidDiag();
   }, []);
 
   const loadSettings = async () => {
@@ -377,34 +420,118 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onLogout }) => {
 
           {/* Companion Tab */}
           {activeTab === 'companion' && (
-            <div className="bg-white border border-[#c6c6cb]/60 rounded-2xl p-5 shadow-2xs space-y-3">
-              <div className="flex items-center justify-between pb-3 border-b border-[#c6c6cb]/40">
-                <div className="flex items-center gap-2.5">
-                  <Smartphone className="w-4 h-4 text-[#ac3400]" />
-                  <h2 className="font-serif font-bold text-base text-[#1b1c1a]">Redmi Note 13 Pro 5G</h2>
+            <div className="space-y-4">
+              <div className="bg-white border border-[#c6c6cb]/60 rounded-2xl p-5 shadow-2xs space-y-3">
+                <div className="flex items-center justify-between pb-3 border-b border-[#c6c6cb]/40">
+                  <div className="flex items-center gap-2.5">
+                    <Smartphone className="w-4 h-4 text-[#ac3400]" />
+                    <h2 className="font-serif font-bold text-base text-[#1b1c1a]">Android Notification Diagnostics</h2>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={refreshAndroidDiag}
+                    className="px-2.5 py-1 rounded-full bg-[#f5f3f0] hover:bg-[#efeeeb] border border-[#c6c6cb] font-mono text-[10px] font-bold flex items-center gap-1"
+                  >
+                    <RefreshCw className="w-3 h-3" />
+                    <span>Refresh</span>
+                  </button>
                 </div>
-                <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#efeeeb] text-[#1b1c1a] border border-[#c6c6cb]">
-                  CONNECTED
-                </span>
+
+                <div className="space-y-2 font-mono text-xs">
+                  <div className="flex justify-between py-1 border-b border-[#c6c6cb]/20">
+                    <span className="text-[#76777c]">NOTIFICATION ACCESS:</span>
+                    <span className={`font-bold ${androidDiag?.notification_access_enabled ? 'text-emerald-700' : 'text-rose-700'}`}>
+                      {androidDiag ? (androidDiag.notification_access_enabled ? 'ON' : 'OFF') : 'N/A (Web)'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b border-[#c6c6cb]/20">
+                    <span className="text-[#76777c]">APP NOTIFICATIONS:</span>
+                    <span className={`font-bold ${androidDiag?.post_notifications_enabled ? 'text-emerald-700' : 'text-rose-700'}`}>
+                      {androidDiag ? (androidDiag.post_notifications_enabled ? 'ON' : 'OFF') : 'N/A (Web)'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b border-[#c6c6cb]/20">
+                    <span className="text-[#76777c]">LISTENER SERVICE:</span>
+                    <span className={`font-bold ${androidDiag?.listener_connected ? 'text-emerald-700' : 'text-amber-700'}`}>
+                      {androidDiag ? (androidDiag.listener_connected ? 'CONNECTED' : 'DISCONNECTED') : 'N/A (Web)'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b border-[#c6c6cb]/20">
+                    <span className="text-[#76777c]">GLOBAL AUTO-REPLY:</span>
+                    <span className={`font-bold ${autoReply ? 'text-emerald-700' : 'text-amber-700'}`}>
+                      {autoReply ? 'ON' : 'OFF'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b border-[#c6c6cb]/20">
+                    <span className="text-[#76777c]">LAST WHATSAPP EVENT:</span>
+                    <span className="font-bold text-[#1b1c1a]">
+                      {androidDiag?.last_notification_time
+                        ? `${new Date(androidDiag.last_notification_time).toLocaleTimeString()} (${androidDiag.last_sender_masked || '-'})`
+                        : 'None yet'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b border-[#c6c6cb]/20">
+                    <span className="text-[#76777c]">LAST BACKEND / HTTP:</span>
+                    <span className="font-bold text-[#1b1c1a]">
+                      {androidDiag?.last_backend_status ? `${androidDiag.last_backend_status} (${androidDiag.last_http_code || '-'})` : '-'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b border-[#c6c6cb]/20">
+                    <span className="text-[#76777c]">LAST AI STATUS:</span>
+                    <span className="font-bold text-[#1b1c1a]">{androidDiag?.last_ai_status || '-'}</span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b border-[#c6c6cb]/20">
+                    <span className="text-[#76777c]">LAST REPLY ACTION:</span>
+                    <span className="font-bold text-[#1b1c1a]">{androidDiag?.last_reply_action_status || '-'}</span>
+                  </div>
+                  <div className="flex justify-between py-1">
+                    <span className="text-[#76777c]">PENDING RETRY QUEUE:</span>
+                    <span className="font-bold text-[#1b1c1a]">{androidDiag?.pending_retry_count ?? 0}</span>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => (window as any).AndroidApp?.openNotificationAccessSettings?.()}
+                    className="flex-1 py-2 px-3 bg-[#1b1c1a] text-white rounded-xl font-mono text-[10px] font-bold uppercase active:scale-95 transition"
+                  >
+                    Open Notification Access
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => (window as any).AndroidApp?.openAppNotificationSettings?.()}
+                    className="flex-1 py-2 px-3 bg-[#f5f3f0] border border-[#c6c6cb] text-[#1b1c1a] rounded-xl font-mono text-[10px] font-bold uppercase active:scale-95 transition"
+                  >
+                    App Notification Settings
+                  </button>
+                </div>
+
+                <div className="pt-1">
+                  <button
+                    type="button"
+                    onClick={runSafePipelineTest}
+                    disabled={testingPipeline}
+                    className="w-full py-2 px-3 bg-[#ac3400] hover:bg-[#832600] text-white rounded-xl font-mono text-[10px] font-bold uppercase active:scale-95 transition"
+                  >
+                    {testingPipeline ? 'Testing Cloud Pipeline...' : 'Run Safe Pipeline Test (No WhatsApp Send)'}
+                  </button>
+                  {safeTestResult && (
+                    <p className="mt-2 p-2 rounded-lg bg-[#f5f3f0] border border-[#c6c6cb] font-mono text-[10px] text-[#1b1c1a]">
+                      {safeTestResult}
+                    </p>
+                  )}
+                </div>
               </div>
 
-              <div className="space-y-2 font-mono text-xs">
-                <div className="flex justify-between py-1 border-b border-[#c6c6cb]/20">
-                  <span className="text-[#76777c]">APPLICATION ID:</span>
-                  <span className="font-bold text-[#1b1c1a]">com.chatpilot.ai.debug</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-[#c6c6cb]/20">
-                  <span className="text-[#76777c]">OPERATING SYSTEM:</span>
-                  <span className="font-bold text-[#1b1c1a]">Android 15 (arm64-v8a)</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-[#c6c6cb]/20">
-                  <span className="text-[#76777c]">ADB IDENTIFIER:</span>
-                  <span className="font-bold text-[#1b1c1a]">n7fyu84lpv4989ha</span>
-                </div>
-                <div className="flex justify-between py-1">
-                  <span className="text-[#76777c]">NOTIFICATION LISTENER:</span>
-                  <span className="font-bold text-[#ac3400]">ACTIVE</span>
-                </div>
+              <div className="bg-white border border-[#c6c6cb]/60 rounded-2xl p-5 shadow-2xs space-y-2">
+                <h3 className="font-serif font-bold text-sm text-[#1b1c1a]">Redmi / HyperOS Background Checklist</h3>
+                <ul className="font-sans text-xs text-[#46464b] space-y-1 list-disc pl-4">
+                  <li><strong>Notification Access:</strong> Settings → Apps → Special app access → Notification access → Enable <em>ChatPilot AI Notification Service</em>.</li>
+                  <li><strong>App Notifications:</strong> App Info → Notifications → Allow notifications (for Android 13+ permission).</li>
+                  <li><strong>Autostart & Battery Saver:</strong> App Info → enable <em>Autostart</em> and set Battery Saver to <em>No restrictions</em> so HyperOS does not suspend the listener.</li>
+                  <li><strong>WhatsApp Previews:</strong> Keep WhatsApp notifications unmuted and message previews visible.</li>
+                </ul>
               </div>
             </div>
           )}

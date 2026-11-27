@@ -51,14 +51,14 @@ class ReplyEngine:
                         contact = c_clean.data[0]
                         contact_id = contact["id"]
 
-        # If contact not found, create a lightweight contact
+        # If contact not found, create a lightweight contact (disabled by default)
         if not contact:
             new_c = self.supabase.table("contacts").insert({
                 "owner_id": settings.DEFAULT_OWNER_ID,
                 "display_name": sender_name,
                 "whatsapp_jid": f"{sender_name.lower().replace(' ', '')}@s.whatsapp.net",
-                "is_selected": True,
-                "auto_reply_enabled": True,
+                "is_selected": False,
+                "auto_reply_enabled": False,
                 "reply_mode": "approval",
                 "preferred_language": "Auto"
             }).execute()
