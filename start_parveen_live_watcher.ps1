@@ -1,3 +1,7 @@
+﻿param(
+    [string]$backendUrl = "http://127.0.0.1:8000"
+)
+
 # =====================================================================
 # ChatPilot AI — Windows Live Notification Watcher for All Contacts
 # =====================================================================
@@ -7,7 +11,7 @@ Write-Host " CHATPILOT AI -- WINDOWS LIVE AUTO-REPLY WATCHER (ALL CONTACTS)" -Fo
 Write-Host "=====================================================================" -ForegroundColor Cyan
 
 # 1. Check Backend Connectivity
-$backendUrl = "http://127.0.0.1:8000"
+$backendUrl = $backendUrl.TrimEnd('/')
 try {
     $health = Invoke-RestMethod -Uri "$backendUrl/api/health" -Method Get -TimeoutSec 3 -ErrorAction Stop
     $appInfo = "ChatPilot Backend is online: " + $health.app + " v" + $health.version

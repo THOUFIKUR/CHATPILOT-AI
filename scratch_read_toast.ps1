@@ -20,9 +20,8 @@ foreach ($n in $task.Result) {
         Write-Host "--- ID: $($n.Id) | App: $app ---"
         $binding = $n.Notification.Visual.GetBinding([Windows.UI.Notifications.KnownNotificationBindings]::ToastGeneric)
         if ($binding) {
-            $texts = $binding.GetTextElements()
-            for ($i=0; $i -lt $texts.Count; $i++) {
-                Write-Host "  Text[$i]: '$($texts[$i].Text)'"
+            foreach ($t in $binding.GetTextElements()) {
+                Write-Host "  Text: '$($t.Text)'"
             }
         }
     }

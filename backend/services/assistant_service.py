@@ -365,6 +365,33 @@ class AssistantService:
         except Exception as e:
             logger.error(f"Error compiling db stats for assistant: {e}")
 
+        # Live Real-time Activity Logs & Recent Auto-Replies
+        recent_activity_text = ""
+        try:
+            act_res = self.supabase.table("activity_logs")\
+                .select("created_at, event_type, description")\
+                .order("created_at", desc=True)\
+                .limit(10)\
+                .execute()
+            if act_res.data:
+                act_lines = [f"[{a.get('created_at', '')[:19]}] {a.get('event_type')}: {a.get('description')}" for a in act_res.data]
+                recent_activity_text = "LIVE ACTIVITY LOGS (RECENT EVENTS & MESSAGES):\n" + "\n".join(act_lines) + "\n"
+        except Exception as e:
+            logger.warning(f"Error fetching recent activity for assistant: {e}")
+
+        recent_replies_text = ""
+        try:
+            rep_res = self.supabase.table("reply_drafts")\
+                .select("created_at, draft_text, status")\
+                .order("created_at", desc=True)\
+                .limit(5)\
+                .execute()
+            if rep_res.data:
+                rep_lines = [f"[{r.get('created_at', '')[:19]}] Reply: '{r.get('draft_text')}' | Status: {r.get('status')}" for r in rep_res.data]
+                recent_replies_text = "RECENT AUTO-REPLIES & GENERATED RESPONSES:\n" + "\n".join(rep_lines) + "\n"
+        except Exception as e:
+            logger.warning(f"Error fetching recent replies for assistant: {e}")
+
         tool_result_text = ""
         if tool_execution_result:
             tool_result_text = f"\nVERIFIED TOOL & CONNECTOR EXECUTION RESULT ({tool_action_name}):\n{json.dumps(tool_execution_result, indent=2)}\n"
@@ -374,15 +401,18 @@ class AssistantService:
             "You are ChatPilot Assistant, the private executive AI Co-Pilot for Thoufikur Rahaman.\n"
             "You are a capable general-purpose assistant that directly controls ChatPilot's database, connected applications (Google Drive, Gmail, Google Calendar, GitHub, MCP), and WhatsApp archives.\n\n"
             f"{db_stats_text}\n"
+            f"{recent_activity_text}\n"
+            f"{recent_replies_text}\n"
             f"{tool_result_text}\n"
             f"{attachment_context_text}\n"
             f"{whatsapp_evidence_text}\n\n"
             "CAPABILITIES & INSTRUCTIONS:\n"
-            "1. You HAVE real execution access. When the user requests contact changes (e.g. 'make Parveen to auto reply and select' or 'disable Afiza'), report the verified changes from the tool execution result above.\n"
-            "2. When answering about Google Drive, Gmail, Calendar, or GitHub, use the verified connector data provided above.\n"
-            "3. If an attachment is present (such as a WhatsApp .txt export or document), analyze its content thoroughly and summarize or offer import ratification.\n"
-            "4. For WhatsApp queries, quote exact timestamps and verified messages from the archive.\n"
-            "5. Answer naturally, authoritatively, and concisely in clean Markdown with code blocks or bullets where helpful."
+            "1. You HAVE real-time access to live WhatsApp activity and the last 10 minutes events via the LIVE ACTIVITY LOGS above. When the user asks about recent messages, status of Parveen, or recent replies, answer directly with the exact verified events and timestamps.\n"
+            "2. You HAVE real execution access. When the user requests contact changes (e.g. 'make Parveen to auto reply and select' or 'disable Afiza'), report the verified changes from the tool execution result above.\n"
+            "3. When answering about Google Drive, Gmail, Calendar, or GitHub, use the verified connector data provided above.\n"
+            "4. If an attachment is present (such as a WhatsApp .txt export or document), analyze its content thoroughly and summarize or offer import ratification.\n"
+            "5. For WhatsApp queries, quote exact timestamps and verified messages from the archive.\n"
+            "6. Answer naturally, authoritatively, and concisely in clean Markdown with code blocks or bullets where helpful."
         )
 
         # 5. Build conversation turns for AI context

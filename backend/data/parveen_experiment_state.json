@@ -10,7 +10,7 @@
   "is_emergency_stopped": false,
   "is_completed": false,
   "max_replies_allowed": 2,
-  "successful_replies_count": 11,
+  "successful_replies_count": 12,
   "processed_notification_ids": [
     "winrt_45147",
     "1",
@@ -22,7 +22,8 @@
     "winrt_45256",
     "winrt_45260",
     "winrt_45263",
-    "winrt_45300"
+    "winrt_45300",
+    "winrt_45346"
   ],
   "processed_message_signatures": [
     "Parveen / \u0645\u0648\u0645\u064a\u0627\u0621_hhh_winrt_45147",
@@ -35,18 +36,19 @@
     "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_eppa dai_winrt_45256",
     "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_two or one_winrt_45260",
     "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_why did u choose that one?_winrt_45263",
-    "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_reply varuma?_winrt_45300"
+    "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_reply varuma?_winrt_45300",
+    "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_epaa deii reply paniru daa_winrt_45346"
   ],
-  "last_event_timestamp": "2026-11-27T03:21:08.086705+00:00",
+  "last_event_timestamp": "2026-11-27T09:28:30.778269+00:00",
   "last_reply_details": {
-    "timestamp": "2026-11-27T03:21:08.086705+00:00",
-    "incoming_message": "reply varuma?",
+    "timestamp": "2026-11-27T09:28:30.778269+00:00",
+    "incoming_message": "epaa deii reply paniru daa",
     "sender": "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621",
     "sender_phone": "+919790171303",
-    "generated_reply": "Ippo varum maa",
+    "generated_reply": "Sorry maa.. class la iruken",
     "provider": "groq",
     "model": "qwen/qwen3.8-27b",
-    "latency_ms": 1872,
+    "latency_ms": 1041,
     "submission_result": "message_sent_and_verified",
     "native_reply_action_available": false
   },
@@ -364,6 +366,27 @@
       "stage": "ONE_SHOT_COMPLETE",
       "level": "INFO",
       "message": "One-shot reply complete. Experiment auto-disabled. Reply: 'Ippo varum maa'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T09:28:30.778269+00:00",
+      "stage": "AI_GENERATION",
+      "level": "INFO",
+      "message": "Generating personalized reply for incoming message: 'epaa deii reply paniru daa'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T09:28:33.250775+00:00",
+      "stage": "DELAY",
+      "level": "INFO",
+      "message": "Holding for authoritative 2-second response delay...",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T09:28:40.958498+00:00",
+      "stage": "ONE_SHOT_COMPLETE",
+      "level": "INFO",
+      "message": "One-shot reply complete. Experiment auto-disabled. Reply: 'Sorry maa.. class la iruken'",
       "details": null
     }
   ],
