@@ -21,6 +21,8 @@ import {
 } from 'lucide-react';
 import { api } from '../lib/api';
 import { supabase, getDeviceIdentifier } from '../lib/supabase';
+import { MobileWelcomeView } from './MobileWelcomeView';
+import { isNativeApp, openAuthInSystemBrowser } from '../lib/authBrowser';
 
 interface AuthViewProps {
   onAuthenticated: (user: any) => void;
@@ -54,6 +56,12 @@ export const AuthView: React.FC<AuthViewProps> = ({
   const [error, setError] = useState<string | null>(initialRevocationMessage || null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
+  // Native Mobile Welcome & Browser Auth State
+  const [isNative] = useState(() => isNativeApp());
+  const [showDirectLogin, setShowDirectLogin] = useState(false);
+  const [isWaitingForCallback, setIsWaitingForCallback] = useState(false);
+  const [redirectingToApp, setRedirectingToApp] = useState<string | null>(null);
+
   // Active Device Conflict Dialog state
   const [conflictModal, setConflictModal] = useState<{
     isOpen: boolean;
@@ -78,13 +86,30 @@ export const AuthView: React.FC<AuthViewProps> = ({
     }
   }, [resendCooldown]);
 
-  // Supabase Password Reset Link Recovery Listener
+  // Supabase Password Reset Link Recovery Listener & Web OAuth Relay Listener
   useEffect(() => {
-    // 1. Detect returning from Supabase password reset link (via URL hash)
+    // 0. Detect returning from OAuth with return_to for Mobile App bounce
+    const params = new URLSearchParams(window.location.search);
+    const returnTo = params.get('return_to') || sessionStorage.getItem('chatpilot_return_to');
     const hash = window.location.hash;
+
+    if (returnTo && returnTo.startsWith('chatpilot://')) {
+      if (hash && (hash.includes('access_token=') || hash.includes('refresh_token='))) {
+        sessionStorage.removeItem('chatpilot_return_to');
+        const target = `${returnTo}${hash}`;
+        console.log('[AuthView] Bouncing OAuth callback to native app:', target);
+        setRedirectingToApp(target);
+        setTimeout(() => {
+          window.location.href = target;
+        }, 300);
+        return;
+      }
+    }
+
+    // 1. Detect returning from Supabase password reset link (via URL hash)
     if (hash && (hash.includes('type=recovery') || (hash.includes('access_token=') && hash.includes('type=recovery')))) {
-      const params = new URLSearchParams(hash.replace('#', ''));
-      const token = params.get('access_token');
+      const urlParams = new URLSearchParams(hash.replace('#', ''));
+      const token = urlParams.get('access_token');
       if (token) {
         setRecoveryToken(token);
         setMode('create-new-password');
@@ -98,6 +123,17 @@ export const AuthView: React.FC<AuthViewProps> = ({
           setRecoveryToken(session.access_token);
         }
         setMode('create-new-password');
+      } else if (event === 'SIGNED_IN' && session) {
+        // If logged in on hosted web with return_to, bounce to app
+        const currentReturnTo = new URLSearchParams(window.location.search).get('return_to') || sessionStorage.getItem('chatpilot_return_to');
+        if (currentReturnTo && currentReturnTo.startsWith('chatpilot://')) {
+          sessionStorage.removeItem('chatpilot_return_to');
+          const target = `${currentReturnTo}#access_token=${session.access_token}&refresh_token=${session.refresh_token || ''}&type=bearer`;
+          setRedirectingToApp(target);
+          setTimeout(() => {
+            window.location.href = target;
+          }, 300);
+        }
       }
     });
 
@@ -105,6 +141,21 @@ export const AuthView: React.FC<AuthViewProps> = ({
       subscription.unsubscribe();
     };
   }, []);
+
+  const handleSuccessfulAuth = (authedUser: any, token: string, refreshToken?: string) => {
+    const params = new URLSearchParams(window.location.search);
+    const returnTo = params.get('return_to') || sessionStorage.getItem('chatpilot_return_to');
+    if (returnTo && returnTo.startsWith('chatpilot://')) {
+      sessionStorage.removeItem('chatpilot_return_to');
+      const callbackTarget = `${returnTo}#access_token=${token}&refresh_token=${refreshToken || ''}&user=${encodeURIComponent(JSON.stringify(authedUser))}`;
+      setRedirectingToApp(callbackTarget);
+      setTimeout(() => {
+        window.location.href = callbackTarget;
+      }, 300);
+      return;
+    }
+    onAuthenticated(authedUser);
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -133,7 +184,7 @@ export const AuthView: React.FC<AuthViewProps> = ({
       if (res.status === 'success') {
         localStorage.setItem('chatpilot_access_token', res.session?.access_token || '');
         localStorage.setItem('chatpilot_user', JSON.stringify(res.user));
-        onAuthenticated(res.user);
+        handleSuccessfulAuth(res.user, res.session?.access_token || '', res.session?.refresh_token);
       }
     } catch (err: any) {
       setError(err.message || 'Login failed. Please verify your credentials.');
@@ -192,7 +243,7 @@ export const AuthView: React.FC<AuthViewProps> = ({
       if (res.status === 'success') {
         localStorage.setItem('chatpilot_access_token', res.session?.access_token || '');
         localStorage.setItem('chatpilot_user', JSON.stringify(res.user));
-        onAuthenticated(res.user);
+        handleSuccessfulAuth(res.user, res.session?.access_token || '', res.session?.refresh_token);
       }
     } catch (err: any) {
       setError(err.message || 'Registration failed.');
@@ -279,11 +330,19 @@ export const AuthView: React.FC<AuthViewProps> = ({
     setError(null);
     setSocialLoading(provider);
 
-    // Platform-aware redirect URL
+    const params = new URLSearchParams(window.location.search);
+    const returnTo = params.get('return_to');
+    if (returnTo) {
+      sessionStorage.setItem('chatpilot_return_to', returnTo);
+    }
+
+    // Platform-aware redirect URL:
+    // If running in browser or relaying to mobile app, use origin callback
     let redirectUrl = window.location.origin;
-    if (typeof window !== 'undefined' && (window as any).__TAURI__) {
-      // In Tauri Windows/Android desktop, use deep link or web origin
-      redirectUrl = 'chatpilot://auth/callback';
+    if (isNative) {
+      redirectUrl = 'chatpilot://auth';
+    } else if (returnTo) {
+      redirectUrl = `${window.location.origin}${window.location.pathname}?return_to=${encodeURIComponent(returnTo)}`;
     }
 
     try {
@@ -313,6 +372,19 @@ export const AuthView: React.FC<AuthViewProps> = ({
       setSocialLoading(null);
     }
   };
+
+  if (isNative && !showDirectLogin) {
+    return (
+      <MobileWelcomeView
+        onOpenBrowserLogin={() => {
+          setIsWaitingForCallback(true);
+          openAuthInSystemBrowser();
+        }}
+        onDirectLoginFallback={() => setShowDirectLogin(true)}
+        isWaitingForCallback={isWaitingForCallback}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen w-full bg-[#fbf7f2] flex items-center justify-center p-4 md:p-8 font-sans relative overflow-hidden selection:bg-[#ac3400] selection:text-white">
@@ -452,6 +524,16 @@ export const AuthView: React.FC<AuthViewProps> = ({
         {/* ==================== RIGHT FORM CARD ==================== */}
         <div className="lg:col-span-6 p-6 sm:p-10 md:p-12 flex flex-col justify-center bg-white/95">
           <div className="max-w-md w-full mx-auto space-y-6">
+
+            {isNative && showDirectLogin && (
+              <button
+                type="button"
+                onClick={() => setShowDirectLogin(false)}
+                className="text-xs font-mono text-[#c84b1a] hover:underline flex items-center gap-1 mb-2"
+              >
+                ← Back to Mobile Welcome Screen
+              </button>
+            )}
 
             {/* Form Header */}
             <div>
@@ -1006,6 +1088,27 @@ export const AuthView: React.FC<AuthViewProps> = ({
                 <span>Sign In Here (Switch)</span>
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Redirecting to Native Mobile App Banner */}
+      {redirectingToApp && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-200">
+          <div className="bg-white border border-[#c6c6cb] rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+              <CheckCircle2 className="w-8 h-8" />
+            </div>
+            <h3 className="font-serif text-xl font-bold text-[#1b1c1a]">Sign-In Verified!</h3>
+            <p className="text-xs text-[#46464b] leading-relaxed">
+              Your credentials are authenticated. Returning to your ChatPilot AI mobile application...
+            </p>
+            <a
+              href={redirectingToApp}
+              className="block w-full py-3 px-4 rounded-xl bg-[#1b1c1a] hover:bg-[#2c2d2a] text-white font-serif text-sm font-bold shadow-md transition"
+            >
+              Open ChatPilot AI App
+            </a>
           </div>
         </div>
       )}

@@ -34,6 +34,7 @@ import {
   Square,
   LayoutGrid
 } from 'lucide-react';
+import { API_BASE } from '../lib/api';
 
 interface AttachedFile {
   id: string;
@@ -140,7 +141,7 @@ export const AssistantChatView: React.FC = () => {
 
   const loadSessions = async () => {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/assistant/sessions');
+      const res = await fetch(`${API_BASE}/assistant/sessions`);
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
         setSessions(data);
@@ -155,7 +156,7 @@ export const AssistantChatView: React.FC = () => {
 
   const loadConnectors = async () => {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/connectors');
+      const res = await fetch(`${API_BASE}/connectors`);
       const data = await res.json();
       if (Array.isArray(data)) {
         setConnectors(data);
@@ -167,7 +168,7 @@ export const AssistantChatView: React.FC = () => {
 
   const handleToggleConnector = async (id: string, currentEnabled?: boolean) => {
     try {
-      await fetch(`http://127.0.0.1:8000/api/connectors/${id}/toggle`, {
+      await fetch(`${API_BASE}/connectors/${id}/toggle`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ enabled: !currentEnabled })
@@ -182,7 +183,7 @@ export const AssistantChatView: React.FC = () => {
     setTestingConnectorId(id);
     setTestResult(null);
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/connectors/${id}/test`, { method: 'POST' });
+      const res = await fetch(`${API_BASE}/connectors/${id}/test`, { method: 'POST' });
       const data = await res.json();
       setTestResult(data);
     } catch (e: any) {
@@ -196,7 +197,7 @@ export const AssistantChatView: React.FC = () => {
     e.preventDefault();
     if (!newMcpName || !newMcpCommand) return;
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/connectors/mcp/add', {
+      const res = await fetch(`${API_BASE}/connectors/mcp/add`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -220,7 +221,7 @@ export const AssistantChatView: React.FC = () => {
 
   const createNewSession = async () => {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/assistant/sessions', {
+      const res = await fetch(`${API_BASE}/assistant/sessions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: 'New chat' })
@@ -245,7 +246,7 @@ export const AssistantChatView: React.FC = () => {
 
   const loadMessages = async (sessionId: string) => {
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/assistant/sessions/${sessionId}/messages`);
+      const res = await fetch(`${API_BASE}/assistant/sessions/${sessionId}/messages`);
       const data = await res.json();
       if (Array.isArray(data)) {
         setMessages(data);
@@ -258,7 +259,7 @@ export const AssistantChatView: React.FC = () => {
   const handleDeleteSession = async (sessionId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-      await fetch(`http://127.0.0.1:8000/api/assistant/sessions/${sessionId}`, { method: 'DELETE' });
+      await fetch(`${API_BASE}/assistant/sessions/${sessionId}`, { method: 'DELETE' });
       const nextSessions = sessions.filter(s => s.id !== sessionId);
       setSessions(nextSessions);
       if (activeSessionId === sessionId) {
@@ -339,7 +340,7 @@ export const AssistantChatView: React.FC = () => {
     try {
       let currentId = activeSessionId;
       if (!currentId) {
-        const newSessionRes = await fetch('http://127.0.0.1:8000/api/assistant/sessions', {
+        const newSessionRes = await fetch(`${API_BASE}/assistant/sessions`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ title: text.slice(0, 30) || 'Attachment Inquest' })
@@ -350,7 +351,7 @@ export const AssistantChatView: React.FC = () => {
         setSessions(prev => [newSession, ...prev]);
       }
 
-      const res = await fetch(`http://127.0.0.1:8000/api/assistant/sessions/${currentId}/messages`, {
+      const res = await fetch(`${API_BASE}/assistant/sessions/${currentId}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -26,6 +26,7 @@ export const ChatsView: React.FC = () => {
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState<'all' | 'selected' | 'automatic' | 'approval'>('all');
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -53,12 +54,13 @@ export const ChatsView: React.FC = () => {
   const [isAddingMemory, setIsAddingMemory] = useState(false);
 
   useEffect(() => {
-    loadContacts();
+    loadContacts(1);
   }, []);
 
-  const loadContacts = async () => {
+  const loadContacts = async (retriesLeft = 1) => {
     try {
       setLoading(true);
+      setFetchError(null);
       const data = await api.getContacts();
       const list = Array.isArray(data) ? data : [];
       setContacts(list);
@@ -66,8 +68,13 @@ export const ChatsView: React.FC = () => {
         const parveen = list.find((c: any) => c.display_name?.toLowerCase().includes('parveen')) || list[0];
         selectContactForEditing(parveen, false);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error('Failed to load contacts', e);
+      if (retriesLeft > 0) {
+        setTimeout(() => loadContacts(retriesLeft - 1), 1500);
+      } else {
+        setFetchError(e.message || 'Unable to sync correspondents registry. Please verify backend connection.');
+      }
     } finally {
       setLoading(false);
     }
@@ -277,6 +284,16 @@ export const ChatsView: React.FC = () => {
         {loading ? (
           <div className="p-12 text-center font-serif text-sm text-[#76777c]">
             Loading correspondents registry...
+          </div>
+        ) : fetchError ? (
+          <div className="p-12 text-center font-serif text-sm space-y-3">
+            <p className="text-rose-600 font-semibold">{fetchError}</p>
+            <button
+              onClick={() => loadContacts(1)}
+              className="px-4 py-2 rounded-xl bg-[#1b1c1a] text-white font-mono text-xs font-bold hover:bg-[#2c2d2a] transition"
+            >
+              Retry Sync
+            </button>
           </div>
         ) : filteredContacts.length === 0 ? (
           <div className="p-12 text-center font-serif text-sm text-[#76777c]">

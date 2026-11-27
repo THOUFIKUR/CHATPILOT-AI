@@ -15,6 +15,7 @@ import { ImporterModal } from './components/ImporterModal';
 import { SecretIndicator } from './components/SecretIndicator';
 import { api } from './lib/api';
 import { supabase, getDeviceIdentifier } from './lib/supabase';
+import { initDeepLinkListener } from './lib/authBrowser';
 import { Menu, Sparkles, Radio, LogOut } from 'lucide-react';
 
 export function App() {
@@ -35,8 +36,15 @@ export function App() {
   const [isImporterOpen, setIsImporterOpen] = useState(false);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
-  // Handle single-device revocation event from api.ts
+  // Handle single-device revocation event from api.ts and native deep link callbacks
   useEffect(() => {
+    // 0. Listen for native deep link auth callback (chatpilot://auth)
+    const cleanupDeepLink = initDeepLinkListener((authedUser) => {
+      console.log('[App] Session established via external browser deep link:', authedUser);
+      setUser(authedUser);
+      setRevocationMessage(null);
+    });
+
     // Check if returning from Supabase OAuth
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
@@ -77,6 +85,7 @@ export function App() {
     return () => {
       subscription.unsubscribe();
       window.removeEventListener('chatpilot:session_revoked', handleRevoked);
+      cleanupDeepLink();
     };
   }, []);
 
