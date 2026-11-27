@@ -258,9 +258,10 @@ async def whatsapp_webhook(request: Request):
                 "owner_id": settings.DEFAULT_OWNER_ID,
                 "source": source,
                 "event_type": "whatsapp_test" if is_test_mode else "whatsapp_incoming",
-                "processing_status": "backend_received",
+                "processing_status": "received",
                 "safe_metadata": {
                     "correlation_id": correlation_id,
+                    "pipeline_status": "backend_received",
                     "event_id": event_id or dedup_key,
                     "platform": platform,
                     "has_native_reply_action": has_reply_action,
