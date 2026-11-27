@@ -160,10 +160,13 @@ while ($true) {
             Write-Host "  Contacting ChatPilot Policy Engine..." -ForegroundColor Cyan
 
             try {
-                $response = Invoke-RestMethod -Uri "$backendUrl/api/webhooks/whatsapp" `
+                $webResp = Invoke-WebRequest -Uri "$backendUrl/api/webhooks/whatsapp" `
                     -Method Post `
                     -ContentType "application/json; charset=utf-8" `
-                    -Body ([System.Text.Encoding]::UTF8.GetBytes($jsonPayload))
+                    -Body ([System.Text.Encoding]::UTF8.GetBytes($jsonPayload)) `
+                    -UseBasicParsing
+                $utf8Json = [System.Text.Encoding]::UTF8.GetString($webResp.RawContentStream.ToArray())
+                $response = $utf8Json | ConvertFrom-Json
             } catch {
                 Write-Host "  [ERROR] Webhook call failed: $_" -ForegroundColor Red
                 continue
@@ -190,6 +193,26 @@ while ($true) {
 
                 $wshell = New-Object -ComObject WScript.Shell
 
+                # Ensure WhatsApp Desktop window is restored and foregrounded even if minimized
+                try {
+                    if (-not ("Win32Focus" -as [type])) {
+                        Add-Type @"
+using System;
+using System.Runtime.InteropServices;
+public class Win32Focus {
+    [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+    [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr hWnd);
+}
+"@
+                    }
+                    $waProc = Get-Process | Where-Object { $_.MainWindowTitle -like "*WhatsApp*" -and $_.MainWindowHandle -ne [IntPtr]::Zero } | Select-Object -First 1
+                    if ($waProc) {
+                        [Win32Focus]::ShowWindow($waProc.MainWindowHandle, 9) | Out-Null
+                        [Win32Focus]::SetForegroundWindow($waProc.MainWindowHandle) | Out-Null
+                        Start-Sleep -Milliseconds 300
+                    }
+                } catch {}
+
                 if ($phone) {
                     $phoneClean = $phone -replace "[^0-9]", ""
                     $uri = "whatsapp://send?phone=$phoneClean"
@@ -197,24 +220,27 @@ while ($true) {
                     Start-Process $uri
                     Start-Sleep -Milliseconds 1200
                 } else {
-                    Write-Host "  [SEARCHING] Navigating to WhatsApp chat for '$contactName'..." -ForegroundColor Yellow
+                    # Strip emojis and any non-ASCII characters so WhatsApp search matches cleanly
+                    $cleanSearch = [System.Text.RegularExpressions.Regex]::Replace($contactName, "[^\x20-\x7E]", "").Trim()
+                    $cleanSearch = [System.Text.RegularExpressions.Regex]::Replace($cleanSearch, "\s+", " ").Trim()
+                    if ([string]::IsNullOrWhiteSpace($cleanSearch)) { $cleanSearch = $detectedSender }
+                    Write-Host "  [SEARCHING] Navigating to WhatsApp chat for '$cleanSearch'..." -ForegroundColor Yellow
+
                     $null = $wshell.AppActivate("WhatsApp")
-                    Start-Sleep -Milliseconds 600
+                    Start-Sleep -Milliseconds 500
                     $wshell.SendKeys("^f")
-                    Start-Sleep -Milliseconds 300
-                    
-                    # Search contact name stripped of emojis
-                    $cleanSearch = [System.Text.RegularExpressions.Regex]::Replace($contactName, "[\uD800-\uDFFF\u2600-\u27BF]", "").Trim()
-                    if ([string]::IsNullOrWhiteSpace($cleanSearch)) { $cleanSearch = "Afiza" }
-                    
+                    Start-Sleep -Milliseconds 350
+
                     Set-Clipboard -Value $cleanSearch
+                    $wshell.SendKeys("^a")
+                    Start-Sleep -Milliseconds 100
                     $wshell.SendKeys("^v")
-                    Start-Sleep -Milliseconds 700
+                    Start-Sleep -Milliseconds 800
                     $wshell.SendKeys("{DOWN}")
-                    Start-Sleep -Milliseconds 200
+                    Start-Sleep -Milliseconds 250
                     $wshell.SendKeys("~")
                     Start-Sleep -Milliseconds 800
-                    
+
                     # Restore reply text to clipboard
                     Set-Clipboard -Value $response.reply_text
                 }
