@@ -32,7 +32,7 @@ class Settings:
     OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY", "")
     OPENROUTER_API_KEY_ALT: str = os.getenv("OPENROUTER_API_KEY_ALT", "")
 
-    DEFAULT_OWNER_ID: str = os.getenv("DEFAULT_OWNER_ID", "87f9f3d6-c0ac-493d-be13-36403ef5558f")
+    DEFAULT_OWNER_ID: str = os.getenv("DEFAULT_OWNER_ID", "2b1d6345-be7c-44e6-ac31-3db4e9145b44")
     PORT: int = int(os.getenv("PORT", "8000"))
     HOST: str = os.getenv("HOST", "127.0.0.1")
 

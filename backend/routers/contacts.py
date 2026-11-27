@@ -6,7 +6,6 @@ from database import get_supabase
 from config import settings
 
 router = APIRouter(prefix="/api/contacts", tags=["contacts"])
-supabase = get_supabase()
 
 class ContactCreate(BaseModel):
     display_name: str
@@ -59,12 +58,14 @@ def parse_contact_record(raw: Dict[str, Any]) -> Dict[str, Any]:
 
 @router.get("")
 async def get_contacts():
-    res = supabase.table("contacts").select("*").order("created_at", desc=True).execute()
+    sb = get_supabase()
+    res = sb.table("contacts").select("*").order("created_at", desc=True).execute()
     data = res.data or []
     return [parse_contact_record(c) for c in data]
 
 @router.post("")
 async def create_contact(contact: ContactCreate):
+    sb = get_supabase()
     data = contact.dict()
     data["owner_id"] = settings.DEFAULT_OWNER_ID
     if not data.get("whatsapp_jid") and data.get("display_name"):
@@ -82,15 +83,16 @@ async def create_contact(contact: ContactCreate):
     }
     data["notes"] = json.dumps(notes_pack)
 
-    res = supabase.table("contacts").insert(data).execute()
+    res = sb.table("contacts").insert(data).execute()
     if not res.data:
         raise HTTPException(status_code=400, detail="Failed to create contact")
     return parse_contact_record(res.data[0])
 
 @router.put("/{contact_id}")
 async def update_contact(contact_id: str, updates: ContactUpdate):
+    sb = get_supabase()
     # Fetch existing
-    cur = supabase.table("contacts").select("*").eq("id", contact_id).execute()
+    cur = sb.table("contacts").select("*").eq("id", contact_id).execute()
     if not cur.data:
         raise HTTPException(status_code=404, detail="Contact not found")
     
@@ -116,12 +118,13 @@ async def update_contact(contact_id: str, updates: ContactUpdate):
     }
     update_dict["notes"] = json.dumps(notes_pack)
 
-    res = supabase.table("contacts").update(update_dict).eq("id", contact_id).execute()
+    res = sb.table("contacts").update(update_dict).eq("id", contact_id).execute()
     if not res.data:
         raise HTTPException(status_code=400, detail="Failed to update contact")
     return parse_contact_record(res.data[0])
 
 @router.delete("/{contact_id}")
 async def delete_contact(contact_id: str):
-    res = supabase.table("contacts").delete().eq("id", contact_id).execute()
+    sb = get_supabase()
+    res = sb.table("contacts").delete().eq("id", contact_id).execute()
     return {"success": True, "id": contact_id}
