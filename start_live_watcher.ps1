@@ -215,11 +215,10 @@ public class Win32Focus {
 
                 if ($phone) {
                     $phoneClean = $phone -replace "[^0-9]", ""
-                    $encodedText = [System.Uri]::EscapeDataString($response.reply_text)
-                    $uri = "whatsapp://send?phone=$phoneClean&text=$encodedText"
-                    Write-Host "  [FOCUSING] Opening WhatsApp chat for $phoneClean with pre-filled reply..." -ForegroundColor Yellow
+                    $uri = "whatsapp://send?phone=$phoneClean"
+                    Write-Host "  [FOCUSING] Opening WhatsApp chat for $phoneClean..." -ForegroundColor Yellow
                     Start-Process $uri
-                    Start-Sleep -Milliseconds 1800
+                    Start-Sleep -Milliseconds 2000
                 } else {
                     # Strip emojis and any non-ASCII characters so WhatsApp search matches cleanly
                     $cleanSearch = [System.Text.RegularExpressions.Regex]::Replace($contactName, "[^\x20-\x7E]", "").Trim()
@@ -254,17 +253,15 @@ public class Win32Focus {
                     $null = $wshell.AppActivate("WhatsApp")
                     Start-Sleep -Milliseconds 500
 
-                    if (-not $phone) {
-                        # 1. Select all and DELETE any existing text in the box (clears old/leftover text)
-                        $wshell.SendKeys("^a")
-                        Start-Sleep -Milliseconds 100
-                        $wshell.SendKeys("{DELETE}")
-                        Start-Sleep -Milliseconds 150
+                    # 1. Select all and DELETE any existing text in the box
+                    $wshell.SendKeys("^a")
+                    Start-Sleep -Milliseconds 120
+                    $wshell.SendKeys("{DELETE}")
+                    Start-Sleep -Milliseconds 150
 
-                        # 2. Paste ONLY the exact clean reply text
-                        $wshell.SendKeys("^v")
-                        Start-Sleep -Milliseconds 300
-                    }
+                    # 2. Paste ONLY the exact clean reply text
+                    $wshell.SendKeys("^v")
+                    Start-Sleep -Milliseconds 300
 
                     # 3. Submit
                     $wshell.SendKeys("~")
