@@ -458,12 +458,15 @@ async def whatsapp_webhook(request: Request):
                     "experiment": "parveen"
                 }
             else:
-                return {
-                    "status": res.get("status", "rejected"),
-                    "reason": res.get("reason", "parveen_policy_rejection"),
-                    "should_reply": False,
-                    "details": res
-                }
+                reason_exp = res.get("reason", "parveen_policy_rejection")
+                if reason_exp not in ("experiment_disabled", "experiment_completed", "duplicate_notification"):
+                    return {
+                        "status": res.get("status", "rejected"),
+                        "reason": reason_exp,
+                        "should_reply": False,
+                        "details": res
+                    }
+                logger.info(f"Parveen experiment returned {reason_exp}; falling through to standard automatic reply_engine.")
 
         # For any other authorized selected contact:
         # Check 13: Safety check & generation via reply engine
