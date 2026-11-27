@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { api } from '../lib/api';
 import { supabase } from '../lib/supabase';
 
@@ -120,14 +121,14 @@ export const SecretIndicator: React.FC<{ className?: string; compact?: boolean }
         )}
       </div>
 
-      {/* Secret HUD Diagnostic Modal for Thoufikur */}
-      {showHud && (
+      {/* Secret HUD Diagnostic Modal for Thoufikur (portaled to body so sidebar overflow/transform never clips it) */}
+      {showHud && createPortal(
         <>
           <div 
-            className="fixed inset-0 z-40" 
+            className="fixed inset-0 z-[9998]" 
             onClick={() => setShowHud(false)} 
           />
-          <div className="fixed left-4 bottom-16 w-72 bg-[#1b1c1a] text-white p-4 rounded-2xl shadow-2xl border border-neutral-700/60 z-50 animate-in fade-in zoom-in-95 duration-150 font-sans text-xs">
+          <div className="fixed left-4 bottom-16 w-72 bg-[#1b1c1a] text-white p-4 rounded-2xl shadow-2xl border border-neutral-700/60 z-[9999] animate-in fade-in zoom-in-95 duration-150 font-sans text-xs">
             <div className="flex items-center justify-between border-b border-neutral-800 pb-2 mb-3">
               <span className="font-serif font-bold text-sm text-[#ffb59d]">
                 ChatPilot System Monitor
@@ -187,7 +188,8 @@ export const SecretIndicator: React.FC<{ className?: string; compact?: boolean }
               </button>
             </div>
           </div>
-        </>
+        </>,
+        document.body
       )}
     </div>
   );

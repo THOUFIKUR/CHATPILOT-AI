@@ -41,6 +41,8 @@ export const ChatsView: React.FC = () => {
   });
 
   // Editable contact state
+  const [phoneE164, setPhoneE164] = useState('');
+  const [phoneWarning, setPhoneWarning] = useState<string | null>(null);
   const [isSelected, setIsSelected] = useState(false);
   const [autoReplyEnabled, setAutoReplyEnabled] = useState(false);
   const [replyMode, setReplyMode] = useState('approval');
@@ -83,6 +85,8 @@ export const ChatsView: React.FC = () => {
   const selectContactForEditing = async (c: any, openDrawer = true) => {
     if (!c) return;
     setSelectedContact(c);
+    setPhoneE164(c.phone_e164 || '');
+    setPhoneWarning(null);
     setIsSelected(Boolean(c.is_selected));
     setAutoReplyEnabled(Boolean(c.auto_reply_enabled));
     setReplyMode(c.reply_mode || 'approval');
@@ -143,10 +147,17 @@ export const ChatsView: React.FC = () => {
 
   const handleSaveDrawer = async () => {
     if (!selectedContact) return;
+    const cleanPhone = phoneE164.trim();
+    if (replyMode === 'automatic' && !cleanPhone) {
+      setPhoneWarning('Add a WhatsApp phone number (e.g. +919876543210) so Automatic mode can open and send replies reliably.');
+    } else {
+      setPhoneWarning(null);
+    }
     setSaving(true);
     setSaveSuccess(false);
     try {
       await api.updateContact(selectedContact.id, {
+        phone_e164: cleanPhone || null,
         is_selected: isSelected,
         auto_reply_enabled: autoReplyEnabled,
         reply_mode: replyMode,
@@ -156,9 +167,8 @@ export const ChatsView: React.FC = () => {
         safety_status: safetyStatus
       });
 
-      // Update in local list
-      setContacts(prev => prev.map(c => c.id === selectedContact.id ? {
-        ...c,
+      const updatedFields = {
+        phone_e164: cleanPhone || null,
         is_selected: isSelected,
         auto_reply_enabled: autoReplyEnabled,
         reply_mode: replyMode,
@@ -166,6 +176,14 @@ export const ChatsView: React.FC = () => {
         preferred_language: language,
         custom_instructions: customInstructions,
         safety_status: safetyStatus
+      };
+
+      setSelectedContact((prev: any) => prev ? { ...prev, ...updatedFields } : prev);
+
+      // Update in local list
+      setContacts(prev => prev.map(c => c.id === selectedContact.id ? {
+        ...c,
+        ...updatedFields
       } : c));
 
       setSaveSuccess(true);
@@ -367,15 +385,26 @@ export const ChatsView: React.FC = () => {
                       </button>
                     </div>
 
-                    {/* Reply Mode Badge */}
-                    <span className={`font-mono text-[10px] font-bold px-2.5 py-0.5 rounded-full border uppercase ${
-                      c.reply_mode === 'automatic'
-                        ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                        : c.reply_mode === 'disabled'
-                        ? 'bg-rose-50 text-rose-800 border-rose-300'
-                        : 'bg-[#efeeeb] text-[#46464b] border-[#c6c6cb]/60'
-                    }`}>
-                      {c.reply_mode || 'approval'}
+                    {/* Reply Mode Badge (Green only when automatic AND phone number is saved) */}
+                    <span
+                      title={
+                        c.reply_mode === 'automatic' && !c.phone_e164?.trim()
+                          ? 'Phone number missing — add number to auto-send reliably'
+                          : undefined
+                      }
+                      className={`font-mono text-[10px] font-bold px-2.5 py-0.5 rounded-full border uppercase ${
+                        c.reply_mode === 'automatic'
+                          ? c.phone_e164?.trim()
+                            ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                            : 'bg-rose-50 text-rose-800 border-rose-300'
+                          : c.reply_mode === 'disabled'
+                          ? 'bg-rose-50 text-rose-800 border-rose-300'
+                          : 'bg-[#efeeeb] text-[#46464b] border-[#c6c6cb]/60'
+                      }`}
+                    >
+                      {c.reply_mode === 'automatic' && !c.phone_e164?.trim()
+                        ? 'automatic · no number'
+                        : c.reply_mode || 'approval'}
                     </span>
 
                     {/* More Settings Action */}
@@ -450,6 +479,37 @@ export const ChatsView: React.FC = () => {
                           disabled
                           className="w-full p-2.5 bg-[#f5f3f0] border border-[#c6c6cb]/40 rounded-xl font-serif text-sm text-[#1b1c1a]"
                         />
+                      </div>
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="font-mono text-[10px] uppercase font-bold text-[#46464b]">
+                            WhatsApp Phone Number (E.164):
+                          </label>
+                          <span
+                            className={`font-mono text-[9px] font-bold px-2 py-0.5 rounded-full border uppercase ${
+                              phoneE164.trim()
+                                ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                                : 'bg-rose-50 text-rose-800 border-rose-300'
+                            }`}
+                          >
+                            {phoneE164.trim() ? '✓ Auto-Send Ready' : '✕ Number Required'}
+                          </span>
+                        </div>
+                        <input
+                          type="tel"
+                          value={phoneE164}
+                          onChange={(e) => {
+                            setPhoneE164(e.target.value);
+                            if (e.target.value.trim()) setPhoneWarning(null);
+                          }}
+                          placeholder="+919876543210"
+                          className="w-full p-2.5 bg-white border border-[#c6c6cb] rounded-xl font-mono text-xs text-[#1b1c1a] focus:outline-none focus:border-[#1b1c1a]"
+                        />
+                        {phoneWarning && (
+                          <p className="mt-1.5 font-mono text-[10px] text-rose-700 bg-rose-50 border border-rose-200 rounded-lg px-2.5 py-1.5">
+                            {phoneWarning}
+                          </p>
+                        )}
                       </div>
                       <div className="flex items-center justify-between pt-2">
                         <div>
