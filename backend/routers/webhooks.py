@@ -17,7 +17,6 @@ from services.parveen_experiment_service import (
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/webhooks", tags=["webhooks"])
-supabase = get_supabase()
 
 # Cross-platform single-execution deduplication cache
 # Maps message_hash -> { "timestamp": float, "platform": str, "replied": bool }
@@ -62,28 +61,28 @@ def find_contact_in_db(sender: str, title: str = ""):
         t = (title or "").strip()
         
         if s:
-            res = supabase.table("contacts").select("*").ilike("display_name", f"%{s}%").execute()
+            res = get_supabase().table("contacts").select("*").ilike("display_name", f"%{s}%").execute()
             if res.data:
                 return res.data[0]
         if t:
-            res_t = supabase.table("contacts").select("*").ilike("display_name", f"%{t}%").execute()
+            res_t = get_supabase().table("contacts").select("*").ilike("display_name", f"%{t}%").execute()
             if res_t.data:
                 return res_t.data[0]
 
         s_clean = re.sub(r'[^\w\s]', '', s).strip()
         if s_clean and len(s_clean) >= 3:
-            res_clean = supabase.table("contacts").select("*").ilike("display_name", f"%{s_clean}%").execute()
+            res_clean = get_supabase().table("contacts").select("*").ilike("display_name", f"%{s_clean}%").execute()
             if res_clean.data:
                 return res_clean.data[0]
 
         t_clean = re.sub(r'[^\w\s]', '', t).strip()
         if t_clean and len(t_clean) >= 3:
-            res_tc = supabase.table("contacts").select("*").ilike("display_name", f"%{t_clean}%").execute()
+            res_tc = get_supabase().table("contacts").select("*").ilike("display_name", f"%{t_clean}%").execute()
             if res_tc.data:
                 return res_tc.data[0]
 
         # Scan in memory for fuzzy match
-        all_c = supabase.table("contacts").select("*").execute()
+        all_c = get_supabase().table("contacts").select("*").execute()
         for c in (all_c.data or []):
             dname = c.get("display_name") or ""
             d_clean = re.sub(r'[^\w\s]', '', dname).strip().lower()
@@ -144,7 +143,7 @@ async def whatsapp_webhook(request: Request):
         account_safety_status = "nominal"
         global_reply_delay = 2
         try:
-            sett_res = supabase.table("app_settings").select("settings").execute()
+            sett_res = get_supabase().table("app_settings").select("settings").execute()
             if sett_res.data and sett_res.data[0].get("settings"):
                 st = sett_res.data[0]["settings"]
                 is_global_auto_reply_enabled = bool(st.get("auto_reply", False))
@@ -190,7 +189,7 @@ async def whatsapp_webhook(request: Request):
 
         # Safe logging of incoming notification
         try:
-            supabase.table("integration_events").insert({
+            get_supabase().table("integration_events").insert({
                 "owner_id": settings.DEFAULT_OWNER_ID,
                 "source": source,
                 "event_type": "whatsapp_incoming",

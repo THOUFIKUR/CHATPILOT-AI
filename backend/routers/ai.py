@@ -11,7 +11,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/ai", tags=["ai"])
-supabase = get_supabase()
 
 class GenerateRequest(BaseModel):
     messages: List[Dict[str, str]]
@@ -88,7 +87,7 @@ MODEL_SPECIFICATIONS = {
 
 @router.get("/providers")
 async def get_providers():
-    res = supabase.table("ai_providers").select("*").order("priority").execute()
+    res = get_supabase().table("ai_providers").select("*").order("priority").execute()
     return res.data or []
 
 @router.put("/providers/{provider_id}")
@@ -103,7 +102,7 @@ async def update_provider(provider_id: str, req: UpdateProviderRequest):
     if req.settings is not None:
         update_data["settings"] = req.settings
 
-    res = supabase.table("ai_providers").update(update_data).eq("id", provider_id).execute()
+    res = get_supabase().table("ai_providers").update(update_data).eq("id", provider_id).execute()
     if not res.data:
         raise HTTPException(status_code=404, detail="Provider not found")
     return res.data[0]
@@ -135,7 +134,7 @@ async def get_usage():
     try:
         # Fetch usage logs from the last 30 days
         since_iso = (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()
-        res = supabase.table("ai_usage_logs")\
+        res = get_supabase().table("ai_usage_logs")\
             .select("*")\
             .gte("created_at", since_iso)\
             .order("created_at", desc=True)\

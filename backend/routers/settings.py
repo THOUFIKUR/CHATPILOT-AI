@@ -4,11 +4,10 @@ from config import settings
 from typing import Dict, Any
 
 router = APIRouter(prefix="/api", tags=["settings"])
-supabase = get_supabase()
 
 @router.get("/settings")
 async def get_settings():
-    res = supabase.table("app_settings").select("*").execute()
+    res = get_supabase().table("app_settings").select("*").execute()
     if res.data and res.data[0].get("settings"):
         st = res.data[0]["settings"]
         # Ensure default reply delay is 2 and auto_reply is present
@@ -33,13 +32,13 @@ async def get_settings():
 
 @router.post("/settings")
 async def update_settings(new_settings: Dict[str, Any]):
-    existing = supabase.table("app_settings").select("*").execute()
+    existing = get_supabase().table("app_settings").select("*").execute()
     new_settings["daily_cap_removed"] = True
     if existing.data:
-        res = supabase.table("app_settings").update({"settings": new_settings}).eq("id", existing.data[0]["id"]).execute()
+        res = get_supabase().table("app_settings").update({"settings": new_settings}).eq("id", existing.data[0]["id"]).execute()
         return res.data[0]["settings"]
     else:
-        res = supabase.table("app_settings").insert({
+        res = get_supabase().table("app_settings").insert({
             "owner_id": settings.DEFAULT_OWNER_ID,
             "settings": new_settings
         }).execute()
@@ -100,5 +99,5 @@ async def toggle_auto_reply(payload: Dict[str, Any]):
 
 @router.get("/activity")
 async def get_activity():
-    res = supabase.table("activity_logs").select("*").order("created_at", desc=True).limit(50).execute()
+    res = get_supabase().table("activity_logs").select("*").order("created_at", desc=True).limit(50).execute()
     return res.data or []

@@ -5,7 +5,6 @@ from database import get_supabase
 from config import settings
 
 router = APIRouter(prefix="/api/groups", tags=["groups"])
-supabase = get_supabase()
 
 class GroupCreate(BaseModel):
     group_name: str
@@ -24,7 +23,7 @@ class GroupUpdate(BaseModel):
 
 @router.get("")
 async def get_groups():
-    res = supabase.table("chatpilot_groups").select("*").order("created_at", desc=True).execute()
+    res = get_supabase().table("chatpilot_groups").select("*").order("created_at", desc=True).execute()
     return res.data or []
 
 @router.post("")
@@ -33,7 +32,7 @@ async def create_group(group: GroupCreate):
     data["owner_id"] = settings.DEFAULT_OWNER_ID
     if not data.get("whatsapp_jid"):
         data["whatsapp_jid"] = f"{data['group_name'].lower().replace(' ', '')}@g.us"
-    res = supabase.table("chatpilot_groups").insert(data).execute()
+    res = get_supabase().table("chatpilot_groups").insert(data).execute()
     if not res.data:
         raise HTTPException(status_code=400, detail="Failed to create group")
     return res.data[0]
@@ -41,7 +40,7 @@ async def create_group(group: GroupCreate):
 @router.put("/{group_id}")
 async def update_group(group_id: str, updates: GroupUpdate):
     data = {k: v for k, v in updates.dict().items() if v is not None}
-    res = supabase.table("chatpilot_groups").update(data).eq("id", group_id).execute()
+    res = get_supabase().table("chatpilot_groups").update(data).eq("id", group_id).execute()
     if not res.data:
         raise HTTPException(status_code=404, detail="Group not found")
     return res.data[0]

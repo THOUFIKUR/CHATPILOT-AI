@@ -8,7 +8,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/replies", tags=["replies"])
-supabase = get_supabase()
 
 class ApproveRequest(BaseModel):
     id: str
@@ -28,7 +27,7 @@ async def get_replies(status: Optional[str] = None):
     contact identity, avatar initials, and provider metadata.
     """
     try:
-        query = supabase.table("reply_drafts").select("*, conversations(*, contacts(*))")
+        query = get_supabase().table("reply_drafts").select("*, conversations(*, contacts(*))")
         if status:
             query = query.eq("status", status)
         res = query.order("created_at", desc=True).execute()
@@ -41,7 +40,7 @@ async def get_replies(status: Optional[str] = None):
             # Batch in chunks of 50
             for i in range(0, len(source_msg_ids), 50):
                 chunk = source_msg_ids[i:i+50]
-                m_res = supabase.table("messages").select("id, body, created_at, sender_name, direction").in_("id", chunk).execute()
+                m_res = get_supabase().table("messages").select("id, body, created_at, sender_name, direction").in_("id", chunk).execute()
                 for m in (m_res.data or []):
                     msg_map[m["id"]] = m
 
@@ -96,7 +95,7 @@ async def approve_reply(req: Optional[ApproveRequest] = None, reply_id: Optional
     if not target_id:
         raise HTTPException(status_code=400, detail="Missing reply ID")
         
-    draft_res = supabase.table("reply_drafts").select("*").eq("id", target_id).execute()
+    draft_res = get_supabase().table("reply_drafts").select("*").eq("id", target_id).execute()
     if not draft_res.data:
         raise HTTPException(status_code=404, detail="Draft not found")
     
@@ -107,7 +106,7 @@ async def approve_reply(req: Optional[ApproveRequest] = None, reply_id: Optional
 
     now_iso = datetime.utcnow().isoformat()
     # Update draft to approved
-    upd = supabase.table("reply_drafts").update({
+    upd = get_supabase().table("reply_drafts").update({
         "draft_text": final_text,
         "status": "approved",
         "approved_at": now_iso,
@@ -116,7 +115,7 @@ async def approve_reply(req: Optional[ApproveRequest] = None, reply_id: Optional
     }).eq("id", target_id).execute()
 
     # Insert into conversation messages as outgoing message
-    supabase.table("messages").insert({
+    get_supabase().table("messages").insert({
         "owner_id": draft["owner_id"],
         "conversation_id": draft["conversation_id"],
         "direction": "outgoing",
@@ -142,7 +141,7 @@ async def reject_reply(req: Optional[RejectRequest] = None, reply_id: Optional[s
     if not target_id:
         raise HTTPException(status_code=400, detail="Missing reply ID")
 
-    upd = supabase.table("reply_drafts").update({
+    upd = get_supabase().table("reply_drafts").update({
         "status": "rejected",
         "send_result": {"reason": reason}
     }).eq("id", target_id).execute()
@@ -168,7 +167,7 @@ async def regenerate_reply(req: Optional[RegenerateRequest] = None, reply_id: Op
     if not target_id:
         raise HTTPException(status_code=400, detail="Missing reply ID")
 
-    draft_res = supabase.table("reply_drafts").select("*, conversations(*, contacts(*))").eq("id", target_id).execute()
+    draft_res = get_supabase().table("reply_drafts").select("*, conversations(*, contacts(*))").eq("id", target_id).execute()
     if not draft_res.data:
         raise HTTPException(status_code=404, detail="Draft not found")
         
@@ -181,7 +180,7 @@ async def regenerate_reply(req: Optional[RegenerateRequest] = None, reply_id: Op
     if not s_id:
         raise HTTPException(status_code=400, detail="Cannot regenerate draft without verified source message")
         
-    msg_res = supabase.table("messages").select("*").eq("id", s_id).execute()
+    msg_res = get_supabase().table("messages").select("*").eq("id", s_id).execute()
     if not msg_res.data:
         raise HTTPException(status_code=404, detail="Original source message not found")
         
@@ -207,7 +206,7 @@ Strict WhatsApp chat style: brief, natural, 1-2 sentences."""
         raise HTTPException(status_code=500, detail="AI generation returned empty response")
         
     now_iso = datetime.utcnow().isoformat()
-    upd = supabase.table("reply_drafts").update({
+    upd = get_supabase().table("reply_drafts").update({
         "draft_text": new_text,
         "provider_name": ai_res.get("provider", "groq"),
         "model_name": ai_res.get("model", "qwen/qwen3.8-27b"),

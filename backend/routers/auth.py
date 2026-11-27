@@ -9,7 +9,6 @@ from config import settings
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
-supabase = get_supabase()
 
 class LoginRequest(BaseModel):
     email: str
@@ -63,7 +62,7 @@ async def login(req: LoginRequest):
     try:
         # Try signing in with password
         try:
-            auth_res = supabase.auth.sign_in_with_password({
+            auth_res = get_supabase().auth.sign_in_with_password({
                 "email": str(req.email),
                 "password": req.password
             })
@@ -77,7 +76,7 @@ async def login(req: LoginRequest):
                 target_u = next((u for u in user_list if (u.email or "").lower() == str(req.email).lower()), None)
                 if target_u:
                     admin_client.auth.admin.update_user_by_id(target_u.id, {"email_confirm": True})
-                    auth_res = supabase.auth.sign_in_with_password({
+                    auth_res = get_supabase().auth.sign_in_with_password({
                         "email": str(req.email),
                         "password": req.password
                     })
@@ -95,7 +94,7 @@ async def login(req: LoginRequest):
         user_id = str(user.id)
 
         # Check existing active devices for this user
-        dev_res = supabase.table("devices").select("*").eq("owner_id", user_id).eq("is_active", True).execute()
+        dev_res = get_supabase().table("devices").select("*").eq("owner_id", user_id).eq("is_active", True).execute()
         active_devices = dev_res.data or []
 
         # Find if another device is currently active
@@ -120,7 +119,7 @@ async def login(req: LoginRequest):
         now = datetime.now(timezone.utc).isoformat()
         
         # Deactivate any other records
-        supabase.table("devices").update({"is_active": False}).eq("owner_id", user_id).execute()
+        get_supabase().table("devices").update({"is_active": False}).eq("owner_id", user_id).execute()
 
         # Register current device
         upsert_data = {
@@ -132,11 +131,11 @@ async def login(req: LoginRequest):
             "last_seen_at": now
         }
         
-        existing_this = supabase.table("devices").select("id").eq("device_identifier", req.device_identifier).execute()
+        existing_this = get_supabase().table("devices").select("id").eq("device_identifier", req.device_identifier).execute()
         if existing_this.data:
-            supabase.table("devices").update(upsert_data).eq("id", existing_this.data[0]["id"]).execute()
+            get_supabase().table("devices").update(upsert_data).eq("id", existing_this.data[0]["id"]).execute()
         else:
-            supabase.table("devices").insert(upsert_data).execute()
+            get_supabase().table("devices").insert(upsert_data).execute()
 
         return {
             "status": "success",
@@ -171,7 +170,7 @@ async def confirm_switch_device(req: SwitchDeviceRequest):
     Revokes the previous device and activates the new device atomically.
     """
     try:
-        auth_res = supabase.auth.sign_in_with_password({
+        auth_res = get_supabase().auth.sign_in_with_password({
             "email": str(req.email),
             "password": req.password
         })
@@ -184,7 +183,7 @@ async def confirm_switch_device(req: SwitchDeviceRequest):
         now = datetime.now(timezone.utc).isoformat()
 
         # Atomically deactivate ALL previous devices for this user
-        supabase.table("devices").update({"is_active": False}).eq("owner_id", user_id).execute()
+        get_supabase().table("devices").update({"is_active": False}).eq("owner_id", user_id).execute()
 
         # Activate this device
         upsert_data = {
@@ -196,11 +195,11 @@ async def confirm_switch_device(req: SwitchDeviceRequest):
             "last_seen_at": now
         }
         
-        existing_this = supabase.table("devices").select("id").eq("owner_id", user_id).eq("device_identifier", req.device_identifier).execute()
+        existing_this = get_supabase().table("devices").select("id").eq("owner_id", user_id).eq("device_identifier", req.device_identifier).execute()
         if existing_this.data:
-            supabase.table("devices").update(upsert_data).eq("id", existing_this.data[0]["id"]).execute()
+            get_supabase().table("devices").update(upsert_data).eq("id", existing_this.data[0]["id"]).execute()
         else:
-            supabase.table("devices").insert(upsert_data).execute()
+            get_supabase().table("devices").insert(upsert_data).execute()
 
         logger.info(f"Switched active device for {req.email} to {req.device_name} ({req.device_identifier})")
 
@@ -238,7 +237,7 @@ async def validate_session(req: ValidateSessionRequest):
         now = datetime.now(timezone.utc).isoformat()
 
         # Check if ANOTHER device has taken over as active for this user
-        dev_res = supabase.table("devices").select("*").eq("owner_id", user_id).eq("is_active", True).execute()
+        dev_res = get_supabase().table("devices").select("*").eq("owner_id", user_id).eq("is_active", True).execute()
         active_devices = dev_res.data or []
         other_active = [d for d in active_devices if d.get("device_identifier") != req.device_identifier]
 
@@ -248,14 +247,14 @@ async def validate_session(req: ValidateSessionRequest):
             raise HTTPException(status_code=401, detail="session_revoked_by_another_device")
 
         # No other device is active: ensure this device is marked active and touch last_seen_at
-        this_res = supabase.table("devices").select("id").eq("device_identifier", req.device_identifier).execute()
+        this_res = get_supabase().table("devices").select("id").eq("device_identifier", req.device_identifier).execute()
         if this_res.data:
-            supabase.table("devices").update({
+            get_supabase().table("devices").update({
                 "is_active": True,
                 "last_seen_at": now
             }).eq("id", this_res.data[0]["id"]).execute()
         else:
-            supabase.table("devices").insert({
+            get_supabase().table("devices").insert({
                 "owner_id": user_id,
                 "device_identifier": req.device_identifier,
                 "device_name": "Active Workstation",
@@ -297,7 +296,7 @@ async def register(req: RegisterRequest):
             user_email = admin_res.email
         except Exception as admin_err:
             # Fallback to standard sign_up and confirm
-            auth_res = supabase.auth.sign_up({
+            auth_res = get_supabase().auth.sign_up({
                 "email": str(req.email),
                 "password": req.password,
                 "options": {
@@ -338,7 +337,7 @@ async def forgot_password(req: ForgotPasswordRequest):
     Sends password recovery email via Supabase Auth.
     """
     try:
-        res = supabase.auth.reset_password_for_email(str(req.email))
+        res = get_supabase().auth.reset_password_for_email(str(req.email))
         return {
             "status": "success",
             "message": "Recovery email sent. Check your inbox."
@@ -353,7 +352,7 @@ async def verify_recovery_otp(req: VerifyOtpRequest):
     Verifies recovery OTP token via Supabase Auth.
     """
     try:
-        res = supabase.auth.verify_otp({
+        res = get_supabase().auth.verify_otp({
             "email": str(req.email),
             "token": req.token,
             "type": "recovery"
@@ -415,7 +414,7 @@ async def change_password(req: ChangePasswordRequest):
     """
     try:
         # Verify current password
-        auth_res = supabase.auth.sign_in_with_password({
+        auth_res = get_supabase().auth.sign_in_with_password({
             "email": str(req.email),
             "password": req.current_password
         })
@@ -424,7 +423,7 @@ async def change_password(req: ChangePasswordRequest):
 
         # Update password via admin
         user_id = str(auth_res.user.id)
-        supabase.auth.admin.update_user_by_id(user_id, {"password": req.new_password})
+        get_supabase().auth.admin.update_user_by_id(user_id, {"password": req.new_password})
 
         return {
             "status": "success",
@@ -443,7 +442,7 @@ async def logout(req: LogoutRequest):
     """
     try:
         user_id = req.user_id or settings.DEFAULT_OWNER_ID
-        supabase.table("devices").update({"is_active": False}).eq("owner_id", user_id).eq("device_identifier", req.device_identifier).execute()
+        get_supabase().table("devices").update({"is_active": False}).eq("owner_id", user_id).eq("device_identifier", req.device_identifier).execute()
         return {"status": "success", "message": "Signed out successfully."}
     except Exception as e:
         logger.error(f"Logout error: {e}")
@@ -455,7 +454,7 @@ async def get_active_device(user_id: Optional[str] = None):
     Returns current active device info.
     """
     uid = user_id or settings.DEFAULT_OWNER_ID
-    res = supabase.table("devices").select("*").eq("owner_id", uid).eq("is_active", True).execute()
+    res = get_supabase().table("devices").select("*").eq("owner_id", uid).eq("is_active", True).execute()
     if res.data:
         return res.data[0]
     return {

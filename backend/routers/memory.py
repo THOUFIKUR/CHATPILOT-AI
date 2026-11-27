@@ -6,7 +6,6 @@ from config import settings
 from services.style_service import style_service
 
 router = APIRouter(prefix="/api/memory", tags=["memory"])
-supabase = get_supabase()
 
 class MemoryCreate(BaseModel):
     contact_id: Optional[str] = None
@@ -17,7 +16,7 @@ class MemoryCreate(BaseModel):
 
 @router.get("")
 async def get_memory(contact_id: Optional[str] = None):
-    query = supabase.table("contact_memory").select("*")
+    query = get_supabase().table("contact_memory").select("*")
     if contact_id:
         query = query.eq("contact_id", contact_id)
     res = query.order("created_at", desc=True).execute()
@@ -27,14 +26,14 @@ async def get_memory(contact_id: Optional[str] = None):
 async def create_memory(data: MemoryCreate):
     m_data = data.dict()
     m_data["owner_id"] = settings.DEFAULT_OWNER_ID
-    res = supabase.table("contact_memory").insert(m_data).execute()
+    res = get_supabase().table("contact_memory").insert(m_data).execute()
     if not res.data:
         raise HTTPException(status_code=400, detail="Failed to save memory")
     return res.data[0]
 
 @router.delete("/{memory_id}")
 async def delete_memory(memory_id: str):
-    supabase.table("contact_memory").delete().eq("id", memory_id).execute()
+    get_supabase().table("contact_memory").delete().eq("id", memory_id).execute()
     return {"success": True, "id": memory_id}
 
 @router.get("/style/{contact_id}")

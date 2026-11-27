@@ -6,7 +6,6 @@ from config import settings
 from services.reply_service import reply_engine
 
 router = APIRouter(prefix="/api/diagnostics", tags=["diagnostics"])
-supabase = get_supabase()
 
 class SimulateRequest(BaseModel):
     sender_name: str
@@ -17,8 +16,8 @@ class SimulateRequest(BaseModel):
 @router.get("")
 async def get_diagnostics():
     # Fetch recent activity, events, and provider metrics
-    events_res = supabase.table("activity_logs").select("*").order("created_at", desc=True).limit(20).execute()
-    devices_res = supabase.table("devices").select("*").execute()
+    events_res = get_supabase().table("activity_logs").select("*").order("created_at", desc=True).limit(20).execute()
+    devices_res = get_supabase().table("devices").select("*").execute()
     return {
         "status": "online",
         "service": "ChatPilot AI Engine",
@@ -31,7 +30,7 @@ async def simulate_incoming_message(req: SimulateRequest):
     """Simulates an incoming WhatsApp notification event."""
     try:
         # Record integration event
-        supabase.table("integration_events").insert({
+        get_supabase().table("integration_events").insert({
             "owner_id": settings.DEFAULT_OWNER_ID,
             "source": "windows_simulator",
             "event_type": "whatsapp_incoming_message",
