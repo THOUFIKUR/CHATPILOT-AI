@@ -37,35 +37,35 @@ class AssistantService:
             logger.error(f"DB list_sessions error: {e}")
             sessions = list(_LOCAL_SESSIONS.values())
 
-        # Enrich sessions with real message count and snippet
+        # Enrich sessions with real message count and snippet in a single batch query
         enriched_sessions = []
+        if not sessions:
+            return []
+
+        session_ids = [s["id"] for s in sessions]
+        recent_by_session = {}
+        counts_by_session = {}
+        try:
+            m_res = self.supabase.table("assistant_session_messages")\
+                .select("id, session_id, role, content, created_at")\
+                .in_("session_id", session_ids)\
+                .order("created_at", desc=True)\
+                .limit(200)\
+                .execute()
+            for m in (m_res.data or []):
+                sid = m["session_id"]
+                counts_by_session[sid] = counts_by_session.get(sid, 0) + 1
+                if sid not in recent_by_session:
+                    recent_by_session[sid] = (m.get("content") or "")[:80]
+        except Exception as e:
+            logger.warning(f"Batch message fetch note: {e}")
+
         for s in sessions:
             sid = s["id"]
-            msg_count = 0
-            last_snippet = ""
-            try:
-                m_res = self.supabase.table("assistant_session_messages")\
-                    .select("id, role, content, created_at")\
-                    .eq("session_id", sid)\
-                    .order("sequence_number", desc=True)\
-                    .limit(1)\
-                    .execute()
-                
-                # Count total messages in session
-                c_res = self.supabase.table("assistant_session_messages")\
-                    .select("id", count="exact")\
-                    .eq("session_id", sid)\
-                    .limit(1)\
-                    .execute()
-
-                msg_count = c_res.count if c_res.count is not None else len(m_res.data or [])
-                if m_res.data:
-                    last_snippet = (m_res.data[0].get("content") or "")[:80]
-            except Exception:
-                local_msgs = _LOCAL_MESSAGES.get(sid, [])
-                msg_count = len(local_msgs)
-                if local_msgs:
-                    last_snippet = (local_msgs[-1].get("content") or "")[:80]
+            msg_count = counts_by_session.get(sid, len(_LOCAL_MESSAGES.get(sid, [])))
+            last_snippet = recent_by_session.get(sid, "")
+            if not last_snippet and sid in _LOCAL_MESSAGES and _LOCAL_MESSAGES[sid]:
+                last_snippet = (_LOCAL_MESSAGES[sid][-1].get("content") or "")[:80]
 
             enriched_sessions.append({
                 **s,

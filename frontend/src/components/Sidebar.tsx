@@ -1,4 +1,5 @@
 import React from 'react';
+import { SecretIndicator } from './SecretIndicator';
 import { 
   LayoutDashboard, 
   Bot, 
@@ -157,6 +158,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="w-1.5 h-1.5 rounded-full bg-[#ac3400] animate-pulse"></span>
               <span className="font-mono text-[9px] text-[#76777c] font-bold">Online</span>
+              <SecretIndicator compact={true} className="ml-1" />
             </div>
           </div>
         </div>

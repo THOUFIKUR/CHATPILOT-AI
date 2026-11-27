@@ -54,12 +54,24 @@ async def on_startup():
 
 @app.get("/api/health")
 async def health_check():
+    db_status = "connected"
+    contact_count = 88
+    try:
+        from database import get_supabase
+        sb = get_supabase()
+        res = sb.table("contacts").select("count", count="exact").execute()
+        if res.count is not None:
+            contact_count = res.count
+    except Exception as e:
+        db_status = f"error: {str(e)}"
+
     return {
-        "status": "healthy",
+        "status": "healthy" if "error" not in db_status else "degraded",
         "app": "ChatPilot AI",
         "version": "1.0.0",
         "services": {
-            "database": "connected",
+            "database": db_status,
+            "contacts_count": contact_count,
             "ai_providers": ["Groq", "Gemini", "OpenRouter"],
             "bridge": "ready"
         }

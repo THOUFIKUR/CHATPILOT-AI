@@ -12,6 +12,7 @@ import { SettingsView } from './views/SettingsView';
 import { AuthView } from './views/AuthView';
 import { SplashScreen } from './components/SplashScreen';
 import { ImporterModal } from './components/ImporterModal';
+import { SecretIndicator } from './components/SecretIndicator';
 import { api } from './lib/api';
 import { supabase, getDeviceIdentifier } from './lib/supabase';
 import { Menu, Sparkles, Radio, LogOut } from 'lucide-react';
@@ -206,6 +207,7 @@ export function App() {
                 <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-[#46464b]">
                   Redmi Bridge · Online
                 </span>
+                <SecretIndicator compact={true} className="ml-1" />
               </div>
             </div>
           </div>
