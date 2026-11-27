@@ -96,9 +96,10 @@ class WhatsAppImporter:
         contact_display_name: str,
         phone_or_jid: str = None
     ) -> Dict[str, Any]:
-        """Save parsed messages, create contact, store writing samples and summaries."""
-        # 1. Create or fetch Contact
-        existing = self.supabase.table("contacts")\
+        """Save parsed messages, create contact, store writing samples and summaries idempotently."""
+        sb = get_supabase()
+        # 1. Create or fetch Contact (disabled by default until user enables)
+        existing = sb.table("contacts")\
             .select("*")\
             .eq("display_name", contact_display_name)\
             .execute()
@@ -107,19 +108,19 @@ class WhatsAppImporter:
             contact = existing.data[0]
             contact_id = contact["id"]
         else:
-            ins = self.supabase.table("contacts").insert({
+            ins = sb.table("contacts").insert({
                 "owner_id": settings.DEFAULT_OWNER_ID,
                 "display_name": contact_display_name,
                 "whatsapp_jid": phone_or_jid or f"{contact_display_name.lower().replace(' ', '')}@s.whatsapp.net",
-                "is_selected": True,
-                "auto_reply_enabled": True,
+                "is_selected": False,
+                "auto_reply_enabled": False,
                 "reply_mode": "approval",
                 "preferred_language": "Auto"
             }).execute()
             contact_id = ins.data[0]["id"]
 
         # 2. Create or fetch Conversation
-        conv_res = self.supabase.table("conversations")\
+        conv_res = sb.table("conversations")\
             .select("*")\
             .eq("contact_id", contact_id)\
             .execute()
@@ -127,7 +128,7 @@ class WhatsAppImporter:
         if conv_res.data:
             conversation_id = conv_res.data[0]["id"]
         else:
-            c_ins = self.supabase.table("conversations").insert({
+            c_ins = sb.table("conversations").insert({
                 "owner_id": settings.DEFAULT_OWNER_ID,
                 "conversation_type": "contact",
                 "contact_id": contact_id,
@@ -135,14 +136,38 @@ class WhatsAppImporter:
             }).execute()
             conversation_id = c_ins.data[0]["id"]
 
-        # 3. Batch insert messages & writing samples
+        # Fetch existing messages & writing samples for idempotent re-imports
+        existing_msgs_res = sb.table("messages")\
+            .select("direction, sender_name, body, metadata")\
+            .eq("conversation_id", conversation_id)\
+            .execute()
+        existing_msg_keys = set()
+        for em in (existing_msgs_res.data or []):
+            ts = (em.get("metadata") or {}).get("imported_timestamp", "")
+            existing_msg_keys.add((em.get("direction"), em.get("sender_name"), em.get("body"), ts))
+
+        existing_samples_res = sb.table("writing_samples")\
+            .select("sample_text")\
+            .eq("contact_id", contact_id)\
+            .execute()
+        existing_sample_texts = {s.get("sample_text") for s in (existing_samples_res.data or []) if s.get("sample_text")}
+
+        # 3. Prepare deduplicated messages & outgoing-only writing samples
         db_messages = []
         writing_samples = []
+        skipped_duplicates = 0
 
         for msg in messages:
             is_outgoing = (msg["sender"].strip().lower() == user_sender_name.strip().lower())
             direction = "outgoing" if is_outgoing else "incoming"
             body = msg["body"]
+            ts_str = msg["raw_timestamp"]
+
+            msg_key = (direction, msg["sender"], body, ts_str)
+            if msg_key in existing_msg_keys:
+                skipped_duplicates += 1
+                continue
+            existing_msg_keys.add(msg_key)
 
             db_messages.append({
                 "owner_id": settings.DEFAULT_OWNER_ID,
@@ -153,44 +178,66 @@ class WhatsAppImporter:
                 "body": body,
                 "message_type": "text",
                 "source": "manual",
-                "metadata": {"imported_timestamp": msg["raw_timestamp"]}
+                "metadata": {"imported_timestamp": ts_str}
             })
 
-            # If user sent it, collect as writing sample
-            if is_outgoing and len(body.strip()) > 3 and not "<Media omitted>" in body:
+            # Only the user's outgoing messages are used as writing samples
+            clean_sample = body.strip()
+            if is_outgoing and len(clean_sample) > 3 and "<Media omitted>" not in body and clean_sample not in existing_sample_texts:
+                existing_sample_texts.add(clean_sample)
                 writing_samples.append({
                     "owner_id": settings.DEFAULT_OWNER_ID,
                     "contact_id": contact_id,
-                    "sample_text": body.strip(),
+                    "sample_text": clean_sample,
                     "source": "whatsapp_export"
                 })
 
-        # Insert messages in chunks of 100
-        total_inserted = 0
-        chunk_size = 100
-        for i in range(0, len(db_messages), chunk_size):
-            chunk = db_messages[i:i + chunk_size]
-            self.supabase.table("messages").insert(chunk).execute()
-            total_inserted += len(chunk)
-
-        # Insert writing samples (up to 50 best)
+        # Pre-check writing_samples constraint before inserting messages so failed imports do not leave partial records
+        inserted_sample_ids = []
         if writing_samples:
             sample_chunk = writing_samples[:50]
-            self.supabase.table("writing_samples").insert(sample_chunk).execute()
+            try:
+                ws_res = sb.table("writing_samples").insert(sample_chunk).execute()
+                inserted_sample_ids = [r["id"] for r in (ws_res.data or []) if r.get("id")]
+            except Exception as ws_err:
+                err_text = str(ws_err)
+                if "writing_samples_source_check" in err_text or "23514" in err_text:
+                    raise ValueError(
+                        "Database constraint 'writing_samples_source_check' rejected source='whatsapp_export'. "
+                        "Apply migration supabase/migrations/20261127_allow_whatsapp_export_writing_samples.sql in Supabase."
+                    ) from ws_err
+                raise
 
-        # 4. Generate initial summary & memory placeholder
-        summary_text = f"Historical conversation with {contact_display_name} containing {len(messages)} messages. Discussed day-to-day coordination, project updates, and ongoing plans."
-        self.supabase.table("conversation_summaries").insert({
-            "owner_id": settings.DEFAULT_OWNER_ID,
-            "conversation_id": conversation_id,
-            "summary": summary_text
-        }).execute()
+        # Insert messages in chunks of 100 (rollback writing samples if message insert fails)
+        total_inserted = 0
+        chunk_size = 100
+        try:
+            for i in range(0, len(db_messages), chunk_size):
+                chunk = db_messages[i:i + chunk_size]
+                sb.table("messages").insert(chunk).execute()
+                total_inserted += len(chunk)
+        except Exception:
+            if inserted_sample_ids:
+                try:
+                    sb.table("writing_samples").delete().in_("id", inserted_sample_ids).execute()
+                except Exception:
+                    pass
+            raise
+
+        # 4. Generate initial summary if none exists
+        if total_inserted > 0:
+            summary_text = f"Historical conversation with {contact_display_name} containing {len(messages)} messages. Discussed day-to-day coordination, project updates, and ongoing plans."
+            sb.table("conversation_summaries").insert({
+                "owner_id": settings.DEFAULT_OWNER_ID,
+                "conversation_id": conversation_id,
+                "summary": summary_text
+            }).execute()
 
         log_activity(
             event_type="import",
-            description=f"Imported {total_inserted} messages from WhatsApp export for {contact_display_name}",
+            description=f"Imported {total_inserted} messages from WhatsApp export for {contact_display_name} ({skipped_duplicates} duplicates skipped)",
             conversation_id=conversation_id,
-            metadata={"contact_id": contact_id, "messages_count": total_inserted}
+            metadata={"contact_id": contact_id, "messages_count": total_inserted, "duplicates_skipped": skipped_duplicates}
         )
 
         return {
@@ -198,7 +245,8 @@ class WhatsAppImporter:
             "contact_id": contact_id,
             "conversation_id": conversation_id,
             "messages_imported": total_inserted,
-            "writing_samples_stored": min(len(writing_samples), 50)
+            "duplicates_skipped": skipped_duplicates,
+            "writing_samples_stored": len(inserted_sample_ids)
         }
 
 importer_service = WhatsAppImporter()

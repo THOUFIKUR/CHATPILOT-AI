@@ -6,11 +6,11 @@
     "canonical_phone": "+919790171303",
     "country": "India"
   },
-  "is_enabled": true,
+  "is_enabled": false,
   "is_emergency_stopped": false,
   "is_completed": false,
   "max_replies_allowed": 2,
-  "successful_replies_count": 12,
+  "successful_replies_count": 17,
   "processed_notification_ids": [
     "winrt_45147",
     "1",
@@ -23,7 +23,12 @@
     "winrt_45260",
     "winrt_45263",
     "winrt_45300",
-    "winrt_45346"
+    "winrt_45346",
+    "winrt_45368",
+    "winrt_45402",
+    "winrt_45431",
+    "winrt_45435",
+    "winrt_45438"
   ],
   "processed_message_signatures": [
     "Parveen / \u0645\u0648\u0645\u064a\u0627\u0621_hhh_winrt_45147",
@@ -37,18 +42,23 @@
     "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_two or one_winrt_45260",
     "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_why did u choose that one?_winrt_45263",
     "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_reply varuma?_winrt_45300",
-    "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_epaa deii reply paniru daa_winrt_45346"
+    "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_epaa deii reply paniru daa_winrt_45346",
+    "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_ANSWER_winrt_45368",
+    "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_seri okey vidu_winrt_45402",
+    "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_enda dai_winrt_45431",
+    "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_one or two_winrt_45435",
+    "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621_i am not asking about okey... one or two\nselect any one and tell why u choose that_winrt_45438"
   ],
-  "last_event_timestamp": "2026-11-27T09:28:30.778269+00:00",
+  "last_event_timestamp": "2026-11-27T17:30:48.824627+00:00",
   "last_reply_details": {
-    "timestamp": "2026-11-27T09:28:30.778269+00:00",
-    "incoming_message": "epaa deii reply paniru daa",
+    "timestamp": "2026-11-27T14:50:23.189248+00:00",
+    "incoming_message": "i am not asking about okey... one or two\nselect any one and tell why u choose that",
     "sender": "\u2764\ufe0f\u2764\ufe0f\u200d\ud83d\udd25\u0645\u0648\u0645\u064a\u0627\u0621",
     "sender_phone": "+919790171303",
-    "generated_reply": "Sorry maa.. class la iruken",
+    "generated_reply": "Clear aah panna maa",
     "provider": "groq",
     "model": "qwen/qwen3.8-27b",
-    "latency_ms": 1041,
+    "latency_ms": 1009,
     "submission_result": "message_sent_and_verified",
     "native_reply_action_available": false
   },
@@ -387,6 +397,293 @@
       "stage": "ONE_SHOT_COMPLETE",
       "level": "INFO",
       "message": "One-shot reply complete. Experiment auto-disabled. Reply: 'Sorry maa.. class la iruken'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T13:29:53.320885+00:00",
+      "stage": "AI_GENERATION",
+      "level": "INFO",
+      "message": "Generating personalized reply for incoming message: 'ANSWER'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T13:29:56.251204+00:00",
+      "stage": "DELAY",
+      "level": "INFO",
+      "message": "Holding for authoritative 2-second response delay...",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T13:30:03.258481+00:00",
+      "stage": "ONE_SHOT_COMPLETE",
+      "level": "INFO",
+      "message": "One-shot reply complete. Experiment auto-disabled. Reply: 'Ok thaa..'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T14:20:43.111076+00:00",
+      "stage": "AI_GENERATION",
+      "level": "INFO",
+      "message": "Generating personalized reply for incoming message: 'seri okey vidu'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T14:20:46.102911+00:00",
+      "stage": "DELAY",
+      "level": "INFO",
+      "message": "Holding for authoritative 2-second response delay...",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T14:20:53.223783+00:00",
+      "stage": "ONE_SHOT_COMPLETE",
+      "level": "INFO",
+      "message": "One-shot reply complete. Experiment auto-disabled. Reply: 'Ok maa'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T14:42:45.642502+00:00",
+      "stage": "AI_GENERATION",
+      "level": "INFO",
+      "message": "Generating personalized reply for incoming message: 'enda dai'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T14:42:49.326932+00:00",
+      "stage": "DELAY",
+      "level": "INFO",
+      "message": "Holding for authoritative 2-second response delay...",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T14:42:56.022669+00:00",
+      "stage": "ONE_SHOT_COMPLETE",
+      "level": "INFO",
+      "message": "One-shot reply complete. Experiment auto-disabled. Reply: 'Nothing maa'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T14:49:40.401493+00:00",
+      "stage": "AI_GENERATION",
+      "level": "INFO",
+      "message": "Generating personalized reply for incoming message: 'one or two'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T14:49:42.513562+00:00",
+      "stage": "DELAY",
+      "level": "INFO",
+      "message": "Holding for authoritative 2-second response delay...",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T14:49:49.342647+00:00",
+      "stage": "ONE_SHOT_COMPLETE",
+      "level": "INFO",
+      "message": "One-shot reply complete. Experiment auto-disabled. Reply: 'Ok maa'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T14:50:23.196168+00:00",
+      "stage": "AI_GENERATION",
+      "level": "INFO",
+      "message": "Generating personalized reply for incoming message: 'i am not asking about okey... one or two\nselect any one and tell why u choose that'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T14:50:25.281129+00:00",
+      "stage": "DELAY",
+      "level": "INFO",
+      "message": "Holding for authoritative 2-second response delay...",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T14:50:31.821095+00:00",
+      "stage": "ONE_SHOT_COMPLETE",
+      "level": "INFO",
+      "message": "One-shot reply complete. Experiment auto-disabled. Reply: 'Clear aah panna maa'",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T14:55:43.764472+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T14:57:17.375283+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T15:12:20.404895+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T15:15:39.539152+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T15:16:05.113694+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T15:26:06.951434+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T15:33:18.361650+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T15:35:13.669064+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T15:38:04.832921+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T15:41:52.086463+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T15:42:24.599667+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T15:52:08.974470+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T15:55:08.020395+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T15:55:24.393757+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T16:19:10.248537+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T16:20:32.605086+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T16:21:13.796566+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T16:22:06.950901+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T16:22:49.935805+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T16:28:23.394597+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T16:29:39.339772+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T17:13:15.888940+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T17:14:01.673269+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T17:14:37.958670+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T17:15:11.720063+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
+      "details": null
+    },
+    {
+      "timestamp": "2026-11-27T17:30:48.824627+00:00",
+      "stage": "REJECTION",
+      "level": "INFO",
+      "message": "Blocked: Experiment is disabled.",
       "details": null
     }
   ],
