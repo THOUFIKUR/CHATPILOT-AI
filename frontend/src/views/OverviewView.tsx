@@ -12,7 +12,8 @@ import {
   Inbox,
   Sparkles,
   ArrowRight,
-  Activity as ActivityIcon
+  Activity as ActivityIcon,
+  RefreshCw
 } from 'lucide-react';
 import { api } from '../lib/api';
 
@@ -33,16 +34,34 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ onNavigate }) => {
     }
   });
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<string>('');
+  const [pullDistance, setPullDistance] = useState(0);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const [toggling, setToggling] = useState(false);
 
+  const refreshAll = async (silent = false) => {
+    if (!silent) setRefreshing(true);
+    try {
+      await Promise.all([
+        loadData(0),
+        api.getAutoReplyStatus().then(res => {
+          if (res && typeof res.auto_reply_enabled === 'boolean') {
+            setIsAutoReplyOn(res.auto_reply_enabled);
+            localStorage.setItem('chatpilot_global_auto_reply', String(res.auto_reply_enabled));
+          }
+        }).catch(() => {})
+      ]);
+      setLastUpdated(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    } finally {
+      if (!silent) setRefreshing(false);
+    }
+  };
+
   useEffect(() => {
-    loadData();
-    api.getAutoReplyStatus().then(res => {
-      if (res && typeof res.auto_reply_enabled === 'boolean') {
-        setIsAutoReplyOn(res.auto_reply_enabled);
-        localStorage.setItem('chatpilot_global_auto_reply', String(res.auto_reply_enabled));
-      }
-    }).catch(() => {});
+    refreshAll(false);
+    const interval = setInterval(() => refreshAll(true), 10000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleToggleAutoReply = async () => {
@@ -90,17 +109,63 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ onNavigate }) => {
   const activeCount = selectedContacts.length;
   const pendingCount = pendingReplies.length;
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (window.scrollY <= 5) {
+      setTouchStartY(e.touches[0].clientY);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStartY === null) return;
+    const diff = e.touches[0].clientY - touchStartY;
+    if (diff > 0 && window.scrollY <= 5) {
+      setPullDistance(Math.min(diff * 0.5, 80));
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (pullDistance >= 50) {
+      refreshAll(false);
+    }
+    setTouchStartY(null);
+    setPullDistance(0);
+  };
+
   return (
-    <div className="flex flex-col w-full min-h-screen bg-[#fbf9f6] text-[#1b1c1a] p-4 md:p-8 space-y-6">
+    <div
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      className="flex flex-col w-full min-h-screen bg-[#fbf9f6] text-[#1b1c1a] p-4 md:p-8 space-y-6"
+    >
+      {(pullDistance > 15 || refreshing) && (
+        <div className="flex items-center justify-center gap-2 py-2 px-4 bg-white border border-[#c6c6cb]/60 rounded-full shadow-xs self-center font-mono text-[11px] font-bold text-[#ac3400]">
+          <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
+          <span>{refreshing ? 'Refreshing live chats & replies...' : pullDistance >= 50 ? 'Release to refresh' : 'Pull down to refresh'}</span>
+        </div>
+      )}
       {/* Clean Modern Header */}
       <section className="bg-white border border-[#c6c6cb]/60 rounded-2xl p-5 md:p-6 shadow-sm">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           <div className="lg:col-span-7 space-y-1">
-            <h1 className="font-serif text-2xl md:text-3xl font-bold tracking-tight text-[#1b1c1a]">
-              System Overview
-            </h1>
+            <div className="flex items-center justify-between gap-3">
+              <h1 className="font-serif text-2xl md:text-3xl font-bold tracking-tight text-[#1b1c1a]">
+                System Overview
+              </h1>
+              <button
+                type="button"
+                onClick={() => refreshAll(false)}
+                disabled={refreshing}
+                className="px-3 py-1.5 rounded-full bg-[#f5f3f0] hover:bg-[#efeeeb] border border-[#c6c6cb] font-mono text-[10px] font-bold flex items-center gap-1.5 text-[#1b1c1a] active:scale-95 transition shrink-0"
+                title="Refresh live chats, replies, and status"
+              >
+                <RefreshCw className={`w-3 h-3 ${refreshing ? 'animate-spin text-[#ac3400]' : ''}`} />
+                <span>{refreshing ? 'Syncing...' : 'Refresh'}</span>
+              </button>
+            </div>
             <p className="font-sans text-xs md:text-sm text-[#76777c]">
               Real-time monitoring, auto-reply policy controls, and multi-model dispatch status.
+              {lastUpdated && <span className="font-mono text-[10px] ml-2 text-[#ac3400]">Updated {lastUpdated}</span>}
             </p>
           </div>
 
