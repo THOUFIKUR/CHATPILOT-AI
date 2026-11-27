@@ -90,15 +90,16 @@ export const ReplyInboxView: React.FC<ReplyInboxViewProps> = ({ onUpdated }) => 
   const handleApprove = async () => {
     if (!selectedReply) return;
     const textToSend = editedText.trim() || selectedReply.draft_text?.trim();
-    if (!textToSend || !selectedReply.incoming_message) return;
+    if (!textToSend) return;
 
     setActionLoading(true);
     try {
       await api.approveReply(selectedReply.id, textToSend);
       await loadReplies();
       if (onUpdated) onUpdated();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
+      alert(`Approve failed: ${e?.message || 'Unknown error'}`);
     } finally {
       setActionLoading(false);
     }
@@ -111,8 +112,9 @@ export const ReplyInboxView: React.FC<ReplyInboxViewProps> = ({ onUpdated }) => 
       await api.rejectReply(selectedReply.id);
       await loadReplies();
       if (onUpdated) onUpdated();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
+      alert(`Reject failed: ${e?.message || 'Unknown error'}`);
     } finally {
       setActionLoading(false);
     }
@@ -143,7 +145,7 @@ export const ReplyInboxView: React.FC<ReplyInboxViewProps> = ({ onUpdated }) => 
 
   const hasValidIncoming = Boolean(selectedReply?.incoming_message?.trim());
   const hasValidDraft = Boolean((editedText.trim() || selectedReply?.draft_text?.trim()));
-  const isDispatchable = hasValidIncoming && hasValidDraft;
+  const isDispatchable = hasValidDraft;
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-[#fbf9f6] text-[#1b1c1a] p-4 md:p-8 space-y-6">

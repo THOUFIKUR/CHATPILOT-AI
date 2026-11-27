@@ -10,15 +10,15 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/replies", tags=["replies"])
 
 class ApproveRequest(BaseModel):
-    id: str
+    id: Optional[str] = None
     edited_text: Optional[str] = None
 
 class RejectRequest(BaseModel):
-    id: str
+    id: Optional[str] = None
     reason: Optional[str] = "operator_rejected"
 
 class RegenerateRequest(BaseModel):
-    id: str
+    id: Optional[str] = None
 
 @router.get("")
 async def get_replies(status: Optional[str] = None):
