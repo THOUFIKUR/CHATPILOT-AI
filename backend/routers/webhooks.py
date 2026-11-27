@@ -414,7 +414,7 @@ async def whatsapp_webhook(request: Request):
         # If Parveen target, use personalized style pipeline
         if is_parveen:
             parveen_event = {
-                "notification_id": body.get("notification_id") or body.get("notification_key"),
+                "notification_id": body.get("event_id") or body.get("notification_id") or body.get("notification_key"),
                 "source_app": body.get("source_app", "WhatsApp"),
                 "sender": sender or TARGET_NAME,
                 "sender_phone": CANONICAL_TARGET_PHONE,
@@ -427,7 +427,8 @@ async def whatsapp_webhook(request: Request):
             res = await parveen_experiment_service.process_notification_event(parveen_event)
             if res.get("status") == "success" and res.get("reply_text"):
                 reply_text = res["reply_text"]
-                _cross_platform_dedup_cache[msg_hash]["replied"] = True
+                if dedup_key in _cross_platform_dedup_cache:
+                    _cross_platform_dedup_cache[dedup_key]["replied"] = True
                 _last_contact_reply_time[contact_key] = time.time()
 
                 # Log activity with reply_text and incoming message
@@ -474,7 +475,8 @@ async def whatsapp_webhook(request: Request):
             logger.info(f"Enforcing configured {contact_delay}-second reply delay before dispatching to {sender}...")
             await asyncio.sleep(contact_delay)
 
-            _cross_platform_dedup_cache[msg_hash]["replied"] = True
+            if dedup_key in _cross_platform_dedup_cache:
+                _cross_platform_dedup_cache[dedup_key]["replied"] = True
             _last_contact_reply_time[contact_key] = time.time()
 
             contact_phone = contact_record.get("phone_e164") if contact_record else None
