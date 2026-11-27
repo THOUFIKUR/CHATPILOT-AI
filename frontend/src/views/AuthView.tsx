@@ -380,7 +380,7 @@ export const AuthView: React.FC<AuthViewProps> = ({
           setIsWaitingForCallback(true);
           openAuthInSystemBrowser();
         }}
-        onDirectLoginFallback={() => setShowDirectLogin(true)}
+        onAuthenticated={onAuthenticated}
         isWaitingForCallback={isWaitingForCallback}
       />
     );

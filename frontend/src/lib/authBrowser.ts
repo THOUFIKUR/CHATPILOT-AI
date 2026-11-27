@@ -41,8 +41,8 @@ export function getAuthWebUrl(): string {
     return window.location.origin;
   }
 
-  // 3. Fallback to production Vercel deployment
-  return "https://chatpilot-ai.vercel.app";
+  // 3. Fallback: use local dev server via ADB reverse (tcp:5173), or current origin
+  return "http://localhost:5173";
 }
 
 /**
