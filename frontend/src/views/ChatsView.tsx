@@ -31,6 +31,54 @@ export const ChatsView: React.FC = () => {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
+  // Add Contact Modal State
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newContactName, setNewContactName] = useState('');
+  const [newContactPhone, setNewContactPhone] = useState('');
+  const [newContactSelected, setNewContactSelected] = useState(true);
+  const [newContactAutoReply, setNewContactAutoReply] = useState(true);
+  const [newContactMode, setNewContactMode] = useState<'automatic' | 'approval'>('automatic');
+  const [newContactLanguage, setNewContactLanguage] = useState('Auto');
+  const [addLoading, setAddLoading] = useState(false);
+  const [addError, setAddError] = useState<string | null>(null);
+  const [addSuccess, setAddSuccess] = useState(false);
+
+  const handleAddContact = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newContactName.trim()) {
+      setAddError('Contact name is required.');
+      return;
+    }
+    setAddLoading(true);
+    setAddError(null);
+    try {
+      const cleanPhone = newContactPhone.trim();
+      const payload = {
+        display_name: newContactName.trim(),
+        phone_e164: cleanPhone || null,
+        whatsapp_jid: cleanPhone ? `${cleanPhone.replace(/[^0-9]/g, '')}@s.whatsapp.net` : null,
+        is_selected: newContactSelected,
+        auto_reply_enabled: newContactAutoReply,
+        reply_mode: newContactMode,
+        preferred_language: newContactLanguage
+      };
+      await api.createContact(payload);
+      setAddSuccess(true);
+      setTimeout(() => {
+        setShowAddModal(false);
+        setAddSuccess(false);
+        setNewContactName('');
+        setNewContactPhone('');
+        loadContacts(1);
+      }, 700);
+    } catch (err: any) {
+      console.error('Failed to create contact:', err);
+      setAddError(err?.message || 'Failed to create contact');
+    } finally {
+      setAddLoading(false);
+    }
+  };
+
   // Section expansion state in drawer
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
     basic: true,
@@ -303,21 +351,31 @@ export const ChatsView: React.FC = () => {
         </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="flex items-center gap-3 bg-white border border-[#c6c6cb]/60 rounded-2xl px-4 py-2.5 shadow-2xs">
-        <Search className="w-4 h-4 text-[#76777c]" />
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search correspondents by name or telephone number..."
-          className="bg-transparent border-none outline-none w-full font-serif text-sm text-[#1b1c1a] placeholder:text-[#76777c]"
-        />
-        {search && (
-          <button onClick={() => setSearch('')} className="text-xs text-[#76777c] hover:text-[#1b1c1a]">
-            Clear
-          </button>
-        )}
+      {/* Search Bar & Add Correspondent */}
+      <div className="flex items-center gap-3">
+        <div className="flex-1 flex items-center gap-3 bg-white border border-[#c6c6cb]/60 rounded-2xl px-4 py-2.5 shadow-2xs">
+          <Search className="w-4 h-4 text-[#76777c]" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search correspondents by name or telephone number..."
+            className="bg-transparent border-none outline-none w-full font-serif text-sm text-[#1b1c1a] placeholder:text-[#76777c]"
+          />
+          {search && (
+            <button onClick={() => setSearch('')} className="text-xs text-[#76777c] hover:text-[#1b1c1a]">
+              Clear
+            </button>
+          )}
+        </div>
+        <button
+          onClick={() => { setShowAddModal(true); setAddError(null); }}
+          className="flex items-center gap-1.5 px-4 py-2.5 bg-[#ac3400] hover:bg-[#832600] active:scale-95 text-white font-mono text-xs font-bold uppercase rounded-2xl shadow-2xs transition shrink-0"
+        >
+          <Plus className="w-4 h-4" />
+          <span className="hidden sm:inline">Add Correspondent</span>
+          <span className="sm:hidden">Add</span>
+        </button>
       </div>
 
       {/* Simplified Clean Contact Cards List */}
@@ -859,6 +917,174 @@ export const ChatsView: React.FC = () => {
                 )}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Correspondent Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-white border border-[#c6c6cb] rounded-3xl w-full max-w-lg shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-[#c6c6cb]/40 flex items-center justify-between">
+              <div>
+                <span className="font-mono text-[10px] text-[#ac3400] font-bold uppercase tracking-widest">
+                  NEW CORRESPONDENT ENTRY
+                </span>
+                <h3 className="font-serif text-xl font-bold text-[#1b1c1a] mt-0.5">
+                  Add Correspondent
+                </h3>
+              </div>
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="w-8 h-8 rounded-full hover:bg-[#efeeeb] flex items-center justify-center text-[#76777c] hover:text-[#1b1c1a] transition"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddContact} className="p-6 space-y-4">
+              {addError && (
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 font-mono text-xs">
+                  {addError}
+                </div>
+              )}
+              {addSuccess && (
+                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 font-mono text-xs flex items-center gap-2">
+                  <Check className="w-4 h-4" />
+                  <span>Correspondent added successfully!</span>
+                </div>
+              )}
+
+              <div className="space-y-1.5">
+                <label className="font-mono text-xs font-bold text-[#46464b] uppercase">
+                  Contact Name <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newContactName}
+                  onChange={(e) => setNewContactName(e.target.value)}
+                  placeholder="e.g. Parveen or Afiza"
+                  className="w-full px-4 py-2.5 rounded-xl border border-[#c6c6cb] bg-[#fbf9f6] text-[#1b1c1a] font-serif text-sm focus:outline-none focus:border-[#ac3400]"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="font-mono text-xs font-bold text-[#46464b] uppercase">
+                  Telephone (E.164 with Country Code)
+                </label>
+                <input
+                  type="text"
+                  value={newContactPhone}
+                  onChange={(e) => setNewContactPhone(e.target.value)}
+                  placeholder="e.g. +919790171303"
+                  className="w-full px-4 py-2.5 rounded-xl border border-[#c6c6cb] bg-[#fbf9f6] text-[#1b1c1a] font-serif text-sm focus:outline-none focus:border-[#ac3400]"
+                />
+                <p className="text-[11px] text-[#76777c] font-serif">
+                  Include leading '+' and country code (e.g. +91 for India).
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 pt-1">
+                <div className="p-3 bg-[#f5f3f0] rounded-xl border border-[#c6c6cb]/40 space-y-1">
+                  <span className="font-mono text-[10px] font-bold uppercase text-[#46464b] block">
+                    Monitoring
+                  </span>
+                  <label className="flex items-center gap-2 cursor-pointer pt-1">
+                    <input
+                      type="checkbox"
+                      checked={newContactSelected}
+                      onChange={(e) => setNewContactSelected(e.target.checked)}
+                      className="w-4 h-4 accent-[#ac3400] rounded"
+                    />
+                    <span className="font-serif text-xs font-semibold text-[#1b1c1a]">
+                      Active Contact
+                    </span>
+                  </label>
+                </div>
+
+                <div className="p-3 bg-[#f5f3f0] rounded-xl border border-[#c6c6cb]/40 space-y-1">
+                  <span className="font-mono text-[10px] font-bold uppercase text-[#46464b] block">
+                    Auto-Reply Permission
+                  </span>
+                  <label className="flex items-center gap-2 cursor-pointer pt-1">
+                    <input
+                      type="checkbox"
+                      checked={newContactAutoReply}
+                      onChange={(e) => setNewContactAutoReply(e.target.checked)}
+                      className="w-4 h-4 accent-[#ac3400] rounded"
+                    />
+                    <span className="font-serif text-xs font-semibold text-[#1b1c1a]">
+                      Enable Auto-Reply
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="space-y-1.5 pt-1">
+                <label className="font-mono text-xs font-bold text-[#46464b] uppercase">
+                  Reply Mode
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setNewContactMode('automatic')}
+                    className={`py-2 px-3 rounded-xl font-mono text-xs font-bold uppercase border transition ${
+                      newContactMode === 'automatic'
+                        ? 'bg-[#1b1c1a] text-white border-[#1b1c1a]'
+                        : 'bg-[#fbf9f6] text-[#46464b] border-[#c6c6cb]'
+                    }`}
+                  >
+                    Automatic
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setNewContactMode('approval')}
+                    className={`py-2 px-3 rounded-xl font-mono text-xs font-bold uppercase border transition ${
+                      newContactMode === 'approval'
+                        ? 'bg-[#1b1c1a] text-white border-[#1b1c1a]'
+                        : 'bg-[#fbf9f6] text-[#46464b] border-[#c6c6cb]'
+                    }`}
+                  >
+                    Hold for Approval
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="font-mono text-xs font-bold text-[#46464b] uppercase">
+                  Preferred Response Language
+                </label>
+                <select
+                  value={newContactLanguage}
+                  onChange={(e) => setNewContactLanguage(e.target.value)}
+                  className="w-full px-4 py-2 rounded-xl border border-[#c6c6cb] bg-[#fbf9f6] text-[#1b1c1a] font-serif text-sm focus:outline-none focus:border-[#ac3400]"
+                >
+                  <option value="Auto">Auto (Context Match)</option>
+                  <option value="Tamil">Tamil (தமிழ்)</option>
+                  <option value="Tanglish">Tanglish (Tamil in English Script)</option>
+                  <option value="English">English</option>
+                </select>
+              </div>
+
+              <div className="pt-4 border-t border-[#c6c6cb]/40 flex items-center justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  className="px-4 py-2.5 rounded-xl border border-[#c6c6cb] font-mono text-xs font-bold text-[#46464b] hover:bg-[#efeeeb] uppercase transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={addLoading}
+                  className="px-6 py-2.5 rounded-xl bg-[#ac3400] hover:bg-[#832600] active:scale-95 text-white font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-2xs transition disabled:opacity-50"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>{addLoading ? 'Adding...' : 'Create Correspondent'}</span>
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

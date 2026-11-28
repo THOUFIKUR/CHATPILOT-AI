@@ -31,6 +31,16 @@ class ReplyEngine:
         conversation_id: Optional[str] = None
     ) -> Dict[str, Any]:
         """Core AI Reply flow."""
+        # Guard: Never process or auto-reply to messages from self ("You", "Me")
+        clean_name = (sender_name or "").strip().lower()
+        if clean_name in ("you", "me", "self", "thoufikur", "thoufikur rahaman", "thoufikur rahaman y"):
+            logger.info(f"Refusing to process incoming message from self ({sender_name})")
+            return {
+                "blocked": True,
+                "reason": "outgoing_message_from_self",
+                "sender_name": sender_name
+            }
+
         # 1. Identify contact
         contact = None
         if contact_id:

@@ -165,6 +165,16 @@ async def whatsapp_webhook(request: Request):
         if not message_text and not sender:
             return {"status": "ignored", "reason": "empty_payload", "should_reply": False}
 
+        # Check 10b: Strictly ignore outgoing messages from self ("You", "Me", operator name)
+        clean_sender_lower = sender.strip().lower()
+        if clean_sender_lower in ("you", "me", "self", "thoufikur", "thoufikur rahaman", "thoufikur rahaman y"):
+            logger.info(f"Ignoring outgoing message from self ({sender}): '{message_text}'")
+            return {
+                "status": "ignored",
+                "reason": "outgoing_message_from_self",
+                "should_reply": False
+            }
+
         # Check 7: Conversation is 1-to-1 (reject groups)
         is_group = bool(body.get("is_group", False))
         if is_group or "@g.us" in sender or ": " in title or "group" in title.lower():

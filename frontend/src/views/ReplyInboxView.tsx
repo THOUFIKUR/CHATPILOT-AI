@@ -87,7 +87,7 @@ export const ReplyInboxView: React.FC<ReplyInboxViewProps> = ({ onUpdated }) => 
     setIsEditing(false);
   };
 
-  const handleApprove = async () => {
+  const handleApprove = async (openWhatsApp: boolean = false) => {
     if (!selectedReply) return;
     const textToSend = editedText.trim() || selectedReply.draft_text?.trim();
     if (!textToSend) return;
@@ -95,6 +95,14 @@ export const ReplyInboxView: React.FC<ReplyInboxViewProps> = ({ onUpdated }) => 
     setActionLoading(true);
     try {
       await api.approveReply(selectedReply.id, textToSend);
+      // Only open WhatsApp if explicitly requested by user
+      if (openWhatsApp) {
+        const bridge = (window as any).AndroidApp;
+        const phone = selectedReply.phone_number;
+        if (bridge?.sendWhatsAppMessage && phone) {
+          bridge.sendWhatsAppMessage(phone, textToSend);
+        }
+      }
       await loadReplies();
       if (onUpdated) onUpdated();
     } catch (e: any) {
@@ -377,13 +385,22 @@ export const ReplyInboxView: React.FC<ReplyInboxViewProps> = ({ onUpdated }) => 
               {activeTab === 'pending' && (
                 <div className="pt-4 border-t border-[#c6c6cb]/40 flex flex-wrap items-center gap-3">
                   <button
-                    onClick={handleApprove}
+                    onClick={() => handleApprove(false)}
                     disabled={actionLoading || !isDispatchable}
                     className="flex-1 px-4 py-2.5 rounded-xl bg-[#ac3400] hover:bg-[#832600] active:scale-95 text-white font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-2xs transition disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     <Check className="w-4 h-4" />
-                    <span>{isDispatchable ? 'Approve & Dispatch' : 'Verification Required To Dispatch'}</span>
+                    <span>Approve & Save</span>
                   </button>
+                  {selectedReply.phone_number && (
+                    <button
+                      onClick={() => handleApprove(true)}
+                      disabled={actionLoading || !isDispatchable}
+                      className="px-4 py-2.5 rounded-xl bg-[#1b1c1a] hover:bg-[#2c2d2a] active:scale-95 text-white font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-2xs transition disabled:opacity-40"
+                    >
+                      <span>Send via WhatsApp</span>
+                    </button>
+                  )}
                   <button
                     onClick={handleReject}
                     disabled={actionLoading}
