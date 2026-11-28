@@ -11,16 +11,14 @@ logger = logging.getLogger(__name__)
 class AIProviderManager:
     def __init__(self):
         self.supabase = get_supabase()
-        # Default to Llama-3.3-70b (non-thinking, fastest reliable model)
-        # qwen/qwen3.8-27b is a thinking model that requires special handling
         self._active_model: Dict[str, str] = {
             "provider_name": "groq",
-            "model_name": "llama-3.3-70b-versatile"
+            "model_name": "qwen/qwen3.8-27b"
         }
 
     def get_active_model(self) -> Dict[str, str]:
         """Returns the current globally active model configuration."""
-        return getattr(self, "_active_model", {"provider_name": "groq", "model_name": "llama-3.3-70b-versatile"})
+        return getattr(self, "_active_model", {"provider_name": "groq", "model_name": "qwen/qwen3.8-27b"})
 
     def set_active_model(self, provider_name: str, model_name: str) -> Dict[str, str]:
         """Sets the globally active model with one-tap across the chatbot and auto-reply."""
@@ -128,7 +126,17 @@ class AIProviderManager:
         last_error = None
         for prov in provider_list:
             prov_name = prov["provider_name"]
-            model = preferred_model or prov["model_name"]
+            if preferred_model and prov_name.lower() == (preferred_provider or "").lower():
+                model = preferred_model
+            else:
+                model = prov.get("model_name")
+                if not model or model == "llama-3.3-70b-versatile":
+                    if "groq" in prov_name.lower():
+                        model = "qwen/qwen3.8-27b"
+                    elif "gemini" in prov_name.lower():
+                        model = "gemini-flash-lite-latest"
+                    elif "openrouter" in prov_name.lower():
+                        model = "deepseek/deepseek-chat"
             
             # Privacy check
             if not allow_private_content and not prov.get("allow_private_content", True):
@@ -185,30 +193,52 @@ class AIProviderManager:
                 )
                 last_error = e
 
-        # Last-resort guaranteed fallback: Groq Llama-3.3 (non-thinking, fastest)
-        logger.warning(f"All configured providers failed. Attempting guaranteed fallback: groq/llama-3.3-70b-versatile")
+        # Last-resort guaranteed fallback: Gemini flash-lite or OpenRouter deepseek
+        logger.warning("All configured providers failed. Attempting guaranteed fallback with gemini-flash-lite-latest and deepseek-chat...")
         try:
             start_t = time.time()
-            fallback_res = await self._call_groq(
+            fallback_res = await self._call_gemini(
                 messages=full_messages,
-                model="llama-3.3-70b-versatile",
+                model="gemini-flash-lite-latest",
                 temp=0.7,
                 max_tokens=max_tokens
             )
             latency = int((time.time() - start_t) * 1000)
             content_text = (fallback_res.get("content") or "").strip()
             if content_text:
-                self._log_usage("groq", "llama-3.3-70b-versatile", "success", 0, 0, 0.0, latency)
+                self._log_usage("gemini", "gemini-flash-lite-latest", "success", 0, 0, 0.0, latency)
                 return {
-                    "provider": "groq",
-                    "model": "llama-3.3-70b-versatile",
+                    "provider": "gemini",
+                    "model": "gemini-flash-lite-latest",
                     "content": content_text,
                     "latency_ms": latency,
                     "prompt_tokens": 0,
                     "completion_tokens": 0
                 }
-        except Exception as fb_err:
-            logger.error(f"Guaranteed fallback also failed: {fb_err}")
+        except Exception as fb_err1:
+            logger.warning(f"Guaranteed Gemini fallback failed: {fb_err1}. Trying OpenRouter deepseek...")
+            try:
+                start_t = time.time()
+                fallback_res = await self._call_openrouter(
+                    messages=full_messages,
+                    model="deepseek/deepseek-chat",
+                    temp=0.7,
+                    max_tokens=max_tokens
+                )
+                latency = int((time.time() - start_t) * 1000)
+                content_text = (fallback_res.get("content") or "").strip()
+                if content_text:
+                    self._log_usage("openrouter", "deepseek/deepseek-chat", "success", 0, 0, 0.0, latency)
+                    return {
+                        "provider": "openrouter",
+                        "model": "deepseek/deepseek-chat",
+                        "content": content_text,
+                        "latency_ms": latency,
+                        "prompt_tokens": 0,
+                        "completion_tokens": 0
+                    }
+            except Exception as fb_err2:
+                logger.error(f"Guaranteed OpenRouter fallback also failed: {fb_err2}")
 
         raise Exception(f"All AI providers failed. Last error: {last_error}")
 
