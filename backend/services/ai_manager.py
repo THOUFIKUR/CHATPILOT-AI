@@ -11,14 +11,16 @@ logger = logging.getLogger(__name__)
 class AIProviderManager:
     def __init__(self):
         self.supabase = get_supabase()
+        # Default to Llama-3.3-70b (non-thinking, fastest reliable model)
+        # qwen/qwen3.8-27b is a thinking model that requires special handling
         self._active_model: Dict[str, str] = {
             "provider_name": "groq",
-            "model_name": "qwen/qwen3.8-27b"
+            "model_name": "llama-3.3-70b-versatile"
         }
 
     def get_active_model(self) -> Dict[str, str]:
         """Returns the current globally active model configuration."""
-        return getattr(self, "_active_model", {"provider_name": "groq", "model_name": "qwen/qwen3.8-27b"})
+        return getattr(self, "_active_model", {"provider_name": "groq", "model_name": "llama-3.3-70b-versatile"})
 
     def set_active_model(self, provider_name: str, model_name: str) -> Dict[str, str]:
         """Sets the globally active model with one-tap across the chatbot and auto-reply."""
@@ -183,6 +185,31 @@ class AIProviderManager:
                 )
                 last_error = e
 
+        # Last-resort guaranteed fallback: Groq Llama-3.3 (non-thinking, fastest)
+        logger.warning(f"All configured providers failed. Attempting guaranteed fallback: groq/llama-3.3-70b-versatile")
+        try:
+            start_t = time.time()
+            fallback_res = await self._call_groq(
+                messages=full_messages,
+                model="llama-3.3-70b-versatile",
+                temp=0.7,
+                max_tokens=max_tokens
+            )
+            latency = int((time.time() - start_t) * 1000)
+            content_text = (fallback_res.get("content") or "").strip()
+            if content_text:
+                self._log_usage("groq", "llama-3.3-70b-versatile", "success", 0, 0, 0.0, latency)
+                return {
+                    "provider": "groq",
+                    "model": "llama-3.3-70b-versatile",
+                    "content": content_text,
+                    "latency_ms": latency,
+                    "prompt_tokens": 0,
+                    "completion_tokens": 0
+                }
+        except Exception as fb_err:
+            logger.error(f"Guaranteed fallback also failed: {fb_err}")
+
         raise Exception(f"All AI providers failed. Last error: {last_error}")
 
     async def generate_with_provider(
@@ -203,6 +230,13 @@ class AIProviderManager:
         else:
             raise ValueError(f"Unsupported AI provider: {provider_name}")
 
+    # Groq thinking/reasoning models require temperature=1 and need reasoning_effort
+    GROQ_THINKING_MODELS = {
+        "qwen/qwen3.8-27b",
+        "qwen/qwen3-32b",
+        "qwen/qwen3.5-32b",
+    }
+
     async def _call_groq(self, messages: List[Dict[str, str]], model: str, temp: float, max_tokens: int) -> Dict[str, Any]:
         url = "https://api.groq.com/openai/v1/chat/completions"
         headers = {
@@ -210,23 +244,45 @@ class AIProviderManager:
             "Content-Type": "application/json",
             "User-Agent": "ChatPilotAI/1.0"
         }
-        payload = {
+        # Qwen3 thinking models require temperature=1 (enforced by Groq) and thinking_token budget
+        is_thinking_model = model in self.GROQ_THINKING_MODELS
+        actual_temp = 1.0 if is_thinking_model else temp
+        # For thinking models, reserve token budget: total tokens = thinking + reply
+        # We allocate up to max_tokens*4 total so the reply portion (max_tokens) is not consumed by thinking
+        actual_max_tokens = max_tokens * 5 if is_thinking_model else max_tokens
+
+        payload: Dict[str, Any] = {
             "model": model,
             "messages": messages,
-            "temperature": temp,
-            "max_tokens": max_tokens
+            "temperature": actual_temp,
+            "max_tokens": actual_max_tokens,
         }
-        async with httpx.AsyncClient(timeout=20.0) as client:
+        # Explicitly disable thinking for auto-reply to avoid empty content (default budget exhausts max_tokens)
+        if is_thinking_model:
+            payload["thinking"] = {"type": "disabled"}
+
+        async with httpx.AsyncClient(timeout=30.0) as client:
             resp = await client.post(url, headers=headers, json=payload)
+            if resp.status_code == 400:
+                # Thinking flag not supported for this model; retry without it
+                payload.pop("thinking", None)
+                payload["temperature"] = temp
+                payload["max_tokens"] = max_tokens
+                resp = await client.post(url, headers=headers, json=payload)
             if resp.status_code != 200:
-                raise Exception(f"Groq API error {resp.status_code}: {resp.text}")
+                raise Exception(f"Groq API error {resp.status_code}: {resp.text[:200]}")
             data = resp.json()
             usage = data.get("usage", {})
             msg_obj = data["choices"][0]["message"]
-            content_text = msg_obj.get("content") or msg_obj.get("reasoning") or ""
-            if not content_text.strip():
+            # For thinking models, content may be empty while reasoning has the answer
+            content_text = (msg_obj.get("content") or "").strip()
+            if not content_text:
+                # Try to extract from reasoning field (Groq thinking models put final answer there)
+                content_text = (msg_obj.get("reasoning") or "").strip()
+            if not content_text:
+                # If still empty try to get from tool_calls or refusal
                 finish_reason = data.get("choices", [{}])[0].get("finish_reason", "unknown")
-                raise ValueError(f"Groq {model} returned empty content (finish_reason={finish_reason}).")
+                raise ValueError(f"Groq {model} returned empty content (finish_reason={finish_reason}). Switching to fallback provider.")
             return {
                 "content": content_text.strip(),
                 "model": data.get("model", model),

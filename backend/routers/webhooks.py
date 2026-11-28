@@ -496,14 +496,29 @@ async def whatsapp_webhook(request: Request):
         # Check 13: Safety check & generation via reply engine
         draft_res = await reply_engine.process_incoming_message(contact_id=contact_id, sender_name=sender, message_body=message_text)
         
-        # Check if generation failed
+        # Check if generation failed — log with explicit detail for dashboard visibility
         if isinstance(draft_res, dict) and not draft_res.get("success", False):
-            logger.warning(f"AI reply generation failed for {sender}: {draft_res.get('error')}")
+            err_detail = draft_res.get("error", "generation_failed")
+            logger.warning(f"AI reply generation failed for {sender}: {err_detail}")
+            # Log to activity so the UI shows meaningful detail
+            try:
+                log_activity(
+                    event_type="reply_failed",
+                    description=f"AI model produced empty response for {sender}",
+                    metadata={
+                        "incoming_message": message_text,
+                        "contact": sender,
+                        "error": err_detail,
+                        "note": "All providers tried. Message held for manual review."
+                    }
+                )
+            except Exception:
+                pass
             return {
                 "status": "failed",
                 "pipeline_status": "generation_failed",
                 "should_reply": False,
-                "reason": draft_res.get("error", "generation_failed"),
+                "reason": err_detail,
                 "correlation_id": correlation_id,
                 "draft_id": draft_res.get("draft_id")
             }
