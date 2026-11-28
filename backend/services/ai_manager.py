@@ -11,6 +11,40 @@ logger = logging.getLogger(__name__)
 class AIProviderManager:
     def __init__(self):
         self.supabase = get_supabase()
+        self._active_model: Dict[str, str] = {
+            "provider_name": "groq",
+            "model_name": "qwen/qwen3.8-27b"
+        }
+
+    def get_active_model(self) -> Dict[str, str]:
+        """Returns the current globally active model configuration."""
+        return getattr(self, "_active_model", {"provider_name": "groq", "model_name": "qwen/qwen3.8-27b"})
+
+    def set_active_model(self, provider_name: str, model_name: str) -> Dict[str, str]:
+        """Sets the globally active model with one-tap across the chatbot and auto-reply."""
+        p_clean = provider_name.lower().strip()
+        m_clean = model_name.strip()
+        self._active_model = {
+            "provider_name": p_clean,
+            "model_name": m_clean
+        }
+        logger.info(f"One-tap active AI model set to: {p_clean} ({m_clean})")
+        try:
+            # Set chosen provider priority to 1 in DB
+            self.supabase.table("ai_providers").update({
+                "priority": 1, 
+                "model_name": m_clean, 
+                "is_enabled": True
+            }).ilike("provider_name", f"%{p_clean}%").execute()
+            
+            # Demote others
+            others = self.supabase.table("ai_providers").select("id, provider_name").not_.ilike("provider_name", f"%{p_clean}%").execute().data or []
+            for idx, op in enumerate(others):
+                self.supabase.table("ai_providers").update({"priority": idx + 2}).eq("id", op["id"]).execute()
+        except Exception as e:
+            logger.warning(f"Could not persist active model priority in DB: {e}")
+            
+        return self._active_model
 
     async def test_provider(self, provider_name: str, model_name: Optional[str] = None) -> Dict[str, Any]:
         """Test connection and return latency + sample output."""
@@ -71,6 +105,12 @@ class AIProviderManager:
                 {"provider_name": "openrouter", "model_name": "deepseek/deepseek-chat", "priority": 3, "is_enabled": True},
             ]
         
+        # If no explicit provider given, use the globally active model chosen by the user
+        if not preferred_provider and not preferred_model:
+            active = self.get_active_model()
+            preferred_provider = active.get("provider_name")
+            preferred_model = active.get("model_name")
+
         # If preferred provider is requested, prioritize it
         if preferred_provider:
             provider_list = sorted(
@@ -277,6 +317,90 @@ class AIProviderManager:
                 "prompt_tokens": usage.get("prompt_tokens", 0),
                 "completion_tokens": usage.get("completion_tokens", 0),
                 "estimated_cost": 0.00005
+            }
+
+    async def analyze_multimodal(
+        self,
+        prompt: str,
+        mime_type: str,
+        file_base64: str,
+        model_name: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Multimodal analysis for images, PDF, and audio using Gemini 1.5 Flash.
+        Supports:
+          - Images (JPEG, PNG, WebP): Reads text/diagrams/screenshots
+          - PDF / Notes: Extracts and understands document layout & contents
+          - Audio / Video: Analyzes spoken or visual content
+        """
+        clean_model = (model_name or "gemini-1.5-flash").replace("models/", "")
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{clean_model}:generateContent?key={settings.GEMINI_API_KEY}"
+        
+        payload = {
+            "contents": [
+                {
+                    "parts": [
+                        {"text": prompt or "Analyze and explain this content in detail:"},
+                        {
+                            "inlineData": {
+                                "mimeType": mime_type,
+                                "data": file_base64
+                            }
+                        }
+                    ]
+                }
+            ],
+            "generationConfig": {
+                "temperature": 0.4,
+                "maxOutputTokens": 1000
+            }
+        }
+        async with httpx.AsyncClient(timeout=45.0) as client:
+            resp = await client.post(url, json=payload)
+            if resp.status_code != 200:
+                raise Exception(f"Gemini Multimodal error {resp.status_code}: {resp.text}")
+            data = resp.json()
+            candidates = data.get("candidates", [])
+            if not candidates or "content" not in candidates[0]:
+                raise Exception("Gemini returned empty candidate for multimodal analysis")
+            analysis_text = candidates[0]["content"]["parts"][0]["text"].strip()
+            return {
+                "success": True,
+                "content": analysis_text,
+                "model": clean_model,
+                "mime_type": mime_type
+            }
+
+    async def transcribe_audio(self, audio_bytes: bytes, filename: str = "audio.wav") -> Dict[str, Any]:
+        """
+        Transcribes voice messages and voice inputs using Groq Whisper.
+        Model: whisper-large-v3-turbo (lightning-fast, high accuracy across English, Tanglish, and global languages).
+        """
+        url = "https://api.groq.com/openai/v1/audio/transcriptions"
+        headers = {
+            "Authorization": f"Bearer {settings.GROQ_API_KEY}"
+        }
+        files = {
+            "file": (filename, audio_bytes, "audio/wav")
+        }
+        data = {
+            "model": "whisper-large-v3-turbo",
+            "response_format": "json"
+        }
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            resp = await client.post(url, headers=headers, data=data, files=files)
+            if resp.status_code != 200:
+                data["model"] = "whisper-large-v3"
+                resp2 = await client.post(url, headers=headers, data=data, files=files)
+                if resp2.status_code != 200:
+                    raise Exception(f"Groq Whisper error {resp.status_code}: {resp.text}")
+                resp = resp2
+            res_data = resp.json()
+            transcription = (res_data.get("text") or "").strip()
+            return {
+                "success": True,
+                "text": transcription,
+                "model": data["model"]
             }
 
     def _log_usage(self, provider_name: str, model_name: str, request_status: str, prompt_tokens: int, completion_tokens: int, estimated_cost: float, latency_ms: int, error_code: Optional[str] = None):

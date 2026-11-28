@@ -505,6 +505,13 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onLogout }) => {
                   >
                     App Notification Settings
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => (window as any).AndroidApp?.openBatteryOptimizationSettings?.()}
+                    className="w-full py-2 px-3 bg-[#f5f3f0] border border-[#c6c6cb] text-[#1b1c1a] hover:bg-[#eae8e5] rounded-xl font-mono text-[10px] font-bold uppercase active:scale-95 transition"
+                  >
+                    Battery Saver: Set to "No restrictions"
+                  </button>
                 </div>
 
                 <div className="pt-1">

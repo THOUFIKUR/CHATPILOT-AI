@@ -301,7 +301,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ onNavigate }) => {
             </div>
           </div>
           <div className="mt-3 pt-2 border-t border-[#c6c6cb]/30 flex items-center justify-between font-mono text-[10px] font-bold">
-            <span className="text-[#46464b]">Port 8000 Bridge</span>
+            <span className="text-[#46464b]">Cloud Production Bridge</span>
             <span className="px-2 py-0.5 rounded-full bg-[#efeeeb] text-[#1b1c1a]">ANDROID 15</span>
           </div>
         </div>

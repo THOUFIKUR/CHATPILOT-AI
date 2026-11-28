@@ -1,9 +1,17 @@
 import { supabase } from './supabase';
 
-const rawApiBase = 
-  (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
-    ? "http://127.0.0.1:8000/api"
-    : (import.meta.env.VITE_API_BASE_URL || "https://chatpilot-backend-5js6.onrender.com/api");
+const isNativeAndroid = typeof window !== 'undefined' && (
+  Boolean((window as any).AndroidApp) ||
+  navigator.userAgent.includes('Android') ||
+  window.location.protocol === 'tauri:' ||
+  window.location.hostname === 'tauri.localhost'
+);
+
+const rawApiBase = isNativeAndroid
+  ? (import.meta.env.VITE_API_BASE_URL || "https://chatpilot-backend-5js6.onrender.com/api")
+  : ((typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
+    ? (import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api")
+    : (import.meta.env.VITE_API_BASE_URL || "https://chatpilot-backend-5js6.onrender.com/api"));
 
 const normalizedApiBase = rawApiBase.replace(/\/+$/, '');
 export const API_BASE = normalizedApiBase.endsWith('/api') ? normalizedApiBase : `${normalizedApiBase}/api`;
@@ -91,6 +99,7 @@ export const api = {
   getGroups: () => fetchApi('/groups'),
   createGroup: (data: any) => fetchApi('/groups', { method: 'POST', body: JSON.stringify(data) }),
   updateGroup: (id: string, data: any) => fetchApi(`/groups/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteGroup: (id: string) => fetchApi(`/groups/${id}`, { method: 'DELETE' }),
 
   // Conversations & Messages
   getConversations: () => fetchApi('/conversations'),
@@ -107,6 +116,13 @@ export const api = {
   updateProvider: (id: string, data: any) => fetchApi(`/ai/providers/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   testProvider: (providerName: string, modelName?: string) => 
     fetchApi('/ai/test', { method: 'POST', body: JSON.stringify({ provider_name: providerName, model_name: modelName }) }),
+  getActiveModel: () => fetchApi('/ai/active-model'),
+  setActiveModel: (data: { provider_name: string; model_name: string }) =>
+    fetchApi('/ai/active-model', { method: 'POST', body: JSON.stringify(data) }),
+  analyzeMultimodal: (data: { prompt?: string; mime_type: string; file_base64: string; model_name?: string }) =>
+    fetchApi('/ai/multimodal/analyze', { method: 'POST', body: JSON.stringify(data) }),
+  transcribeAudio: (data: { audio_base64: string; filename?: string }) =>
+    fetchApi('/ai/transcribe', { method: 'POST', body: JSON.stringify(data) }),
 
   // Reply Drafts & Policies
   getReplies: (status?: string) => fetchApi(`/replies${status ? `?status=${status}` : ''}`),

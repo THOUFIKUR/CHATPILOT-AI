@@ -6,6 +6,7 @@ from fastapi import APIRouter, Request, HTTPException
 from database import get_supabase, log_activity
 from config import settings
 from services.reply_service import reply_engine
+from utils.phone_utils import normalize_phone, match_phone
 from services.parveen_experiment_service import (
     parveen_experiment_service, 
     TARGET_NAME, 
@@ -64,42 +65,35 @@ def _normalize_text(val: str) -> str:
     return s
 
 def _normalize_phone(val: str) -> str:
-    """Extract digits with leading + if E.164-like."""
-    import re
-    if not val:
-        return ""
-    digits = re.sub(r"\D", "", val)
-    if len(digits) < 7:
-        return ""
-    return f"+{digits}"
+    """Extract digits and normalize to E.164 (Saudi, Indian, and International)."""
+    return normalize_phone(val)
 
 def find_contact_in_db(sender: str, title: str = "", sender_phone: str = ""):
     """
     Safe contact matching in strict priority order:
-      1. Verified/provided phone number (exact normalized E.164 or last-10 digits)
+      1. Verified/provided phone number (normalized E.164 and national digit matching)
       2. Exact normalized display_name match
       3. Controlled alias match (Parveen / مومياء)
     Returns (contact_dict_or_none, status_reason_or_none).
-    Never guesses when multiple distinct contacts match.
+    Never cross-matches between different country codes.
     """
     try:
         sb = get_supabase()
         all_c = sb.table("contacts").select("*").execute().data or []
 
         # 1. Phone match (from explicit sender_phone or phone-formatted sender)
-        phone_cand = _normalize_phone(sender_phone) or (_normalize_phone(sender) if any(ch.isdigit() for ch in (sender or "")) else "")
+        phone_cand = normalize_phone(sender_phone) or (normalize_phone(sender) if any(ch.isdigit() for ch in (sender or "")) else "")
         if phone_cand:
             phone_matches = []
-            cand_last10 = phone_cand[-10:]
             for c in all_c:
-                c_phone = _normalize_phone(c.get("phone_e164") or "")
-                if c_phone and (c_phone == phone_cand or (len(cand_last10) == 10 and c_phone.endswith(cand_last10))):
+                c_phone = c.get("phone_e164") or ""
+                if match_phone(c_phone, phone_cand):
                     phone_matches.append(c)
             if len(phone_matches) == 1:
                 return phone_matches[0], None
             if len(phone_matches) > 1:
                 # Prefer exact E.164 match if unique
-                exact_p = [c for c in phone_matches if _normalize_phone(c.get("phone_e164") or "") == phone_cand]
+                exact_p = [c for c in phone_matches if normalize_phone(c.get("phone_e164") or "") == phone_cand]
                 if len(exact_p) == 1:
                     return exact_p[0], None
                 return None, "ambiguous_contact"
@@ -204,14 +198,46 @@ async def whatsapp_webhook(request: Request):
                 "should_reply": False
             }
 
-        # Check 7: Conversation is 1-to-1 (reject groups)
-        is_group = bool(body.get("is_group", False))
-        if is_group or "@g.us" in sender or ": " in title or "group" in title.lower():
-            return {
-                "status": "ignored",
-                "reason": "group_conversation_blocked",
-                "should_reply": False
-            }
+        # Check 7: Conversation routing (1-to-1 contacts vs enrolled WhatsApp groups)
+        is_group = bool(body.get("is_group", False)) or ("@g.us" in sender) or (": " in title and not sender_phone)
+        is_group_chat = False
+        group_record = None
+
+        if is_group:
+            # Query enrolled WhatsApp groups in chatpilot_groups
+            try:
+                all_g = get_supabase().table("chatpilot_groups").select("*").execute().data or []
+                raw_group_title = title.split(":")[0] if ": " in title else (title or sender)
+                norm_grp = _normalize_text(raw_group_title)
+                for g in all_g:
+                    g_clean = _normalize_text(g.get("group_name") or "")
+                    if g_clean and (g_clean in norm_grp or norm_grp in g_clean):
+                        group_record = g
+                        break
+            except Exception as ge:
+                logger.warning(f"Error querying chatpilot_groups: {ge}")
+
+            if not group_record or not group_record.get("is_selected", False):
+                return {
+                    "status": "ignored",
+                    "reason": "group_not_monitored",
+                    "group_title": title or sender,
+                    "should_reply": False
+                }
+
+            # Check trigger_mode: 'mention_only' vs 'all_messages'
+            t_mode = group_record.get("trigger_mode", "mention_only")
+            if t_mode == "mention_only":
+                lower_body = (message_text or "").lower()
+                user_handles = ["@thoufikur", "@thoufik", "@thouf", "thoufikur", "thoufik"]
+                if not any(h in lower_body for h in user_handles):
+                    return {
+                        "status": "ignored",
+                        "reason": "group_mention_not_detected",
+                        "group_name": group_record.get("group_name"),
+                        "should_reply": False
+                    }
+            is_group_chat = True
 
         # Check 1 & 2 & 3: Global settings and safety check
         is_global_auto_reply_enabled = False
@@ -311,9 +337,25 @@ async def whatsapp_webhook(request: Request):
         except Exception as log_err:
             logger.warning(f"Failed to log integration_event: {log_err}")
 
-        # Check 4: Contact recognized in DB (strict safe matching)
+        # Check 4: Contact or Group recognized in DB
         sender_phone = (body.get("sender_phone") or "").strip()
-        contact_record, match_reason = find_contact_in_db(sender, title, sender_phone)
+        contact_record = None
+        match_reason = None
+        
+        if is_group_chat and group_record:
+            contact_record = {
+                "id": None,
+                "display_name": group_record.get("group_name"),
+                "is_selected": bool(group_record.get("is_selected", True)),
+                "auto_reply_enabled": bool(group_record.get("auto_reply_enabled", False)),
+                "reply_mode": group_record.get("reply_mode", "approval"),
+                "phone_e164": group_record.get("whatsapp_jid"),
+                "notes": group_record.get("notes")
+            }
+            match_reason = "enrolled_group_match"
+        else:
+            contact_record, match_reason = find_contact_in_db(sender, title, sender_phone)
+            
         is_parveen = is_parveen_target(sender, title)
 
         if not contact_record:

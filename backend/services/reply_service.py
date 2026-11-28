@@ -130,6 +130,90 @@ class ReplyEngine:
         }).execute()
         source_message_id = msg_ins.data[0]["id"]
 
+        # Check 2b: Explicit confirmation of a staged pending action (e.g. "Yeah, okay")
+        from services.action_approval_service import action_approval_service
+        if action_approval_service.is_confirmation(message_body):
+            pending = action_approval_service.get_pending_action_for_contact(sender_name)
+            if pending:
+                exec_res = action_approval_service.execute_action(pending["id"])
+                reply_text = f"Attached and sent {pending.get('filename')} on WhatsApp."
+                # Persist outgoing message
+                try:
+                    self.supabase.table("messages").insert({
+                        "owner_id": settings.DEFAULT_OWNER_ID,
+                        "conversation_id": conversation_id,
+                        "direction": "outgoing",
+                        "sender_name": "Thoufikur Rahman",
+                        "body": reply_text,
+                        "source": "auto_reply"
+                    }).execute()
+                except Exception:
+                    pass
+
+                return {
+                    "success": True,
+                    "action_executed": True,
+                    "action_id": pending["id"],
+                    "conversation_id": conversation_id,
+                    "contact_name": sender_name,
+                    "incoming_message": message_body,
+                    "draft_text": reply_text,
+                    "provider": "action_execution_engine",
+                    "model": "action_executor",
+                    "requires_approval": False
+                }
+
+        # Check 2c: Context-aware study file request (e.g. "Dai, send me the PE notes")
+        from services.file_indexer import file_indexer
+        file_req = file_indexer.extract_file_request(message_body)
+        if file_req:
+            matched_files = file_indexer.search_files(message_body)
+            if matched_files:
+                top_file = matched_files[0]
+                pending = action_approval_service.create_pending_action(
+                    action_type="send_whatsapp_attachment",
+                    recipient_name=sender_name,
+                    recipient_jid=contact.get("whatsapp_jid"),
+                    file_path=top_file["file_path"],
+                    filename=top_file["filename"],
+                    conversation_id=conversation_id,
+                    summary=f"Send {top_file['filename']} to {sender_name}"
+                )
+                draft_text = f"Found '{top_file['filename']}'. Should I send it to {sender_name}?"
+                
+                # Save draft for operator ratification
+                draft_ins = self.supabase.table("reply_drafts").insert({
+                    "owner_id": settings.DEFAULT_OWNER_ID,
+                    "conversation_id": conversation_id,
+                    "source_message_id": source_message_id,
+                    "draft_text": draft_text,
+                    "provider_name": "file_indexer",
+                    "model_name": "context_file_search",
+                    "status": "pending"
+                }).execute()
+                draft_id = draft_ins.data[0]["id"]
+                
+                log_activity(
+                    event_type="awaiting_approval",
+                    description=f"Staged file attachment '{top_file['filename']}' for {sender_name} — awaiting approval",
+                    conversation_id=conversation_id,
+                    metadata={"action_id": pending["id"], "file": top_file["filename"], "recipient": sender_name}
+                )
+
+                return {
+                    "success": True,
+                    "draft_id": draft_id,
+                    "action_id": pending["id"],
+                    "conversation_id": conversation_id,
+                    "contact_name": sender_name,
+                    "incoming_message": message_body,
+                    "draft_text": draft_text,
+                    "provider": "file_indexer",
+                    "model": "context_file_search",
+                    "requires_approval": True,
+                    "staged_file": top_file
+                }
+
         # 3. Check automation and high risk
         if self.is_high_risk(message_body):
             log_activity(

@@ -264,3 +264,52 @@ async def get_usage():
             "model_specifications": MODEL_SPECIFICATIONS,
             "recent_logs": []
         }
+
+class SetActiveModelRequest(BaseModel):
+    provider_name: str
+    model_name: str
+
+class MultimodalAnalyzeRequest(BaseModel):
+    prompt: Optional[str] = "Analyze and explain this content in detail:"
+    mime_type: str
+    file_base64: str
+    model_name: Optional[str] = None
+
+class TranscribeRequest(BaseModel):
+    audio_base64: str
+    filename: Optional[str] = "audio.wav"
+
+@router.get("/active-model")
+async def get_active_model():
+    """Returns the globally active model across chatbot and auto-reply."""
+    return ai_manager.get_active_model()
+
+@router.post("/active-model")
+async def set_active_model(req: SetActiveModelRequest):
+    """Sets the active model with one-tap across chatbot and auto-reply."""
+    return ai_manager.set_active_model(req.provider_name, req.model_name)
+
+@router.post("/multimodal/analyze")
+async def analyze_multimodal(req: MultimodalAnalyzeRequest):
+    """Analyzes images (diagrams/screenshots), PDFs, and videos."""
+    try:
+        return await ai_manager.analyze_multimodal(
+            prompt=req.prompt or "",
+            mime_type=req.mime_type,
+            file_base64=req.file_base64,
+            model_name=req.model_name
+        )
+    except Exception as e:
+        logger.error(f"Multimodal analysis error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/transcribe")
+async def transcribe_audio(req: TranscribeRequest):
+    """Transcribes audio voice messages and spoken inputs using Groq Whisper."""
+    import base64
+    try:
+        audio_bytes = base64.b64decode(req.audio_base64)
+        return await ai_manager.transcribe_audio(audio_bytes, req.filename or "audio.wav")
+    except Exception as e:
+        logger.error(f"Audio transcription error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

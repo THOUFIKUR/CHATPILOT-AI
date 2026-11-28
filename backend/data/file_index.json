@@ -1,0 +1,63 @@
+[
+  {
+    "id": "file_1_1795865035",
+    "filename": "Power_Electronics_Unit_1_Notes.pdf",
+    "file_path": "D:\\CHATPILOT AI\\storage\\study_materials\\Power_Electronics_Unit_1_Notes.pdf",
+    "mime_type": "application/pdf",
+    "file_size_bytes": 220,
+    "tags": [
+      "pe",
+      "notes",
+      "power electronics",
+      "unit 1",
+      "engineering"
+    ],
+    "subject_keywords": [
+      "power_electronics_unit_1_notes",
+      "pdf",
+      "power_electronics_unit_1_notes.pdf"
+    ],
+    "extracted_text_preview": "POWER ELECTRONICS (EE8552) - UNIT I: Power Semiconductor Devices. SCR, TRIAC, GTO, Power MOSFET and IGBT: Principle of operation, static and dynamic characteristics, gate drive requirements. Turn on and turn off methods.",
+    "last_indexed": "2026-11-28T11:23:55.940512+00:00"
+  },
+  {
+    "id": "file_2_1795865035",
+    "filename": "Power_Electronics_Question_Bank.docx",
+    "file_path": "D:\\CHATPILOT AI\\storage\\study_materials\\Power_Electronics_Question_Bank.docx",
+    "mime_type": "application/pdf",
+    "file_size_bytes": 134,
+    "tags": [
+      "pe",
+      "question bank",
+      "power electronics",
+      "qb"
+    ],
+    "subject_keywords": [
+      "docx",
+      "power_electronics_question_bank.docx",
+      "power_electronics_question_bank"
+    ],
+    "extracted_text_preview": "POWER ELECTRONICS 2-Marks & 16-Marks Important Questions & Answers. Inverters, Choppers, Cycloconverters, Phase Controlled Rectifiers.",
+    "last_indexed": "2026-11-28T11:23:55.951921+00:00"
+  },
+  {
+    "id": "file_3_1795865035",
+    "filename": "Digital_Signal_Processing_Formulas.pdf",
+    "file_path": "D:\\CHATPILOT AI\\storage\\study_materials\\Digital_Signal_Processing_Formulas.pdf",
+    "mime_type": "application/pdf",
+    "file_size_bytes": 140,
+    "tags": [
+      "dsp",
+      "digital signal processing",
+      "formulas",
+      "notes"
+    ],
+    "subject_keywords": [
+      "pdf",
+      "digital_signal_processing_formulas.pdf",
+      "digital_signal_processing_formulas"
+    ],
+    "extracted_text_preview": "DIGITAL SIGNAL PROCESSING (DSP) Formula Sheet: DFT, Radix-2 FFT algorithms, IIR Butterworth and Chebyshev filters, FIR windowing techniques.",
+    "last_indexed": "2026-11-28T11:23:55.954591+00:00"
+  }
+]

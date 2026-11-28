@@ -32,9 +32,10 @@ import {
   Boxes,
   RotateCcw,
   Square,
-  LayoutGrid
+  LayoutGrid,
+  Mic
 } from 'lucide-react';
-import { API_BASE } from '../lib/api';
+import { API_BASE, api } from '../lib/api';
 
 interface AttachedFile {
   id: string;
@@ -86,11 +87,83 @@ export const AssistantChatView: React.FC = () => {
   const [searchSession, setSearchSession] = useState('');
   
   // Model & contact context
-  const [selectedModel, setSelectedModel] = useState('Groq Qwen-3.8');
+  const [selectedModel, setSelectedModel] = useState('Groq: Qwen 3.8-27b');
   const [selectedContact, setSelectedContact] = useState<string>('Parveen');
   const [showAttachMenu, setShowAttachMenu] = useState(false);
   const [showModelMenu, setShowModelMenu] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  // Voice recording state
+  const [isRecording, setIsRecording] = useState(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+
+  const AVAILABLE_MODELS = [
+    { label: 'Groq: Qwen 3.8-27b', provider: 'groq', model: 'qwen/qwen3.8-27b', speed: 'Fast (0.8s)', badge: 'Default' },
+    { label: 'Groq: Llama 3.3-70b', provider: 'groq', model: 'llama-3.3-70b-versatile', speed: 'Ultra Fast', badge: 'High Logic' },
+    { label: 'Gemini: Flash Lite Latest', provider: 'gemini', model: 'gemini-flash-lite-latest', speed: '1.2s', badge: 'Multimodal' },
+    { label: 'Gemini: 1.5 Flash', provider: 'gemini', model: 'gemini-1.5-flash', speed: '1.5s', badge: 'Long Context' },
+    { label: 'OpenRouter: DeepSeek Chat', provider: 'openrouter', model: 'deepseek/deepseek-chat', speed: '1.8s', badge: 'Deep Reasoning' },
+  ];
+
+  const loadActiveModel = async () => {
+    try {
+      const active = await api.getActiveModel();
+      if (active && active.provider_name) {
+        const found = AVAILABLE_MODELS.find(m => m.provider === active.provider_name && m.model === active.model_name);
+        if (found) setSelectedModel(found.label);
+      }
+    } catch {}
+  };
+
+  const handleSelectModel = async (m: typeof AVAILABLE_MODELS[0]) => {
+    setSelectedModel(m.label);
+    setShowModelMenu(false);
+    try {
+      await api.setActiveModel({ provider_name: m.provider, model_name: m.model });
+    } catch (e) {
+      console.error('Failed to set active model:', e);
+    }
+  };
+
+  const toggleVoiceRecording = async () => {
+    if (isRecording) {
+      mediaRecorderRef.current?.stop();
+      setIsRecording(false);
+    } else {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const recorder = new MediaRecorder(stream);
+        audioChunksRef.current = [];
+        recorder.ondataavailable = (e) => {
+          if (e.data.size > 0) audioChunksRef.current.push(e.data);
+        };
+        recorder.onstop = async () => {
+          const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+          const reader = new FileReader();
+          reader.readAsDataURL(audioBlob);
+          reader.onloadend = async () => {
+            const base64Audio = (reader.result as string).split(',')[1];
+            try {
+              const res = await api.transcribeAudio({ audio_base64: base64Audio });
+              if (res.text) {
+                setInputText((prev) => (prev ? `${prev} ${res.text}` : res.text));
+              }
+            } catch (err) {
+              console.error('Transcription failed:', err);
+            }
+          };
+          stream.getTracks().forEach((track) => track.stop());
+        };
+        recorder.start();
+        mediaRecorderRef.current = recorder;
+        setIsRecording(true);
+      } catch (err) {
+        console.warn('Microphone access note:', err);
+        alert('Microphone access is required for voice input.');
+      }
+    }
+  };
 
   // Attachments state
   const [attachments, setAttachments] = useState<AttachedFile[]>([]);
@@ -127,6 +200,7 @@ export const AssistantChatView: React.FC = () => {
   useEffect(() => {
     loadSessions();
     loadConnectors();
+    loadActiveModel();
   }, []);
 
   useEffect(() => {
@@ -519,10 +593,53 @@ export const AssistantChatView: React.FC = () => {
               <span>Connectors & Tools ({connectors.length || 6})</span>
             </button>
 
-            {/* Model Pill */}
-            <div className="px-2.5 py-1 bg-[#efeeeb] border border-[#c6c6cb]/60 rounded-full font-mono text-[11px] font-bold text-[#46464b] flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
-              <span>{selectedModel}</span>
+            {/* Interactive One-Tap Model Switcher */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowModelMenu(!showModelMenu)}
+                className="px-3 py-1 bg-[#efeeeb] hover:bg-[#ede5dc] border border-[#c6c6cb]/60 rounded-full font-mono text-[11px] font-bold text-[#1b1c1a] flex items-center gap-1.5 transition shadow-2xs"
+                title="Tap to switch the active AI model globally"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+                <span>{selectedModel}</span>
+                <ChevronDown className="w-3 h-3 text-[#76777c]" />
+              </button>
+
+              {showModelMenu && (
+                <div className="absolute right-0 top-9 w-64 bg-white border border-[#c6c6cb] rounded-2xl shadow-xl p-2 z-50 space-y-1 animate-in fade-in zoom-in-95 font-sans">
+                  <span className="font-mono text-[9px] uppercase font-bold text-[#76777c] px-2 block mb-1">
+                    Select Active AI Model
+                  </span>
+                  {AVAILABLE_MODELS.map((m) => {
+                    const isCurrent = selectedModel === m.label;
+                    return (
+                      <button
+                        key={m.model}
+                        type="button"
+                        onClick={() => handleSelectModel(m)}
+                        className={`w-full text-left px-2.5 py-2 rounded-xl text-xs transition flex items-center justify-between ${
+                          isCurrent
+                            ? 'bg-[#1b1c1a] text-white font-semibold'
+                            : 'hover:bg-[#fbf9f6] text-[#1b1c1a]'
+                        }`}
+                      >
+                        <div className="truncate">
+                          <span className="block truncate">{m.label}</span>
+                          <span className={`font-mono text-[9px] ${isCurrent ? 'text-gray-300' : 'text-[#76777c]'}`}>
+                            {m.speed}
+                          </span>
+                        </div>
+                        <span className={`font-mono text-[8px] font-bold px-1.5 py-0.5 rounded-full ${
+                          isCurrent ? 'bg-white/20 text-white' : 'bg-[#ede5dc] text-[#5e5f63]'
+                        }`}>
+                          {m.badge}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </header>
@@ -589,105 +706,115 @@ export const AssistantChatView: React.FC = () => {
                         <Plus className="w-4 h-4" />
                       </button>
 
-                      {/* Level 1 Popover Menu */}
+                      {/* Responsive Plus Actions Popover */}
                       {showPlusMenu && (
-                        <div className="absolute left-0 bottom-9 z-40 w-56 bg-white border border-[#c6c6cb] rounded-2xl shadow-xl p-1.5 space-y-1 animate-in fade-in zoom-in-95 font-sans">
+                        <div className="absolute left-0 bottom-10 z-40 w-64 max-w-[calc(100vw-2rem)] bg-white border border-[#c6c6cb] rounded-2xl shadow-2xl p-2 space-y-1.5 animate-in fade-in zoom-in-95 font-sans">
+                          <span className="font-mono text-[9px] uppercase font-bold text-[#76777c] px-2 block mb-0.5">
+                            Actions & Integrations
+                          </span>
+
+                          {/* 1. Upload study files */}
                           <button
                             type="button"
                             onClick={() => {
                               fileInputRef.current?.click();
                               setShowPlusMenu(false);
                             }}
-                            className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs text-[#1b1c1a] hover:bg-[#fbf9f6] transition group"
+                            className="w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs text-[#1b1c1a] hover:bg-[#fbf9f6] transition group"
                           >
-                            <span className="flex items-center gap-2.5 font-medium">
+                            <span className="flex items-center gap-2 font-medium">
                               <Paperclip className="w-4 h-4 text-[#76777c] group-hover:text-[#c84b1a]" />
-                              <span>Upload or add files</span>
+                              <span>Upload & index notes</span>
                             </span>
-                            <span className="font-mono text-[10px] text-[#8a8b90]">Ctrl+U</span>
+                            <span className="font-mono text-[9px] text-[#8a8b90]">PDF/DOCX</span>
                           </button>
 
-                          <div className="relative">
+                          {/* 2. Voice input */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowPlusMenu(false);
+                              toggleVoiceRecording();
+                            }}
+                            className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs transition group ${
+                              isRecording ? 'bg-red-50 text-red-700 font-bold' : 'text-[#1b1c1a] hover:bg-[#fbf9f6]'
+                            }`}
+                          >
+                            <span className="flex items-center gap-2 font-medium">
+                              <Mic className={`w-4 h-4 ${isRecording ? 'text-red-600 animate-pulse' : 'text-[#76777c]'}`} />
+                              <span>{isRecording ? 'Stop Recording' : 'Voice Dictation (Whisper)'}</span>
+                            </span>
+                            <span className="font-mono text-[9px] text-[#8a8b90]">Audio</span>
+                          </button>
+
+                          {/* 3. Google Workspace Connectors */}
+                          <div className="border-t border-[#ede5dc] pt-1.5 space-y-1">
+                            <span className="font-mono text-[9px] uppercase font-bold text-[#76777c] px-2 block">
+                              Cloud Integrations
+                            </span>
+
+                            {/* Google Drive */}
+                            <div className="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-[#fbf9f6] transition text-xs">
+                              <span className="flex items-center gap-2 font-medium text-[#1b1c1a] truncate">
+                                <FolderGit2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                                <span className="truncate">Google Drive</span>
+                              </span>
+                              <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded-full font-bold ${
+                                connectors.find(c => c.id === 'google_drive')?.status === 'connected'
+                                  ? 'bg-emerald-100 text-emerald-800'
+                                  : 'bg-amber-100 text-amber-800'
+                              }`}>
+                                {connectors.find(c => c.id === 'google_drive')?.status === 'connected' ? 'Connected' : 'Setup Required'}
+                              </span>
+                            </div>
+
+                            {/* Gmail */}
+                            <div className="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-[#fbf9f6] transition text-xs">
+                              <span className="flex items-center gap-2 font-medium text-[#1b1c1a] truncate">
+                                <Mail className="w-3.5 h-3.5 text-red-600 shrink-0" />
+                                <span className="truncate">Gmail</span>
+                              </span>
+                              <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded-full font-bold ${
+                                connectors.find(c => c.id === 'gmail')?.status === 'connected'
+                                  ? 'bg-emerald-100 text-emerald-800'
+                                  : 'bg-amber-100 text-amber-800'
+                              }`}>
+                                {connectors.find(c => c.id === 'gmail')?.status === 'connected' ? 'Connected' : 'Setup Required'}
+                              </span>
+                            </div>
+
+                            {/* Calendar */}
+                            <div className="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-[#fbf9f6] transition text-xs">
+                              <span className="flex items-center gap-2 font-medium text-[#1b1c1a] truncate">
+                                <Calendar className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                <span className="truncate">Calendar</span>
+                              </span>
+                              <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded-full font-bold ${
+                                connectors.find(c => c.id === 'google_calendar')?.status === 'connected'
+                                  ? 'bg-emerald-100 text-emerald-800'
+                                  : 'bg-amber-100 text-amber-800'
+                              }`}>
+                                {connectors.find(c => c.id === 'google_calendar')?.status === 'connected' ? 'Connected' : 'Setup Required'}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Manage Connectors Button */}
+                          <div className="border-t border-[#ede5dc] pt-1">
                             <button
                               type="button"
-                              onClick={() => setShowPluginsFlyout(!showPluginsFlyout)}
-                              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition group ${
-                                showPluginsFlyout ? 'bg-[#fbf9f6] text-[#c84b1a] font-bold' : 'text-[#1b1c1a] hover:bg-[#fbf9f6]'
-                              }`}
+                              onClick={() => {
+                                setShowConnectorsModal(true);
+                                setShowPlusMenu(false);
+                              }}
+                              className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl text-xs font-semibold text-[#c84b1a] hover:bg-[#fbf9f6] transition"
                             >
-                              <span className="flex items-center gap-2.5 font-medium">
-                                <Boxes className="w-4 h-4 text-[#76777c] group-hover:text-[#c84b1a]" />
-                                <span>Plugins & Connectors</span>
-                              </span>
                               <span className="flex items-center gap-1.5">
-                                <span className="inline-flex items-center justify-center px-1.5 py-0.2 rounded-full text-[9px] font-mono font-bold bg-[#f3d9c3] text-[#c84b1a]">
-                                  {connectors.filter(c => c.enabled !== false).length}
-                                </span>
-                                <ChevronRight className="w-3.5 h-3.5 text-[#8a8b90]" />
+                                <Boxes className="w-3.5 h-3.5" />
+                                <span>Manage Connectors & Auth</span>
                               </span>
+                              <ChevronRight className="w-3.5 h-3.5" />
                             </button>
-
-                            {/* Level 2 Secondary Flyout Menu (matching Claude reference image) */}
-                            {showPluginsFlyout && (
-                              <div className="absolute left-full bottom-0 ml-2 w-64 bg-white border border-[#c6c6cb] rounded-2xl shadow-2xl p-2.5 space-y-2 z-50 animate-in fade-in duration-150">
-                                <div className="relative">
-                                  <Search className="w-3.5 h-3.5 text-[#8a8b90] absolute left-2.5 top-2.5 pointer-events-none" />
-                                  <input
-                                    type="text"
-                                    value={pluginSearchText}
-                                    onChange={(e) => setPluginSearchText(e.target.value)}
-                                    placeholder="Search plugins"
-                                    className="w-full pl-8 pr-2 py-1.5 bg-[#fbf9f6] border border-[#e3dad1] rounded-xl text-xs text-[#1b1c1a] placeholder:text-[#9c9da2] focus:outline-none focus:border-[#c84b1a]"
-                                  />
-                                </div>
-
-                                <div className="max-h-52 overflow-y-auto space-y-1 pr-1">
-                                  {connectors
-                                    .filter(c => !pluginSearchText || c.name.toLowerCase().includes(pluginSearchText.toLowerCase()))
-                                    .map(c => (
-                                      <div key={c.id} className="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-[#fbf9f6] transition text-xs">
-                                        <span className="flex items-center gap-2 font-medium text-[#1b1c1a] truncate">
-                                          {c.id === 'github' ? <GitBranch className="w-3.5 h-3.5 text-[#1b1c1a]" />
-                                           : c.id === 'google_drive' ? <FolderGit2 className="w-3.5 h-3.5 text-blue-600" />
-                                           : c.id === 'gmail' ? <Mail className="w-3.5 h-3.5 text-red-600" />
-                                           : c.id === 'google_calendar' ? <Calendar className="w-3.5 h-3.5 text-emerald-600" />
-                                           : c.id === 'supabase' ? <Database className="w-3.5 h-3.5 text-emerald-700" />
-                                           : <Boxes className="w-3.5 h-3.5 text-[#c84b1a]" />}
-                                          <span className="truncate">{c.name}</span>
-                                        </span>
-                                        
-                                        <button
-                                          type="button"
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleToggleConnector(c.id, c.enabled !== false);
-                                          }}
-                                          className={`w-7 h-4 rounded-full transition p-0.5 flex items-center ${
-                                            c.enabled !== false ? 'bg-[#c84b1a] justify-end' : 'bg-[#c6c6cb] justify-start'
-                                          }`}
-                                        >
-                                          <span className="w-3 h-3 rounded-full bg-white shadow-xs" />
-                                        </button>
-                                      </div>
-                                    ))}
-                                </div>
-
-                                <div className="border-t border-[#ede5dc] pt-1.5">
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setShowConnectorsModal(true);
-                                      setShowPlusMenu(false);
-                                      setShowPluginsFlyout(false);
-                                    }}
-                                    className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl text-xs font-semibold text-[#c84b1a] hover:bg-[#fbf9f6] transition"
-                                  >
-                                    <span>⚙ Manage plugins</span>
-                                    <span className="text-[11px]">↗</span>
-                                  </button>
-                                </div>
-                              </div>
-                            )}
                           </div>
                         </div>
                       )}
@@ -719,7 +846,21 @@ export const AssistantChatView: React.FC = () => {
                     )}
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
+                    {/* Dedicated Voice Recording Mic Button */}
+                    <button
+                      type="button"
+                      onClick={toggleVoiceRecording}
+                      className={`w-8 h-8 rounded-full flex items-center justify-center transition ${
+                        isRecording
+                          ? 'bg-red-600 text-white animate-pulse shadow-md'
+                          : 'bg-[#ede5dc] text-[#5e5f63] hover:text-[#1b1c1a] hover:bg-[#e3dad1]'
+                      }`}
+                      title={isRecording ? 'Click to finish speaking' : 'Speak to ChatPilot (Voice Input via Whisper)'}
+                    >
+                      <Mic className="w-4 h-4" />
+                    </button>
+
                     <button
                       type="button"
                       onClick={() => handleSendMessage()}
@@ -866,19 +1007,131 @@ export const AssistantChatView: React.FC = () => {
 
               <div className="flex items-center justify-between pt-1 border-t border-[#c6c6cb]/30">
                 <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowPlusMenu(!showPlusMenu);
-                      setShowPluginsFlyout(false);
-                    }}
-                    className={`w-6 h-6 rounded-lg flex items-center justify-center transition border ${
-                      showPlusMenu ? 'bg-[#1b1c1a] text-white border-[#1b1c1a]' : 'bg-[#f5f3f0] text-[#5e5f63] hover:text-[#1b1c1a] hover:bg-[#ede5dc] border-[#e3dad1]'
-                    }`}
-                    title="Upload files, add plugins, or configure MCP tools"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                  </button>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowPlusMenu(!showPlusMenu);
+                        setShowPluginsFlyout(false);
+                      }}
+                      className={`w-7 h-7 rounded-xl flex items-center justify-center transition border ${
+                        showPlusMenu ? 'bg-[#1b1c1a] text-white border-[#1b1c1a]' : 'bg-[#f5f3f0] text-[#5e5f63] hover:text-[#1b1c1a] hover:bg-[#ede5dc] border-[#e3dad1]'
+                      }`}
+                      title="Upload files, add plugins, or configure MCP tools"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </button>
+
+                    {/* Responsive Plus Actions Popover */}
+                    {showPlusMenu && (
+                      <div className="absolute left-0 bottom-10 z-40 w-64 max-w-[calc(100vw-2rem)] bg-white border border-[#c6c6cb] rounded-2xl shadow-2xl p-2 space-y-1.5 animate-in fade-in zoom-in-95 font-sans">
+                        <span className="font-mono text-[9px] uppercase font-bold text-[#76777c] px-2 block mb-0.5">
+                          Actions & Integrations
+                        </span>
+
+                        {/* 1. Upload study files */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            fileInputRef.current?.click();
+                            setShowPlusMenu(false);
+                          }}
+                          className="w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs text-[#1b1c1a] hover:bg-[#fbf9f6] transition group"
+                        >
+                          <span className="flex items-center gap-2 font-medium">
+                            <Paperclip className="w-4 h-4 text-[#76777c] group-hover:text-[#c84b1a]" />
+                            <span>Upload & index notes</span>
+                          </span>
+                          <span className="font-mono text-[9px] text-[#8a8b90]">PDF/DOCX</span>
+                        </button>
+
+                        {/* 2. Voice input */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowPlusMenu(false);
+                            toggleVoiceRecording();
+                          }}
+                          className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs transition group ${
+                            isRecording ? 'bg-red-50 text-red-700 font-bold' : 'text-[#1b1c1a] hover:bg-[#fbf9f6]'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2 font-medium">
+                            <Mic className={`w-4 h-4 ${isRecording ? 'text-red-600 animate-pulse' : 'text-[#76777c]'}`} />
+                            <span>{isRecording ? 'Stop Recording' : 'Voice Dictation (Whisper)'}</span>
+                          </span>
+                          <span className="font-mono text-[9px] text-[#8a8b90]">Audio</span>
+                        </button>
+
+                        {/* 3. Google Workspace Connectors */}
+                        <div className="border-t border-[#ede5dc] pt-1.5 space-y-1">
+                          <span className="font-mono text-[9px] uppercase font-bold text-[#76777c] px-2 block">
+                            Cloud Integrations
+                          </span>
+
+                          <div className="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-[#fbf9f6] transition text-xs">
+                            <span className="flex items-center gap-2 font-medium text-[#1b1c1a] truncate">
+                              <FolderGit2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                              <span className="truncate">Google Drive</span>
+                            </span>
+                            <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded-full font-bold ${
+                              connectors.find(c => c.id === 'google_drive')?.status === 'connected'
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : 'bg-amber-100 text-amber-800'
+                            }`}>
+                              {connectors.find(c => c.id === 'google_drive')?.status === 'connected' ? 'Connected' : 'Setup Required'}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-[#fbf9f6] transition text-xs">
+                            <span className="flex items-center gap-2 font-medium text-[#1b1c1a] truncate">
+                              <Mail className="w-3.5 h-3.5 text-red-600 shrink-0" />
+                              <span className="truncate">Gmail</span>
+                            </span>
+                            <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded-full font-bold ${
+                              connectors.find(c => c.id === 'gmail')?.status === 'connected'
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : 'bg-amber-100 text-amber-800'
+                            }`}>
+                              {connectors.find(c => c.id === 'gmail')?.status === 'connected' ? 'Connected' : 'Setup Required'}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center justify-between px-2.5 py-1.5 rounded-xl hover:bg-[#fbf9f6] transition text-xs">
+                            <span className="flex items-center gap-2 font-medium text-[#1b1c1a] truncate">
+                              <Calendar className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                              <span className="truncate">Calendar</span>
+                            </span>
+                            <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded-full font-bold ${
+                              connectors.find(c => c.id === 'google_calendar')?.status === 'connected'
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : 'bg-amber-100 text-amber-800'
+                            }`}>
+                              {connectors.find(c => c.id === 'google_calendar')?.status === 'connected' ? 'Connected' : 'Setup Required'}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Manage Connectors Button */}
+                        <div className="border-t border-[#ede5dc] pt-1">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowConnectorsModal(true);
+                              setShowPlusMenu(false);
+                            }}
+                            className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl text-xs font-semibold text-[#c84b1a] hover:bg-[#fbf9f6] transition"
+                          >
+                            <span className="flex items-center gap-1.5">
+                              <Boxes className="w-3.5 h-3.5" />
+                              <span>Manage Connectors & Auth</span>
+                            </span>
+                            <ChevronRight className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
                   <button
                     type="button"
@@ -887,6 +1140,17 @@ export const AssistantChatView: React.FC = () => {
                   >
                     <Paperclip className="w-3.5 h-3.5" />
                     <span>Attach</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={toggleVoiceRecording}
+                    className={`p-1.5 rounded-lg transition flex items-center gap-1 text-xs font-mono font-bold ${
+                      isRecording ? 'bg-red-500 text-white animate-pulse' : 'text-[#76777c] hover:text-[#1b1c1a] hover:bg-[#efeeeb]'
+                    }`}
+                    title={isRecording ? 'Stop voice recording' : 'Record voice (Groq Whisper)'}
+                  >
+                    <Mic className="w-3.5 h-3.5" />
                   </button>
 
                   <button
