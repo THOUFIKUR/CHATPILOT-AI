@@ -453,6 +453,32 @@ async def whatsapp_webhook(request: Request):
         # Unified Context-Aware Generation via Reply Engine for all authorized contacts
         # Check 13: Safety check & generation via reply engine
         draft_res = await reply_engine.process_incoming_message(contact_id=contact_id, sender_name=sender, message_body=message_text)
+        
+        # Check if generation failed
+        if isinstance(draft_res, dict) and not draft_res.get("success", False):
+            logger.warning(f"AI reply generation failed for {sender}: {draft_res.get('error')}")
+            return {
+                "status": "failed",
+                "pipeline_status": "generation_failed",
+                "should_reply": False,
+                "reason": draft_res.get("error", "generation_failed"),
+                "correlation_id": correlation_id,
+                "draft_id": draft_res.get("draft_id")
+            }
+
+        # Check if important decision requires manual operator ratification (dates, bookings, money, commitments)
+        if isinstance(draft_res, dict) and draft_res.get("requires_approval"):
+            logger.info(f"Important decision detected for {sender}. Holding draft for operator ratification.")
+            return {
+                "status": "held",
+                "pipeline_status": "awaiting_approval",
+                "should_reply": False,
+                "reason": "important_decision_requires_approval",
+                "correlation_id": correlation_id,
+                "draft_id": draft_res.get("draft_id"),
+                "draft_text": draft_res.get("draft_text")
+            }
+
         reply_text = draft_res.get("draft_text") if isinstance(draft_res, dict) else None
 
         if reply_text:

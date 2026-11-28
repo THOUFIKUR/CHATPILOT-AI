@@ -15,6 +15,16 @@ HIGH_RISK_KEYWORDS = [
     "gpay pin", "upi pin"
 ]
 
+# Patterns for important decisions requiring human approval (dates, travel, bookings, money, commitments)
+IMPORTANT_DECISION_PATTERNS = [
+    r"\b(trip|tour|goa|bangalore|chennai|delhi|mumbai|kodaikanal|ooty)\b",
+    r"\b(flight|train|bus|ticket|tickets|hotel|resort|room|stay|booking|book)\b",
+    r"\b(choose|pick|preferred|prefer)\b.*\b(date|day|time|month|weekend|slot)\b",
+    r"\b(date|day|time)\b.*\b(preferred|prefer|free|available|confirm)\b",
+    r"\b(send|transfer|pay|paid|payment|gpay|phonepe|upi|rupees|rs\.?|cash|borrow|lend|amount)\b",
+    r"\b(promise|deal|contract|commit)\b"
+]
+
 class ReplyEngine:
     def __init__(self):
         self.supabase = get_supabase()
@@ -22,6 +32,13 @@ class ReplyEngine:
     def is_high_risk(self, message_text: str) -> bool:
         lower = message_text.lower()
         return any(k in lower for k in HIGH_RISK_KEYWORDS)
+
+    def is_important_decision(self, message_text: str) -> bool:
+        lower = message_text.lower()
+        for pat in IMPORTANT_DECISION_PATTERNS:
+            if re.search(pat, lower):
+                return True
+        return False
 
     async def process_incoming_message(
         self,
@@ -172,7 +189,13 @@ CRITICAL TEXTING RULES:
 2. NEVER use exclamation marks "!" unless Thoufikur uses them in the examples above. Text in relaxed lowercase or normal casing with natural punctuation.
 3. CONVERSATIONAL REASONING: Read the previous conversation flow carefully. If {sender_name} asks a question, presents choices (e.g. "choose one or two and tell me why"), or questions a prior message, THINK logically, choose an option, and give a clear, natural explanation. Never repeat generic phrases like "okey maa" or "seri" when a real answer is asked.
 4. STRICT COMPLIANCE: Obey all custom rules above (e.g., if told never to say "bro", NEVER say "bro").
-5. Output ONLY the raw WhatsApp reply text. No quotes, no intro, no emojis unless natural.
+5. SHORTHAND & TYPOS:
+   - Understand modern mobile texting abbreviations (gn = good night, gm = good morning, btw = by the way, u = you, r = are, y = why, whr = where, pls/plz = please, tq/ty = thank you, idk = I don't know, tbh = to be honest, hru = how are you, wbu = what about you, k/kk = okay, tc = take care, brb = be right back).
+   - Autocorrect incoming typos seamlessly (e.g. "coorect" -> "correct", "repky" -> "reply", "vam" -> "coming/varren", "tomorow" -> "tomorrow"). Do not mention typos; reply naturally to the intended meaning.
+6. PRESENCE & CLARITY:
+   - For simple greetings or presence checks like "hello are u there?" or "heyyy reply to this", give a natural, responsive reply (e.g. "Yeah, I'm here. What's up?" or "Haha yeah, tell me").
+   - If a message is unclear or ambiguous, do NOT fabricate facts. Think twice and respond casually or ask a quick, natural clarification question.
+7. Output ONLY the raw WhatsApp reply text. No quotes, no intro, no emojis unless natural.
 """
 
         chat_messages = []
@@ -187,7 +210,7 @@ CRITICAL TEXTING RULES:
             messages=chat_messages,
             system_prompt=system_instructions,
             temperature=0.7,
-            max_tokens=150
+            max_tokens=250
         )
 
         draft_text = (ai_res.get("content") or "").strip().strip('"').strip("'").strip()
@@ -197,8 +220,8 @@ CRITICAL TEXTING RULES:
         # Guard against saving empty drafts
         if not draft_text:
             log_activity(
-                event_type="reply_failed",
-                description=f"AI model produced empty response for {sender_name}",
+                event_type="generation_failed",
+                description=f"AI generation failed to produce non-empty reply for {sender_name}",
                 conversation_id=conversation_id,
                 metadata={"provider": provider_used, "model": model_used, "incoming_message": message_body}
             )
@@ -208,6 +231,9 @@ CRITICAL TEXTING RULES:
                 "conversation_id": conversation_id,
                 "contact_name": sender_name
             }
+
+        # Check risk classification for important decisions requiring human ratification
+        is_decision = self.is_important_decision(message_body)
 
         # 8. Idempotent draft saving: update existing pending draft or insert single new draft
         existing_draft = self.supabase.table("reply_drafts")\
@@ -236,19 +262,35 @@ CRITICAL TEXTING RULES:
             }).execute()
             draft_id = draft_ins.data[0]["id"]
 
-        log_activity(
-            event_type="reply_generated",
-            description=f"Generated draft reply for {sender_name} using {provider_used} ({model_used})",
-            conversation_id=conversation_id,
-            metadata={
-                "provider": provider_used,
-                "model": model_used,
-                "incoming_message": message_body,
-                "reply_text": draft_text,
-                "draft_text": draft_text,
-                "contact": sender_name
-            }
-        )
+        if is_decision:
+            log_activity(
+                event_type="awaiting_approval",
+                description=f"Draft generated for {sender_name} — awaiting approval for important decision (dates/plans/money)",
+                conversation_id=conversation_id,
+                metadata={
+                    "provider": provider_used,
+                    "model": model_used,
+                    "incoming_message": message_body,
+                    "reply_text": draft_text,
+                    "draft_text": draft_text,
+                    "contact": sender_name,
+                    "requires_approval": True
+                }
+            )
+        else:
+            log_activity(
+                event_type="reply_generated",
+                description=f"Generated draft reply for {sender_name} using {provider_used} ({model_used})",
+                conversation_id=conversation_id,
+                metadata={
+                    "provider": provider_used,
+                    "model": model_used,
+                    "incoming_message": message_body,
+                    "reply_text": draft_text,
+                    "draft_text": draft_text,
+                    "contact": sender_name
+                }
+            )
 
         return {
             "success": True,
@@ -259,7 +301,8 @@ CRITICAL TEXTING RULES:
             "draft_text": draft_text,
             "provider": provider_used,
             "model": model_used,
-            "latency_ms": ai_res.get("latency_ms")
+            "latency_ms": ai_res.get("latency_ms"),
+            "requires_approval": is_decision
         }
 
 reply_engine = ReplyEngine()

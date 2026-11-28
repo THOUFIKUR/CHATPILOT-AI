@@ -104,6 +104,11 @@ class AIProviderManager:
                     max_tokens=max_tokens
                 )
                 latency = int((time.time() - start_t) * 1000)
+
+                # Strict Content Validation: reject empty/whitespace-only responses so fallback triggers
+                content_text = (res.get("content") or "").strip()
+                if not content_text:
+                    raise ValueError(f"Provider {prov_name} returned empty or blank text.")
                 
                 # Log usage to ai_usage_logs
                 self._log_usage(
@@ -118,18 +123,18 @@ class AIProviderManager:
                 return {
                     "provider": prov_name,
                     "model": res.get("model", model),
-                    "content": res.get("content"),
+                    "content": content_text,
                     "latency_ms": latency,
                     "prompt_tokens": res.get("prompt_tokens", 0),
                     "completion_tokens": res.get("completion_tokens", 0)
                 }
             except Exception as e:
                 latency = int((time.time() - start_t) * 1000)
-                logger.warning(f"Provider {prov_name} failed: {e}. Falling back...")
+                logger.warning(f"Provider {prov_name} ({model}) failed or returned empty: {e}. Falling back...")
                 self._log_usage(
                     provider_name=prov_name,
                     model_name=model,
-                    request_status="failed",
+                    request_status="error",
                     prompt_tokens=0,
                     completion_tokens=0,
                     estimated_cost=0.0,
@@ -179,6 +184,9 @@ class AIProviderManager:
             usage = data.get("usage", {})
             msg_obj = data["choices"][0]["message"]
             content_text = msg_obj.get("content") or msg_obj.get("reasoning") or ""
+            if not content_text.strip():
+                finish_reason = data.get("choices", [{}])[0].get("finish_reason", "unknown")
+                raise ValueError(f"Groq {model} returned empty content (finish_reason={finish_reason}).")
             return {
                 "content": content_text.strip(),
                 "model": data.get("model", model),
