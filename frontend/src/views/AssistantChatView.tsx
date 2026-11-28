@@ -100,10 +100,9 @@ export const AssistantChatView: React.FC = () => {
 
   const AVAILABLE_MODELS = [
     { label: 'Groq: Qwen 3.8-27b', provider: 'groq', model: 'qwen/qwen3.8-27b', speed: 'Fast (0.8s)', badge: 'Default' },
-    { label: 'Groq: Llama 3.3-70b', provider: 'groq', model: 'llama-3.3-70b-versatile', speed: 'Ultra Fast', badge: 'High Logic' },
     { label: 'Gemini: Flash Lite Latest', provider: 'gemini', model: 'gemini-flash-lite-latest', speed: '1.2s', badge: 'Multimodal' },
-    { label: 'Gemini: 1.5 Flash', provider: 'gemini', model: 'gemini-1.5-flash', speed: '1.5s', badge: 'Long Context' },
     { label: 'OpenRouter: DeepSeek Chat', provider: 'openrouter', model: 'deepseek/deepseek-chat', speed: '1.8s', badge: 'Deep Reasoning' },
+    { label: 'OpenRouter: Llama 3.3 70B', provider: 'openrouter', model: 'meta-llama/llama-3.3-70b-instruct', speed: 'Ultra Fast', badge: 'Flagship' },
   ];
 
   const loadActiveModel = async () => {

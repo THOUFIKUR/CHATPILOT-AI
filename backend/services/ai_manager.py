@@ -170,6 +170,22 @@ class AIProviderManager:
                     estimated_cost=res.get("estimated_cost", 0.0),
                     latency_ms=latency
                 )
+                # If a previous model failed due to token/rate limits, automatically update active model to this working provider
+                if last_error:
+                    err_str = str(last_error).lower()
+                    if any(kw in err_str for kw in ("429", "rate limit", "token", "quota", "exhausted", "capacity")):
+                        logger.warning(f"Auto-switching default active model to {prov_name} ({model}) due to rate limit/token exhaustion on previous provider.")
+                        self._active_model = {"provider_name": prov_name, "model_name": res.get("model", model)}
+                        try:
+                            from database import log_activity
+                            log_activity(
+                                event_type="model_failover",
+                                description=f"Automatic failover: Switched active model to {prov_name} ({res.get('model', model)}) due to token/rate limit on previous provider.",
+                                metadata={"new_provider": prov_name, "new_model": res.get("model", model), "previous_error": str(last_error)[:100]}
+                            )
+                        except Exception:
+                            pass
+
                 return {
                     "provider": prov_name,
                     "model": res.get("model", model),

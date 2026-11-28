@@ -32,6 +32,17 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onLogout }) => {
   const [androidDiag, setAndroidDiag] = useState<any>(null);
   const [safeTestResult, setSafeTestResult] = useState<string | null>(null);
   const [testingPipeline, setTestingPipeline] = useState(false);
+  const [activeModel, setActiveModel] = useState<any>({ provider_name: 'groq', model_name: 'qwen/qwen3.8-27b' });
+  const [modelSaving, setModelSaving] = useState(false);
+  const [resettingListener, setResettingListener] = useState(false);
+  const [resetSuccess, setResetSuccess] = useState(false);
+
+  const AI_MODEL_OPTIONS = [
+    { label: 'Groq: Qwen 3.8-27b', provider: 'groq', model: 'qwen/qwen3.8-27b', badge: 'Default Fast (0.8s)', desc: 'High-speed local dialect Tanglish & presence replies' },
+    { label: 'Gemini: Flash Lite Latest', provider: 'gemini', model: 'gemini-flash-lite-latest', badge: '1M Context', desc: 'Google Cloud ultra-low latency & deep multimodal understanding' },
+    { label: 'OpenRouter: DeepSeek Chat', provider: 'openrouter', model: 'deepseek/deepseek-chat', badge: 'Deep Reasoning', desc: 'Logical decision reasoning & complex query parsing' },
+    { label: 'OpenRouter: Llama 3.3 70B', provider: 'openrouter', model: 'meta-llama/llama-3.3-70b-instruct', badge: 'Flagship Open', desc: 'Versatile 70B open weight instruction tuned model' }
+  ];
 
   const refreshAndroidDiag = () => {
     try {
@@ -42,6 +53,41 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onLogout }) => {
       }
     } catch (e) {
       console.error('Android diagnostics read note:', e);
+    }
+  };
+
+  const handleResetNotificationEngine = () => {
+    setResettingListener(true);
+    setResetSuccess(false);
+    try {
+      const bridge = (window as any).AndroidApp;
+      if (bridge && typeof bridge.resetNotificationListener === 'function') {
+        bridge.resetNotificationListener();
+        setResetSuccess(true);
+        setTimeout(() => setResetSuccess(false), 4000);
+      } else {
+        alert('Notification listener reset is only active inside the Android APK.');
+      }
+      setTimeout(() => refreshAndroidDiag(), 1200);
+    } catch (e: any) {
+      console.error('Reset listener error:', e);
+      alert('Error triggering reset: ' + e?.message);
+    } finally {
+      setResettingListener(false);
+    }
+  };
+
+  const handleSelectActiveModel = async (provider: string, model: string) => {
+    setModelSaving(true);
+    setActiveModel({ provider_name: provider, model_name: model });
+    try {
+      await api.setActiveModel({ provider_name: provider, model_name: model });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch (e) {
+      console.error('Failed to set active model:', e);
+    } finally {
+      setModelSaving(false);
     }
   };
 
@@ -101,6 +147,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onLogout }) => {
       if (st && typeof st.auto_reply_enabled === 'boolean') {
         setAutoReply(st.auto_reply_enabled);
       }
+      try {
+        const am = await api.getActiveModel();
+        if (am && am.provider_name) setActiveModel(am);
+      } catch {}
     } catch (e) {
       console.error(e);
     }
@@ -315,6 +365,94 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onLogout }) => {
                   <span className="text-[#76777c]">DUPLICATE REJECTION:</span>
                   <span className="text-[#1b1c1a]">90s HASH-LOCK ACTIVE</span>
                 </div>
+              </div>
+
+              {/* AI Model Selection & Token Failover Card */}
+              <div className="bg-white border border-[#c6c6cb]/60 rounded-2xl p-5 shadow-2xs space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-[#c6c6cb]/40">
+                  <div>
+                    <h3 className="font-serif font-bold text-base text-[#1b1c1a]">Global Active AI Model</h3>
+                    <p className="font-serif text-xs text-[#46464b]">Controls both conversational assistant chat and WhatsApp auto-replies</p>
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-[#dcfce7] text-[#166534] font-mono text-[10px] font-bold uppercase tracking-wider">
+                    AUTO FAILOVER ON
+                  </span>
+                </div>
+
+                <div className="space-y-2.5">
+                  {AI_MODEL_OPTIONS.map((opt) => {
+                    const isSelected = activeModel.provider_name === opt.provider && activeModel.model_name === opt.model;
+                    return (
+                      <div
+                        key={opt.model}
+                        onClick={() => handleSelectActiveModel(opt.provider, opt.model)}
+                        className={`p-3.5 rounded-xl border transition cursor-pointer flex items-start justify-between ${
+                          isSelected
+                            ? 'bg-[#fbf9f6] border-[#ac3400] ring-1 ring-[#ac3400]'
+                            : 'bg-white border-[#c6c6cb]/60 hover:border-[#1b1c1a]'
+                        }`}
+                      >
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="font-serif font-bold text-sm text-[#1b1c1a]">{opt.label}</span>
+                            <span className="px-2 py-0.5 rounded-full bg-[#efeeeb] text-[#46464b] font-mono text-[9px] font-bold">
+                              {opt.badge}
+                            </span>
+                          </div>
+                          <p className="font-serif text-xs text-[#76777c]">{opt.desc}</p>
+                        </div>
+                        <div className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 mt-0.5 ${
+                          isSelected ? 'border-[#ac3400] bg-[#ac3400]' : 'border-[#c6c6cb]'
+                        }`}>
+                          {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="p-3 bg-[#f5f3f0] rounded-xl font-mono text-[11px] text-[#46464b] space-y-1">
+                  <div className="flex items-center gap-1.5 font-bold text-[#1b1c1a]">
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#0284c7]" />
+                    <span>AUTOMATIC TOKEN & RATE LIMIT FAILOVER:</span>
+                  </div>
+                  <p>
+                    If your chosen model reaches its token limit or encounters a rate limit (HTTP 429), ChatPilot will automatically switch to the next healthy provider without dropping messages.
+                  </p>
+                </div>
+              </div>
+
+              {/* Notification Listener Auto-Heal & Reset Card */}
+              <div className="bg-[#fff9f7] border border-[#ffb59d] rounded-2xl p-5 shadow-2xs space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-[#ffb59d]/40">
+                  <div className="flex items-center gap-2">
+                    <Smartphone className="w-4 h-4 text-[#ac3400]" />
+                    <h3 className="font-serif font-bold text-base text-[#1b1c1a]">Notification Engine Health</h3>
+                  </div>
+                  {resetSuccess ? (
+                    <span className="px-2.5 py-1 rounded-full bg-[#dcfce7] text-[#166534] font-mono text-[10px] font-bold animate-pulse">
+                      RECONNECTED & BOUND
+                    </span>
+                  ) : (
+                    <span className="px-2.5 py-1 rounded-full bg-[#efeeeb] text-[#46464b] font-mono text-[10px] font-bold">
+                      HYPEROS AUTO-HEAL
+                    </span>
+                  )}
+                </div>
+
+                <p className="font-serif text-xs text-[#46464b]">
+                  If Android battery management puts the background notification reader to sleep, tap below to instantly force-cycle and rebind the service. You never have to manually toggle permissions in Android settings again.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={handleResetNotificationEngine}
+                  disabled={resettingListener}
+                  className="w-full py-2.5 bg-[#ac3400] hover:bg-[#8f2b00] text-white rounded-xl font-mono text-xs font-bold uppercase transition flex items-center justify-center gap-2 active:scale-98 shadow-sm cursor-pointer"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${resettingListener ? 'animate-spin' : ''}`} />
+                  <span>{resettingListener ? 'Rebinding Service...' : 'Auto-Heal & Reset Notification Engine'}</span>
+                </button>
               </div>
             </>
           )}
