@@ -165,10 +165,39 @@ async def whatsapp_webhook(request: Request):
         if not message_text and not sender:
             return {"status": "ignored", "reason": "empty_payload", "should_reply": False}
 
-        # Check 10b: Strictly ignore outgoing messages from self ("You", "Me", operator name)
+        # Check 10b: Strictly ignore outgoing messages from self
+        # Covers: "You", "Me", WhatsApp self-label, operator display names (ASCII + Unicode small-caps),
+        # and payloads that explicitly declare direction=outgoing
+        import unicodedata
+        def _ascii_fold(s: str) -> str:
+            """Fold Unicode to nearest ASCII equivalent for comparison."""
+            try:
+                return unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode("ascii").strip().lower()
+            except Exception:
+                return s.strip().lower()
+
+        # Explicit direction flag from Android (most reliable)
+        direction_field = str(body.get("direction", "")).strip().lower()
+        if direction_field == "outgoing":
+            logger.info(f"Ignoring outgoing message (direction=outgoing) from {sender}")
+            return {"status": "ignored", "reason": "outgoing_message_from_self", "should_reply": False}
+
         clean_sender_lower = sender.strip().lower()
-        if clean_sender_lower in ("you", "me", "self", "thoufikur", "thoufikur rahaman", "thoufikur rahaman y"):
+        folded_sender = _ascii_fold(sender)
+        # Block literal self labels and all known operator name variants
+        SELF_NAMES = {"you", "me", "self"}
+        OWNER_NAMES = {"thoufikur", "thoufikur rahman", "thoufikur rahaman",
+                       "thoufikur rahaman y", "thoufikur rahman y"}
+        if clean_sender_lower in SELF_NAMES or folded_sender in OWNER_NAMES:
             logger.info(f"Ignoring outgoing message from self ({sender}): '{message_text}'")
+            return {
+                "status": "ignored",
+                "reason": "outgoing_message_from_self",
+                "should_reply": False
+            }
+        # Also block partial matches for the owner's name in folded form
+        if any(name in folded_sender for name in ("thoufikur",)):
+            logger.info(f"Ignoring outgoing message from self (name contains owner prefix) ({sender})")
             return {
                 "status": "ignored",
                 "reason": "outgoing_message_from_self",

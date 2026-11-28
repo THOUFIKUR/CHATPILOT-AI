@@ -58,6 +58,14 @@ async def get_replies(status: Optional[str] = None):
             source_msg = msg_map.get(s_id)
             incoming_body = source_msg.get("body") if source_msg else None
             incoming_time = source_msg.get("created_at") if source_msg else d.get("created_at")
+            source_sender = (source_msg.get("sender_name") or "").strip().lower() if source_msg else ""
+            source_direction = (source_msg.get("direction") or "").strip().lower() if source_msg else ""
+
+            # Strict Quarantine: Never display drafts triggered by outgoing/self messages
+            if source_direction == "outgoing" or source_sender in ("you", "me", "self", "thoufikur", "thoufikur rahman", "thoufikur rahaman"):
+                continue
+            if contact_name.strip().lower() in ("you", "me", "self", "thoufikur", "thoufikur rahman", "thoufikur rahaman"):
+                continue
             
             draft_text = d.get("draft_text") or ""
             

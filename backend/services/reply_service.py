@@ -32,8 +32,21 @@ class ReplyEngine:
     ) -> Dict[str, Any]:
         """Core AI Reply flow."""
         # Guard: Never process or auto-reply to messages from self ("You", "Me")
+        # Covers ASCII and Unicode small-caps variants of the operator's name
+        import unicodedata
+        def _ascii_fold(s: str) -> str:
+            try:
+                return unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode("ascii").strip().lower()
+            except Exception:
+                return s.strip().lower()
+
         clean_name = (sender_name or "").strip().lower()
-        if clean_name in ("you", "me", "self", "thoufikur", "thoufikur rahaman", "thoufikur rahaman y"):
+        folded_name = _ascii_fold(sender_name or "")
+        SELF_LABELS = {"you", "me", "self"}
+        OWNER_NAMES = {"thoufikur", "thoufikur rahman", "thoufikur rahaman", "thoufikur rahaman y"}
+        if (clean_name in SELF_LABELS or folded_name in OWNER_NAMES
+                or any(n in folded_name for n in ("thoufikur",))):
+            logger.info(f"Refusing to process incoming message from self ({sender_name})")
             logger.info(f"Refusing to process incoming message from self ({sender_name})")
             return {
                 "blocked": True,

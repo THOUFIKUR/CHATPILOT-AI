@@ -189,7 +189,8 @@ class WhatsAppImporter:
                     "owner_id": settings.DEFAULT_OWNER_ID,
                     "contact_id": contact_id,
                     "sample_text": clean_sample,
-                    "source": "whatsapp_export"
+                    # Use 'manual' directly — 'whatsapp_export' violates writing_samples_source_check constraint
+                    "source": "manual"
                 })
 
         # Store writing samples (resilient to schema constraint differences)
