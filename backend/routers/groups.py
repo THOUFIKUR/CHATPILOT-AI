@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import Optional, List, Dict, Any
+from typing import Optional, List
 from database import get_supabase
 from config import settings
 import logging
@@ -14,9 +14,8 @@ class GroupCreate(BaseModel):
     whatsapp_jid: Optional[str] = None
     is_selected: bool = True
     auto_reply_enabled: bool = False
-    reply_mode: str = "approval"
-    trigger_mode: Optional[str] = "mention_only"
-    notes: Optional[str] = None
+    reply_mode: str = "approval"        # "approval" or "automatic"
+    trigger_mode: str = "mention_only"  # "mention_only" or "all_messages"
 
 class GroupUpdate(BaseModel):
     group_name: Optional[str] = None
@@ -24,25 +23,6 @@ class GroupUpdate(BaseModel):
     auto_reply_enabled: Optional[bool] = None
     reply_mode: Optional[str] = None
     trigger_mode: Optional[str] = None
-    notes: Optional[str] = None
-
-def _sanitize_group_data(data: Dict[str, Any]) -> Dict[str, Any]:
-    """Sanitizes group modes to match PostgreSQL constraints strictly."""
-    # reply_mode constraint: 'approval' or 'automatic'
-    rm = str(data.get("reply_mode", "")).strip().lower()
-    if rm in ("automatic", "auto", "autonomous"):
-        data["reply_mode"] = "automatic"
-    else:
-        data["reply_mode"] = "approval"
-
-    # trigger_mode constraint: 'mention_only' or 'all_messages'
-    tm = str(data.get("trigger_mode", "")).strip().lower()
-    if tm in ("all", "all_messages", "every"):
-        data["trigger_mode"] = "all_messages"
-    else:
-        data["trigger_mode"] = "mention_only"
-        
-    return data
 
 @router.get("")
 async def get_groups():
@@ -51,27 +31,50 @@ async def get_groups():
 
 @router.post("")
 async def create_group(group: GroupCreate):
+    sb = get_supabase()
     data = group.dict()
     data["owner_id"] = settings.DEFAULT_OWNER_ID
-    # Remove notes if present as chatpilot_groups table does not have notes column
-    data.pop("notes", None)
+
+    clean_name = data["group_name"].strip()
+    if not clean_name:
+        raise HTTPException(status_code=400, detail="Group name cannot be empty")
+    data["group_name"] = clean_name
+
     if not data.get("whatsapp_jid"):
-        clean_jid = "".join(c for c in data['group_name'].lower() if c.isalnum() or c in ('_', '-'))
-        data["whatsapp_jid"] = f"{clean_jid or 'group'}@g.us"
+        data["whatsapp_jid"] = f"{clean_name.lower().replace(' ', '')}@g.us"
 
-    _sanitize_group_data(data)
+    # Enforce database check constraints:
+    # 1. reply_mode in ('approval', 'automatic')
+    if data.get("reply_mode") not in ("approval", "automatic"):
+        data["reply_mode"] = "approval"
+    # 2. trigger_mode in ('mention_only', 'all_messages')
+    if data.get("trigger_mode") not in ("mention_only", "all_messages"):
+        data["trigger_mode"] = "mention_only"
 
-    res = get_supabase().table("chatpilot_groups").insert(data).execute()
+    # Check if group already exists to prevent duplicate
+    existing = sb.table("chatpilot_groups").select("*").or_(f"whatsapp_jid.eq.{data['whatsapp_jid']},group_name.eq.{clean_name}").execute()
+    if existing.data:
+        g_id = existing.data[0]["id"]
+        upd = sb.table("chatpilot_groups").update({
+            "is_selected": data.get("is_selected", True),
+            "auto_reply_enabled": data.get("auto_reply_enabled", False),
+            "reply_mode": data.get("reply_mode", "approval"),
+            "trigger_mode": data.get("trigger_mode", "mention_only")
+        }).eq("id", g_id).execute()
+        return upd.data[0]
+
+    res = sb.table("chatpilot_groups").insert(data).execute()
     if not res.data:
-        raise HTTPException(status_code=400, detail="Failed to create group record")
+        raise HTTPException(status_code=400, detail="Failed to create group")
     return res.data[0]
 
 @router.put("/{group_id}")
 async def update_group(group_id: str, updates: GroupUpdate):
     data = {k: v for k, v in updates.dict().items() if v is not None}
-    data.pop("notes", None)
-    if "reply_mode" in data or "trigger_mode" in data:
-        _sanitize_group_data(data)
+    if "reply_mode" in data and data["reply_mode"] not in ("approval", "automatic"):
+        data["reply_mode"] = "approval"
+    if "trigger_mode" in data and data["trigger_mode"] not in ("mention_only", "all_messages"):
+        data["trigger_mode"] = "mention_only"
 
     res = get_supabase().table("chatpilot_groups").update(data).eq("id", group_id).execute()
     if not res.data:
@@ -81,4 +84,4 @@ async def update_group(group_id: str, updates: GroupUpdate):
 @router.delete("/{group_id}")
 async def delete_group(group_id: str):
     res = get_supabase().table("chatpilot_groups").delete().eq("id", group_id).execute()
-    return {"success": True, "deleted_id": group_id}
+    return {"success": True, "deleted": group_id}

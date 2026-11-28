@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 from database import get_supabase
 from config import settings
-from utils.phone_utils import normalize_phone, match_phone
+from utils.phone_utils import normalize_phone_e164, phones_match
 
 router = APIRouter(prefix="/api/contacts", tags=["contacts"])
 
@@ -69,16 +69,27 @@ async def create_contact(contact: ContactCreate):
     sb = get_supabase()
     data = contact.dict()
     data["owner_id"] = settings.DEFAULT_OWNER_ID
+
+    # Normalize phone to E.164 (handles Saudi Arabia +966 and India +91)
     if data.get("phone_e164"):
-        norm_phone = normalize_phone(data["phone_e164"])
+        norm_phone = normalize_phone_e164(data["phone_e164"])
         data["phone_e164"] = norm_phone
-        # Duplicate prevention check across normalized phones
-        if norm_phone:
-            existing_p = sb.table("contacts").select("id, display_name, phone_e164").execute().data or []
-            for ep in existing_p:
-                if match_phone(ep.get("phone_e164"), norm_phone):
-                    logger.info(f"Contact with matching phone already exists: {ep['display_name']} ({ep.get('phone_e164')})")
-                    return parse_contact_record(ep)
+        if not data.get("whatsapp_jid"):
+            data["whatsapp_jid"] = f"{norm_phone.lstrip('+')}@s.whatsapp.net"
+
+        # Check for existing contact by phone to prevent duplicates
+        existing = sb.table("contacts").select("*").eq("phone_e164", norm_phone).execute()
+        if existing.data:
+            c_id = existing.data[0]["id"]
+            upd_data = {
+                "display_name": data.get("display_name") or existing.data[0]["display_name"],
+                "is_selected": data.get("is_selected", existing.data[0]["is_selected"]),
+                "auto_reply_enabled": data.get("auto_reply_enabled", existing.data[0]["auto_reply_enabled"]),
+                "reply_mode": data.get("reply_mode", existing.data[0]["reply_mode"])
+            }
+            sb.table("contacts").update(upd_data).eq("id", c_id).execute()
+            updated_res = sb.table("contacts").select("*").eq("id", c_id).execute()
+            return parse_contact_record(updated_res.data[0])
 
     if not data.get("whatsapp_jid") and data.get("display_name"):
         data["whatsapp_jid"] = f"{data['display_name'].lower().replace(' ', '')}@s.whatsapp.net"
@@ -113,11 +124,11 @@ async def update_contact(contact_id: str, updates: ContactUpdate):
 
     update_dict = {k: v for k, v in updates.dict().items() if v is not None}
 
+    if "phone_e164" in update_dict and update_dict["phone_e164"]:
+        update_dict["phone_e164"] = normalize_phone_e164(update_dict["phone_e164"])
+
     if update_dict.get("reply_mode") == "autonomous":
         update_dict["reply_mode"] = "automatic"
-
-    if "phone_e164" in update_dict and update_dict["phone_e164"]:
-        update_dict["phone_e164"] = normalize_phone(update_dict["phone_e164"])
 
     # Extract extra fields
     custom_inst = update_dict.pop("custom_instructions", parsed_cur.get("custom_instructions"))

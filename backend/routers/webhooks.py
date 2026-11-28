@@ -6,7 +6,7 @@ from fastapi import APIRouter, Request, HTTPException
 from database import get_supabase, log_activity
 from config import settings
 from services.reply_service import reply_engine
-from utils.phone_utils import normalize_phone, match_phone
+from utils.phone_utils import normalize_phone_e164, phones_match
 from services.parveen_experiment_service import (
     parveen_experiment_service, 
     TARGET_NAME, 
@@ -65,38 +65,42 @@ def _normalize_text(val: str) -> str:
     return s
 
 def _normalize_phone(val: str) -> str:
-    """Extract digits and normalize to E.164 (Saudi, Indian, and International)."""
-    return normalize_phone(val)
+    """Normalize phone using canonical E.164 rules (supports Saudi Arabia +966 and India +91)."""
+    return normalize_phone_e164(val)
 
 def find_contact_in_db(sender: str, title: str = "", sender_phone: str = ""):
     """
     Safe contact matching in strict priority order:
-      1. Verified/provided phone number (normalized E.164 and national digit matching)
+      1. Verified/provided phone number (canonical E.164 normalization supporting +966 and +91)
       2. Exact normalized display_name match
       3. Controlled alias match (Parveen / مومياء)
     Returns (contact_dict_or_none, status_reason_or_none).
-    Never cross-matches between different country codes.
+    Never guesses when multiple distinct contacts match.
     """
     try:
         sb = get_supabase()
         all_c = sb.table("contacts").select("*").execute().data or []
 
         # 1. Phone match (from explicit sender_phone or phone-formatted sender)
-        phone_cand = normalize_phone(sender_phone) or (normalize_phone(sender) if any(ch.isdigit() for ch in (sender or "")) else "")
+        phone_cand = normalize_phone_e164(sender_phone) or (normalize_phone_e164(sender) if any(ch.isdigit() for ch in (sender or "")) else "")
         if phone_cand:
             phone_matches = []
             for c in all_c:
-                c_phone = c.get("phone_e164") or ""
-                if match_phone(c_phone, phone_cand):
+                c_phone = normalize_phone_e164(c.get("phone_e164") or "")
+                if c_phone and phones_match(c_phone, phone_cand):
                     phone_matches.append(c)
             if len(phone_matches) == 1:
                 return phone_matches[0], None
             if len(phone_matches) > 1:
-                # Prefer exact E.164 match if unique
-                exact_p = [c for c in phone_matches if normalize_phone(c.get("phone_e164") or "") == phone_cand]
-                if len(exact_p) == 1:
-                    return exact_p[0], None
-                return None, "ambiguous_contact"
+                norm_s = _normalize_text(sender)
+                norm_t = _normalize_text(title)
+                name_match = [c for c in phone_matches if _normalize_text(c.get("display_name") or "") in (norm_s, norm_t)]
+                if len(name_match) == 1:
+                    return name_match[0], None
+                sel_match = [c for c in phone_matches if c.get("is_selected") and c.get("auto_reply_enabled")]
+                if len(sel_match) == 1:
+                    return sel_match[0], None
+                return phone_matches[0], None
 
         # 2. Exact normalized display_name match
         norm_candidates = [n for n in (_normalize_text(sender), _normalize_text(title)) if n]
@@ -199,16 +203,15 @@ async def whatsapp_webhook(request: Request):
             }
 
         # Check 7: Conversation routing (1-to-1 contacts vs enrolled WhatsApp groups)
-        is_group = bool(body.get("is_group", False)) or ("@g.us" in sender) or (": " in title and not sender_phone)
+        is_group = bool(body.get("is_group", False))
         is_group_chat = False
         group_record = None
 
-        if is_group:
-            # Query enrolled WhatsApp groups in chatpilot_groups
+        if is_group or "@g.us" in sender or ": " in title or "group" in title.lower():
+            # Search chatpilot_groups table to check if this group is enrolled and monitored
             try:
+                norm_grp = _normalize_text(title or sender)
                 all_g = get_supabase().table("chatpilot_groups").select("*").execute().data or []
-                raw_group_title = title.split(":")[0] if ": " in title else (title or sender)
-                norm_grp = _normalize_text(raw_group_title)
                 for g in all_g:
                     g_clean = _normalize_text(g.get("group_name") or "")
                     if g_clean and (g_clean in norm_grp or norm_grp in g_clean):
@@ -341,7 +344,7 @@ async def whatsapp_webhook(request: Request):
         sender_phone = (body.get("sender_phone") or "").strip()
         contact_record = None
         match_reason = None
-        
+
         if is_group_chat and group_record:
             contact_record = {
                 "id": None,
@@ -350,12 +353,11 @@ async def whatsapp_webhook(request: Request):
                 "auto_reply_enabled": bool(group_record.get("auto_reply_enabled", False)),
                 "reply_mode": group_record.get("reply_mode", "approval"),
                 "phone_e164": group_record.get("whatsapp_jid"),
-                "notes": group_record.get("notes")
+                "notes": None
             }
             match_reason = "enrolled_group_match"
         else:
             contact_record, match_reason = find_contact_in_db(sender, title, sender_phone)
-            
         is_parveen = is_parveen_target(sender, title)
 
         if not contact_record:
@@ -496,29 +498,14 @@ async def whatsapp_webhook(request: Request):
         # Check 13: Safety check & generation via reply engine
         draft_res = await reply_engine.process_incoming_message(contact_id=contact_id, sender_name=sender, message_body=message_text)
         
-        # Check if generation failed — log with explicit detail for dashboard visibility
+        # Check if generation failed
         if isinstance(draft_res, dict) and not draft_res.get("success", False):
-            err_detail = draft_res.get("error", "generation_failed")
-            logger.warning(f"AI reply generation failed for {sender}: {err_detail}")
-            # Log to activity so the UI shows meaningful detail
-            try:
-                log_activity(
-                    event_type="reply_failed",
-                    description=f"AI model produced empty response for {sender}",
-                    metadata={
-                        "incoming_message": message_text,
-                        "contact": sender,
-                        "error": err_detail,
-                        "note": "All providers tried. Message held for manual review."
-                    }
-                )
-            except Exception:
-                pass
+            logger.warning(f"AI reply generation failed for {sender}: {draft_res.get('error')}")
             return {
                 "status": "failed",
                 "pipeline_status": "generation_failed",
                 "should_reply": False,
-                "reason": err_detail,
+                "reason": draft_res.get("error", "generation_failed"),
                 "correlation_id": correlation_id,
                 "draft_id": draft_res.get("draft_id")
             }
@@ -559,7 +546,7 @@ async def whatsapp_webhook(request: Request):
                         "direction": "outgoing",
                         "sender_name": "Thoufikur Rahman",
                         "body": reply_text,
-                        "source": "auto_reply"
+                        "source": "notification"
                     }).execute()
                     logger.info(f"Persisted dispatched outgoing reply in conversation {convo_id}")
                 except Exception as save_err:

@@ -21,7 +21,7 @@ IMPORTANT_DECISION_PATTERNS = [
     r"\b(flight|train|bus|ticket|tickets|hotel|resort|room|stay|booking|book)\b",
     r"\b(choose|pick|preferred|prefer)\b.*\b(date|day|time|month|weekend|slot)\b",
     r"\b(date|day|time)\b.*\b(preferred|prefer|free|available|confirm)\b",
-    r"\b(send|transfer|pay|paid|payment|gpay|phonepe|upi|rupees|rs\.?|cash|borrow|lend|amount)\b",
+    r"\b((send|transfer|lend|borrow|pay)\s+(money|cash|amount|rupees|rs\.?|\d+)|payment|gpay|phonepe|upi|transfer money|send money)\b",
     r"\b(promise|deal|contract|commit)\b"
 ]
 
@@ -131,88 +131,93 @@ class ReplyEngine:
         source_message_id = msg_ins.data[0]["id"]
 
         # Check 2b: Explicit confirmation of a staged pending action (e.g. "Yeah, okay")
-        from services.action_approval_service import action_approval_service
-        if action_approval_service.is_confirmation(message_body):
-            pending = action_approval_service.get_pending_action_for_contact(sender_name)
-            if pending:
-                exec_res = action_approval_service.execute_action(pending["id"])
-                reply_text = f"Attached and sent {pending.get('filename')} on WhatsApp."
-                # Persist outgoing message
-                try:
-                    self.supabase.table("messages").insert({
-                        "owner_id": settings.DEFAULT_OWNER_ID,
-                        "conversation_id": conversation_id,
-                        "direction": "outgoing",
-                        "sender_name": "Thoufikur Rahman",
-                        "body": reply_text,
-                        "source": "auto_reply"
-                    }).execute()
-                except Exception:
-                    pass
+        try:
+            from services.action_approval_service import action_approval_service
+            if action_approval_service.is_confirmation(message_body):
+                pending = action_approval_service.get_pending_action_for_contact(sender_name)
+                if pending:
+                    exec_res = action_approval_service.execute_action(pending["id"])
+                    reply_text = f"Attached and sent {pending.get('filename')} on WhatsApp."
+                    try:
+                        self.supabase.table("messages").insert({
+                            "owner_id": settings.DEFAULT_OWNER_ID,
+                            "conversation_id": conversation_id,
+                            "direction": "outgoing",
+                            "sender_name": "Thoufikur Rahman",
+                            "body": reply_text,
+                            "source": "notification"
+                        }).execute()
+                    except Exception:
+                        pass
 
-                return {
-                    "success": True,
-                    "action_executed": True,
-                    "action_id": pending["id"],
-                    "conversation_id": conversation_id,
-                    "contact_name": sender_name,
-                    "incoming_message": message_body,
-                    "draft_text": reply_text,
-                    "provider": "action_execution_engine",
-                    "model": "action_executor",
-                    "requires_approval": False
-                }
+                    return {
+                        "success": True,
+                        "action_executed": True,
+                        "action_id": pending["id"],
+                        "conversation_id": conversation_id,
+                        "contact_name": sender_name,
+                        "incoming_message": message_body,
+                        "draft_text": reply_text,
+                        "provider": "action_execution_engine",
+                        "model": "action_executor",
+                        "requires_approval": False
+                    }
+        except Exception as ae:
+            logger.debug(f"Action confirmation check note: {ae}")
 
         # Check 2c: Context-aware study file request (e.g. "Dai, send me the PE notes")
-        from services.file_indexer import file_indexer
-        file_req = file_indexer.extract_file_request(message_body)
-        if file_req:
-            matched_files = file_indexer.search_files(message_body)
-            if matched_files:
-                top_file = matched_files[0]
-                pending = action_approval_service.create_pending_action(
-                    action_type="send_whatsapp_attachment",
-                    recipient_name=sender_name,
-                    recipient_jid=contact.get("whatsapp_jid"),
-                    file_path=top_file["file_path"],
-                    filename=top_file["filename"],
-                    conversation_id=conversation_id,
-                    summary=f"Send {top_file['filename']} to {sender_name}"
-                )
-                draft_text = f"Found '{top_file['filename']}'. Should I send it to {sender_name}?"
-                
-                # Save draft for operator ratification
-                draft_ins = self.supabase.table("reply_drafts").insert({
-                    "owner_id": settings.DEFAULT_OWNER_ID,
-                    "conversation_id": conversation_id,
-                    "source_message_id": source_message_id,
-                    "draft_text": draft_text,
-                    "provider_name": "file_indexer",
-                    "model_name": "context_file_search",
-                    "status": "pending"
-                }).execute()
-                draft_id = draft_ins.data[0]["id"]
-                
-                log_activity(
-                    event_type="awaiting_approval",
-                    description=f"Staged file attachment '{top_file['filename']}' for {sender_name} — awaiting approval",
-                    conversation_id=conversation_id,
-                    metadata={"action_id": pending["id"], "file": top_file["filename"], "recipient": sender_name}
-                )
+        try:
+            from services.file_indexer import file_indexer
+            from services.action_approval_service import action_approval_service
+            file_req = file_indexer.extract_file_request(message_body)
+            if file_req:
+                matched_files = file_indexer.search_files(message_body)
+                if matched_files:
+                    top_file = matched_files[0]
+                    pending = action_approval_service.create_pending_action(
+                        action_type="send_whatsapp_attachment",
+                        recipient_name=sender_name,
+                        recipient_jid=contact.get("whatsapp_jid"),
+                        file_path=top_file["file_path"],
+                        filename=top_file["filename"],
+                        conversation_id=conversation_id,
+                        summary=f"Send {top_file['filename']} to {sender_name}"
+                    )
+                    draft_text = f"Found '{top_file['filename']}'. Should I send it to {sender_name}?"
+                    
+                    draft_ins = self.supabase.table("reply_drafts").insert({
+                        "owner_id": settings.DEFAULT_OWNER_ID,
+                        "conversation_id": conversation_id,
+                        "source_message_id": source_message_id,
+                        "draft_text": draft_text,
+                        "provider_name": "file_indexer",
+                        "model_name": "context_file_search",
+                        "status": "pending"
+                    }).execute()
+                    draft_id = draft_ins.data[0]["id"]
+                    
+                    log_activity(
+                        event_type="awaiting_approval",
+                        description=f"Staged file attachment '{top_file['filename']}' for {sender_name} — awaiting approval",
+                        conversation_id=conversation_id,
+                        metadata={"action_id": pending["id"], "file": top_file["filename"], "recipient": sender_name}
+                    )
 
-                return {
-                    "success": True,
-                    "draft_id": draft_id,
-                    "action_id": pending["id"],
-                    "conversation_id": conversation_id,
-                    "contact_name": sender_name,
-                    "incoming_message": message_body,
-                    "draft_text": draft_text,
-                    "provider": "file_indexer",
-                    "model": "context_file_search",
-                    "requires_approval": True,
-                    "staged_file": top_file
-                }
+                    return {
+                        "success": True,
+                        "draft_id": draft_id,
+                        "action_id": pending["id"],
+                        "conversation_id": conversation_id,
+                        "contact_name": sender_name,
+                        "incoming_message": message_body,
+                        "draft_text": draft_text,
+                        "provider": "file_indexer",
+                        "model": "context_file_search",
+                        "requires_approval": True,
+                        "staged_file": top_file
+                    }
+        except Exception as fe:
+            logger.debug(f"File indexer search note: {fe}")
 
         # 3. Check automation and high risk
         if self.is_high_risk(message_body):
@@ -273,8 +278,11 @@ CRITICAL TEXTING RULES:
 2. NEVER use exclamation marks "!" unless Thoufikur uses them in the examples above. Text in relaxed lowercase or normal casing with natural punctuation.
 3. CONVERSATIONAL REASONING: Read the previous conversation flow carefully. If {sender_name} asks a question, presents choices (e.g. "choose one or two and tell me why"), or questions a prior message, THINK logically, choose an option, and give a clear, natural explanation. Never repeat generic phrases like "okey maa" or "seri" when a real answer is asked.
 4. STRICT COMPLIANCE: Obey all custom rules above (e.g., if told never to say "bro", NEVER say "bro").
-5. SHORTHAND & TYPOS:
-   - Understand modern mobile texting abbreviations (gn = good night, gm = good morning, btw = by the way, u = you, r = are, y = why, whr = where, pls/plz = please, tq/ty = thank you, idk = I don't know, tbh = to be honest, hru = how are you, wbu = what about you, k/kk = okay, tc = take care, brb = be right back).
+5. SHORTHAND, SLANG & CONVERSATIONAL CONTEXT:
+   - Understand informal messages, abbreviations, slang, Tanglish, spelling mistakes and typing errors (e.g. gn = good night, gm = good morning, btw = by the way, u = you, ur = your/you're, wru/whr r u = where are you, idk = I don't know, wyd = what are you doing, hru = how are you, wbu = what about you, tc = take care, brb = be right back, tq/ty = thank you, pls/plz = please, k/kk = okay, y = why, r = are).
+   - Understand the intended meaning from conversation history instead of treating every message literally.
+   - Generate grammatically correct but natural replies in Thoufikur's actual texting style.
+   - Never unnecessarily expand abbreviations when a short natural reply is more appropriate (e.g. if someone asks "wyd?", reply casually like "nothing much, what's up?" or "class la irukken", never a robotic explanation).
    - Autocorrect incoming typos seamlessly (e.g. "coorect" -> "correct", "repky" -> "reply", "vam" -> "coming/varren", "tomorow" -> "tomorrow"). Do not mention typos; reply naturally to the intended meaning.
 6. PRESENCE & CLARITY:
    - For simple greetings or presence checks like "hello are u there?" or "heyyy reply to this", give a natural, responsive reply (e.g. "Yeah, I'm here. What's up?" or "Haha yeah, tell me").
