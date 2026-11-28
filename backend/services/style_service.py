@@ -20,11 +20,13 @@ class StyleLearner:
         """Analyze a list of outgoing messages to identify writing patterns."""
         if not samples:
             return {
-                "detected_languages": ["English"],
-                "tone": "Casual and friendly",
-                "sentence_length": "Short replies",
-                "slang_tags": ["Uses 'bro'"],
-                "summary": "No outgoing messages analyzed yet."
+                "detected_languages": ["Tanglish / English"],
+                "tone": "Casual and natural",
+                "sentence_length": "Short and concise",
+                "slang_tags": ["Natural text", "Short replies"],
+                "top_emojis": [],
+                "example_samples": [],
+                "summary": "Natural WhatsApp texting style."
             }
 
         total_words = 0
@@ -33,9 +35,15 @@ class StyleLearner:
         emojis_found = []
         punctuation_patterns = {"exclamation": 0, "ellipsis": 0, "question": 0}
         detected_slang = set()
+        clean_examples = []
 
         for s in samples:
             text = s.strip()
+            if not text or "<Media" in text:
+                continue
+            if len(clean_examples) < 6 and len(text) > 3:
+                clean_examples.append(text)
+
             total_chars += len(text)
             words = re.findall(r"\b\w+\b", text.lower())
             total_words += len(words)
@@ -60,33 +68,33 @@ class StyleLearner:
         avg_words_per_msg = total_words / max(len(samples), 1)
 
         # Determine language profile
-        if tanglish_count > 2:
+        if tanglish_count > 1:
             language_tag = "Tamil + English (Tanglish)"
         else:
-            language_tag = "English"
+            language_tag = "Tanglish / English"
 
         # Determine length
         if avg_words_per_msg < 6:
-            length_tag = "Short replies"
+            length_tag = "Short (1-6 words)"
         elif avg_words_per_msg < 15:
-            length_tag = "Moderate replies"
+            length_tag = "Moderate (6-15 words)"
         else:
             length_tag = "Detailed replies"
 
         # Formality
-        tone = "Casual and friendly"
+        tone = "Casual and relaxed"
         if "da" in detected_slang or "machi" in detected_slang:
-            tone = "Very casual & informal"
+            tone = "Very casual & friendly"
 
-        slang_pills = []
-        if language_tag != "English":
-            slang_pills.append(language_tag)
-        slang_pills.append(length_tag)
-
+        slang_pills = [language_tag, length_tag]
         slang_list = list(detected_slang)[:4]
         if slang_list:
             formatted_slang = ", ".join(f"'{s}'" for s in slang_list)
             slang_pills.append(f"Uses {formatted_slang}")
+
+        # Top emojis
+        from collections import Counter
+        top_emojis = [e for e, _ in Counter(emojis_found).most_common(5)]
 
         return {
             "detected_languages": [language_tag],
@@ -95,6 +103,8 @@ class StyleLearner:
             "slang_tags": slang_pills,
             "total_samples": len(samples),
             "top_slang": list(detected_slang),
+            "top_emojis": top_emojis,
+            "example_samples": clean_examples,
             "summary": f"Speaks mostly in {language_tag} with {length_tag.lower()}. Tone is {tone.lower()}."
         }
 
@@ -106,7 +116,22 @@ class StyleLearner:
             .limit(100)\
             .execute()
         
-        samples = [r["sample_text"] for r in (res.data or [])]
+        samples = [r["sample_text"] for r in (res.data or []) if r.get("sample_text")]
+        
+        # Fallback to outgoing messages if writing_samples is empty
+        if not samples:
+            conv_res = self.supabase.table("conversations").select("id").eq("contact_id", contact_id).execute()
+            if conv_res.data:
+                convo_id = conv_res.data[0]["id"]
+                msg_res = self.supabase.table("messages")\
+                    .select("body")\
+                    .eq("conversation_id", convo_id)\
+                    .eq("direction", "outgoing")\
+                    .neq("body", "<Media omitted>")\
+                    .limit(50)\
+                    .execute()
+                samples = [m["body"] for m in (msg_res.data or []) if m.get("body")]
+
         return self.analyze_samples(samples)
 
 style_service = StyleLearner()

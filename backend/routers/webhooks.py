@@ -450,64 +450,7 @@ async def whatsapp_webhook(request: Request):
                 "correlation_id": correlation_id
             }
 
-        # If Parveen target, use personalized style pipeline
-        if is_parveen:
-            parveen_event = {
-                "notification_id": body.get("event_id") or body.get("notification_id") or body.get("notification_key"),
-                "source_app": body.get("source_app", "WhatsApp"),
-                "sender": sender or TARGET_NAME,
-                "sender_phone": CANONICAL_TARGET_PHONE,
-                "message": message_text,
-                "title": title or sender,
-                "has_native_reply_action": has_reply_action,
-                "simulate_sending": False
-            }
-
-            res = await parveen_experiment_service.process_notification_event(parveen_event)
-            if res.get("status") == "success" and res.get("reply_text"):
-                reply_text = res["reply_text"]
-                if dedup_key in _cross_platform_dedup_cache:
-                    _cross_platform_dedup_cache[dedup_key]["replied"] = True
-                _last_contact_reply_time[contact_key] = time.time()
-
-                # Log activity with reply_text and incoming message
-                try:
-                    log_activity(
-                        event_type="reply_generated",
-                        description=f"Generated and dispatched reply for {sender}",
-                        metadata={
-                            "incoming_message": message_text,
-                            "reply_text": reply_text,
-                            "contact": sender,
-                            "phone": CANONICAL_TARGET_PHONE,
-                            "provider": res.get("provider", "groq")
-                        }
-                    )
-                except Exception:
-                    pass
-
-                return {
-                    "status": "success",
-                    "should_reply": True,
-                    "reply_text": reply_text,
-                    "phone_number": CANONICAL_TARGET_PHONE,
-                    "sender": sender,
-                    "platform": platform,
-                    "reply_delay_seconds": contact_delay,
-                    "experiment": "parveen"
-                }
-            else:
-                reason_exp = res.get("reason", "parveen_policy_rejection")
-                if reason_exp not in ("experiment_disabled", "experiment_completed", "duplicate_notification"):
-                    return {
-                        "status": res.get("status", "rejected"),
-                        "reason": reason_exp,
-                        "should_reply": False,
-                        "details": res
-                    }
-                logger.info(f"Parveen experiment returned {reason_exp}; falling through to standard automatic reply_engine.")
-
-        # For any other authorized selected contact:
+        # Unified Context-Aware Generation via Reply Engine for all authorized contacts
         # Check 13: Safety check & generation via reply engine
         draft_res = await reply_engine.process_incoming_message(contact_id=contact_id, sender_name=sender, message_body=message_text)
         reply_text = draft_res.get("draft_text") if isinstance(draft_res, dict) else None
@@ -521,7 +464,23 @@ async def whatsapp_webhook(request: Request):
                 _cross_platform_dedup_cache[dedup_key]["replied"] = True
             _last_contact_reply_time[contact_key] = time.time()
 
-            contact_phone = contact_record.get("phone_e164") if contact_record else None
+            contact_phone = contact_record.get("phone_e164") if contact_record else (CANONICAL_TARGET_PHONE if is_parveen else None)
+
+            # Persist outgoing reply message to ensure unbroken conversation flow
+            convo_id = draft_res.get("conversation_id")
+            if convo_id:
+                try:
+                    get_supabase().table("messages").insert({
+                        "owner_id": settings.DEFAULT_OWNER_ID,
+                        "conversation_id": convo_id,
+                        "direction": "outgoing",
+                        "sender_name": "Thoufikur Rahman",
+                        "body": reply_text,
+                        "source": "auto_reply"
+                    }).execute()
+                    logger.info(f"Persisted dispatched outgoing reply in conversation {convo_id}")
+                except Exception as save_err:
+                    logger.warning(f"Failed to persist outgoing message: {save_err}")
 
             # Log activity for UI feed display
             try:
@@ -533,7 +492,7 @@ async def whatsapp_webhook(request: Request):
                         "reply_text": reply_text,
                         "contact": sender,
                         "phone": contact_phone,
-                        "provider": "groq"
+                        "provider": draft_res.get("provider", "groq")
                     }
                 )
             except Exception:

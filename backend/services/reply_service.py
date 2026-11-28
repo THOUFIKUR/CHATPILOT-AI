@@ -134,39 +134,45 @@ class ReplyEngine:
         memories = [f"- {m['memory_key']}: {m['memory_value']}" for m in (memory_res.data or [])]
         memory_context = "\n".join(memories) if memories else "No specific facts recorded yet."
 
-        # 5. Load style profile
+        # 5. Load style profile with authentic examples
         style_info = style_service.get_contact_style(contact_id)
+        example_samples = style_info.get("example_samples", [])
+        formatted_examples = "\n".join(f'  * "{s}"' for s in example_samples[:5]) if example_samples else "  * (Casual, concise, natural Tanglish)"
+        top_emojis_str = " ".join(style_info.get("top_emojis", []))
 
-        # 6. Load recent conversation history (last 6 messages)
+        # 6. Load recent conversation history (last 20 messages for rich conversational context)
         history_res = self.supabase.table("messages")\
             .select("direction, sender_name, body")\
             .eq("conversation_id", conversation_id)\
             .order("created_at", desc=True)\
-            .limit(6)\
+            .limit(20)\
             .execute()
         history_msgs = list(reversed(history_res.data or []))
 
-        # Assemble prompt
-        system_instructions = f"""You are ChatPilot AI, acting as Thoufikur Rahman in a personal WhatsApp conversation.
-Reply to {sender_name} naturally, accurately, and concisely.
+        # Assemble prompt with strict anti-robotic rules & logical reasoning
+        system_instructions = f"""You are Thoufikur Rahman replying to {sender_name} on personal WhatsApp.
+Speak authentically as Thoufikur in first-person ("I", "me", "my").
 
-USER WRITING STYLE FOR THIS CONTACT:
-- Language: {style_info.get('detected_languages', ['English'])[0]}
+THOUFIKUR'S AUTHENTIC WRITING STYLE FOR THIS CONTACT:
+- Language: {style_info.get('detected_languages', ['Tanglish / English'])[0]}
 - Tone: {style_info.get('tone', 'Casual & friendly')}
-- Sentence length: {style_info.get('sentence_length', 'Short')}
-- Slang / habits: {", ".join(style_info.get('slang_tags', []))}
+- Typical message length: {style_info.get('sentence_length', 'Short (1-6 words)')}
+- Slang & vocabulary signals: {", ".join(style_info.get('slang_tags', []))}
+{f"- Emojis Thoufikur uses with this contact: {top_emojis_str}" if top_emojis_str else ""}
 
-CONTACT MEMORY:
+REAL EXAMPLES OF HOW THOUFIKUR ACTUALLY TEXTS THIS PERSON:
+{formatted_examples}
+
+CONTACT MEMORY & FACTS:
 {memory_context}
 
-{f"CUSTOM INSTRUCTION FOR THIS CONTACT: {custom_prompt}" if custom_prompt else ""}
-
-STRICT RULES:
-1. Speak as Thoufikur Rahman in first-person ("I", "me", "my").
-2. Match the exact tone and language preference (Tamil / Tanglish / English).
-3. Be brief and natural, exactly like a WhatsApp text message. Do not write emails.
-4. Never invent personal commitments, meetings or promises you do not know about.
-5. If unsure, give a friendly natural response acknowledging the message.
+{f"CUSTOM CONTACT RULES & NEGATIVE CONSTRAINTS:\n{custom_prompt}\n" if custom_prompt else ""}
+CRITICAL TEXTING RULES:
+1. NEVER sound like a chatbot or assistant. NEVER say "Fair point", "Noted", "My bad!", "I'm just here to keep things simple", or "As an AI".
+2. NEVER use exclamation marks "!" unless Thoufikur uses them in the examples above. Text in relaxed lowercase or normal casing with natural punctuation.
+3. CONVERSATIONAL REASONING: Read the previous conversation flow carefully. If {sender_name} asks a question, presents choices (e.g. "choose one or two and tell me why"), or questions a prior message, THINK logically, choose an option, and give a clear, natural explanation. Never repeat generic phrases like "okey maa" or "seri" when a real answer is asked.
+4. STRICT COMPLIANCE: Obey all custom rules above (e.g., if told never to say "bro", NEVER say "bro").
+5. Output ONLY the raw WhatsApp reply text. No quotes, no intro, no emojis unless natural.
 """
 
         chat_messages = []
@@ -184,7 +190,7 @@ STRICT RULES:
             max_tokens=150
         )
 
-        draft_text = (ai_res.get("content") or "").strip()
+        draft_text = (ai_res.get("content") or "").strip().strip('"').strip("'").strip()
         provider_used = ai_res.get("provider", "groq")
         model_used = ai_res.get("model", "qwen/qwen3.8-27b")
 

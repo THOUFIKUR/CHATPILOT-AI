@@ -256,8 +256,29 @@ class AssistantService:
         tool_execution_result = None
         tool_action_name = None
 
+        # A0: Add or Register New Contact
+        if any(w in lower_prompt for w in ["add contact", "create contact", "new contact", "register contact", "save contact"]):
+            import re
+            name_m = re.search(r"(?:contact|add|create|new|register)\s+([A-Za-z0-9_\u0600-\u06FF\s]+?)(?:\s+(?:with|phone|number)|\s*$)", prompt, re.IGNORECASE)
+            t_name = name_m.group(1).strip() if name_m else ""
+            t_name = re.sub(r"^(contact|new|add|create)\s+", "", t_name, flags=re.I).strip()
+            phone_m = re.search(r"(\+?\d[\d\s\-]{8,15}\d)", prompt)
+            t_phone = phone_m.group(1).replace(" ", "").replace("-", "") if phone_m else ""
+            if t_name:
+                tool_action_name = "add_contact"
+                tool_execution_result = await connectors_service.execute_tool(
+                    "add_contact",
+                    {
+                        "display_name": t_name,
+                        "phone": t_phone,
+                        "auto_reply_enabled": True,
+                        "is_selected": True,
+                        "reply_mode": "approval"
+                    }
+                )
+
         # A: Contact management actions (Dynamic across all contacts in database)
-        if any(w in lower_prompt for w in ["auto reply", "auto-reply", "autoreply", "select", "disable", "enable", "turn on", "turn off"]):
+        elif any(w in lower_prompt for w in ["auto reply", "auto-reply", "autoreply", "select", "disable", "enable", "turn on", "turn off"]):
             all_c = []
             try:
                 c_res = self.supabase.table("contacts").select("id, display_name, phone").execute()
@@ -407,8 +428,8 @@ class AssistantService:
             f"{attachment_context_text}\n"
             f"{whatsapp_evidence_text}\n\n"
             "CAPABILITIES & INSTRUCTIONS:\n"
-            "1. You HAVE real-time access to live WhatsApp activity and the last 10 minutes events via the LIVE ACTIVITY LOGS above. When the user asks about recent messages, status of Parveen, or recent replies, answer directly with the exact verified events and timestamps.\n"
-            "2. You HAVE real execution access. When the user requests contact changes (e.g. 'make Parveen to auto reply and select' or 'disable Afiza'), report the verified changes from the tool execution result above.\n"
+            "1. You HAVE real-time access to live WhatsApp activity, contact management, and the database. You CAN add new contacts, view all registered contacts, update auto-reply rules, and inspect conversations.\n"
+            "2. You HAVE real execution access. When the user requests contact additions (e.g. 'add contact Kishore') or preference updates (e.g. 'make Parveen auto reply'), report the verified changes from the tool execution result above.\n"
             "3. When answering about Google Drive, Gmail, Calendar, or GitHub, use the verified connector data provided above.\n"
             "4. If an attachment is present (such as a WhatsApp .txt export or document), analyze its content thoroughly and summarize or offer import ratification.\n"
             "5. For WhatsApp queries, quote exact timestamps and verified messages from the archive.\n"

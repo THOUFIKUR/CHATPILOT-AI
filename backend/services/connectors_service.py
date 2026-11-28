@@ -243,6 +243,65 @@ class ConnectorsService:
         logger.info(f"Executing connector tool: {tool_name} with args: {arguments}")
         
         # 1. Contact Management Tools (100% Real Live PostgreSQL)
+        if tool_name == "add_contact":
+            display_name = arguments.get("display_name") or arguments.get("name", "")
+            phone = arguments.get("phone") or arguments.get("phone_number", "")
+            auto_reply_enabled = bool(arguments.get("auto_reply_enabled", True))
+            is_selected = bool(arguments.get("is_selected", True))
+            reply_mode = arguments.get("reply_mode", "approval")
+            notes = arguments.get("notes", "")
+
+            if not display_name:
+                return {"success": False, "error": "Contact display_name is required."}
+
+            # Check if contact already exists
+            existing = self.supabase.table("contacts").select("*").ilike("display_name", f"%{display_name}%").execute()
+            if existing.data:
+                return {
+                    "success": True,
+                    "action": "contact_already_exists",
+                    "contact": existing.data[0],
+                    "message": f"Contact '{display_name}' already exists in your registry (id={existing.data[0]['id']})."
+                }
+
+            from config import settings
+            ins_res = self.supabase.table("contacts").insert({
+                "owner_id": settings.DEFAULT_OWNER_ID,
+                "display_name": display_name,
+                "phone_e164": phone if phone else None,
+                "whatsapp_jid": f"{display_name.lower().replace(' ', '')}@s.whatsapp.net",
+                "is_selected": is_selected,
+                "auto_reply_enabled": auto_reply_enabled,
+                "reply_mode": reply_mode,
+                "preferred_language": "Auto",
+                "notes": notes
+            }).execute()
+
+            new_contact = ins_res.data[0] if ins_res.data else {}
+            if new_contact:
+                self.supabase.table("conversations").insert({
+                    "owner_id": settings.DEFAULT_OWNER_ID,
+                    "conversation_type": "contact",
+                    "contact_id": new_contact["id"],
+                    "title": f"Chat with {display_name}"
+                }).execute()
+
+            return {
+                "success": True,
+                "action": "contact_created",
+                "contact": new_contact,
+                "message": f"Contact '{display_name}' was successfully created and registered in your database!"
+            }
+
+        if tool_name in ("list_contacts", "get_all_contacts"):
+            res = self.supabase.table("contacts").select("id, display_name, phone_e164, is_selected, auto_reply_enabled, reply_mode, preferred_language").order("display_name").execute()
+            return {
+                "success": True,
+                "action": "contacts_listed",
+                "total": len(res.data or []),
+                "contacts": res.data or []
+            }
+
         if tool_name == "update_contact_preference":
             contact_name = arguments.get("contact_name") or arguments.get("name", "")
             is_selected = arguments.get("is_selected")
